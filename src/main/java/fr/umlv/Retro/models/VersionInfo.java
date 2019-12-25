@@ -21,7 +21,7 @@ public class VersionInfo {
 	 *  58 -> 14
 	 * @param A byte code major version
 	 */
-	public static int fromASM(int version) {
+	public static int fromMajor(int version) {
 		return version - 44;
 	}
 }
