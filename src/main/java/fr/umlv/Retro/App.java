@@ -17,7 +17,7 @@ public class App {
         // ClassReader cr = new ClassReader(is);
     	// var fos = new FileOutputStream(args[1]);
 
-    	var cr = new ClassReader("fr.umlv.Retro.App");
+    	var cr = new ClassReader("TestLambda");
         var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         var options = TransformOptions.fromCommandLine(args);
         cr.accept(new ClassTransformer(cw, options), 0);
