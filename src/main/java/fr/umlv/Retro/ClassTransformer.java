@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import fr.umlv.Retro.lambdas.LambdaMethodVisitor;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
 import fr.umlv.Retro.models.TransformOptions;
@@ -17,6 +18,7 @@ import fr.umlv.Retro.models.VersionInfo;
 public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	private final MethodFeatureVisitor[] methodVisitors =  {
+			new LambdaMethodVisitor()
 	};
 	
 	private final TransformOptions options;
