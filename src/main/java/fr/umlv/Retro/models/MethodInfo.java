@@ -9,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
  */
 public class MethodInfo {
 
+	private final int access;
 	private final String methodName;
 	private final String descriptor;
 	private final String[] exceptions;
@@ -22,13 +23,20 @@ public class MethodInfo {
 	 * @param exceptions A list of exceptions of thrown by the method.
 	 * @param mv The method visitor to which method calls should be delegated.
 	 */
-	public MethodInfo(String name, String descriptor, String[] exceptions, MethodVisitor mv) {
+	public MethodInfo(int access, String name, String descriptor, String[] exceptions, MethodVisitor mv) {
+		this.access = access;
 		this.methodName = Objects.requireNonNull(name);
 		this.descriptor = Objects.requireNonNull(descriptor);
 		this.exceptions = Objects.requireNonNull(exceptions);
 		this.mv = Objects.requireNonNull(mv);
 	}
 
+	/** 
+	 * The method's access flags.
+	 */
+	public int access() {
+		return access;
+	}
 	/** 
 	 * The name of the method.
 	 */

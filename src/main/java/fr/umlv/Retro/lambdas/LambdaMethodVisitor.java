@@ -32,8 +32,8 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 		public Visitor(ClassInfo ci, MethodInfo mi, TransformOptions options) {
 			super(ci.api(), mi.visitor());
 
-			this.ci = ci; // requireNonNull no needed
-			this.mi = mi; // requireNonNull no needed
+			this.ci = ci;
+			this.mi = mi;
 
 			this.options = Objects.requireNonNull(options);
 		}
@@ -43,7 +43,17 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 			this.lineNumber = line;
 			super.visitLineNumber(line, start);
 		}
-		
+
+		@Override
+		public void visitVarInsn(int opcode, int var) {
+			if (opcode >= ISTORE && opcode <= ASTORE) {
+				captures.add(opcode  + "-" + var);
+			} else if (opcode >= ILOAD && opcode <= ILOAD) {
+				captures.remove(opcode  + "-" + var);
+			}
+			super.visitVarInsn(opcode, var);
+		}
+
 		@Override
 		public void visitInvokeDynamicInsn(String name, String descriptor, Handle handle, Object... args) {
 			if (handle.getOwner().equals("java/lang/invoke/LambdaMetafactory")) {
@@ -60,17 +70,6 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 				super.visitInvokeDynamicInsn(name, descriptor, handle, args);				
 			}
 		}
-
-		@Override
-		public void visitVarInsn(int opcode, int var) {
-			if (opcode >= ISTORE && opcode <= ASTORE) {
-				captures.add(opcode  + "-" + var);
-			} else if (opcode >= ILOAD && opcode <= ILOAD) {
-				captures.remove(opcode  + "-" + var);
-			}
-			super.visitVarInsn(opcode, var);
-		}
-		
 	}
 
 	@Override

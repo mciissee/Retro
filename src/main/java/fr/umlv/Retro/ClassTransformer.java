@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import fr.umlv.Retro.concats.ConcatMethodVisitor;
 import fr.umlv.Retro.lambdas.LambdaMethodVisitor;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
@@ -18,7 +19,8 @@ import fr.umlv.Retro.models.VersionInfo;
 public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	private final MethodFeatureVisitor[] methodVisitors =  {
-			new LambdaMethodVisitor()
+			new LambdaMethodVisitor(),
+			new ConcatMethodVisitor(),
 	};
 	
 	private final TransformOptions options;
@@ -58,6 +60,7 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 					cv
 			);
 			var mi = new MethodInfo(
+					access,
 					name,
 					descriptor,
 					exceptions == null ? new String[0] : exceptions,
@@ -67,5 +70,4 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		}
 		return mv;
 	}
-
 }
