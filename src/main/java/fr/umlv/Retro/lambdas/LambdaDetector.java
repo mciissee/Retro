@@ -7,6 +7,7 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.Features;
@@ -24,10 +25,8 @@ class LambdaDetector extends MethodVisitor implements Opcodes {
 
 	public LambdaDetector(ClassInfo ci, MethodInfo mi, TransformOptions options) {
 		super(ci.api(), mi.visitor());
-
 		this.ci = ci;
 		this.mi = mi;
-
 		this.options = Objects.requireNonNull(options);
 	}
 
@@ -51,6 +50,7 @@ class LambdaDetector extends MethodVisitor implements Opcodes {
 	public void visitInvokeDynamicInsn(String name, String descriptor, Handle handle, Object... args) {
 		var rewritten = false;
 		if (handle.getOwner().equals("java/lang/invoke/LambdaMetafactory")) {
+			var captures = Type.getArgumentTypes(descriptor);
 			var printer = new LambdaPrinter(ci, mi, lineNumber, captures, descriptor, (Handle) args[1]);
 			if (options.info()) {
 				System.out.println(printer);
