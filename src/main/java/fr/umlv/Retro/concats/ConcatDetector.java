@@ -35,7 +35,7 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 
 	@Override
 	public void visitInvokeDynamicInsn(String name, String descriptor, Handle handle, Object... args) {
-		var rewrited = false;
+		var rewritten = false;
 		if (handle.getOwner().equals("java/lang/invoke/StringConcatFactory")) {
 			var tokens = ((String) args[0]).split("((?<=\u0001)|(?=\u0001))");
 			var printer = new ConcatPrinter(ci, mi, lineNumber, tokens);
@@ -44,10 +44,10 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 			}
 			if (options.target() < 9 && (options.hasFeature(Features.Concat) || options.force())) {
 				rewriter.rewrite(descriptor, tokens);
-				rewrited = true;
+				rewritten = true;
 			}
 		}
-		if (!rewrited) {
+		if (!rewritten) {
 			super.visitInvokeDynamicInsn(name, descriptor, handle, args);
 		}
 	}
