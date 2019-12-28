@@ -4,12 +4,11 @@ import java.util.Objects;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.LocalVariablesSorter;
 
 class ConcatRewriter implements Opcodes {
-	private final LocalVariablesSorter mv;
+	private final ConcatDetector mv;
 
-	public ConcatRewriter(LocalVariablesSorter mv) {
+	public ConcatRewriter(ConcatDetector mv) {
 		this.mv = Objects.requireNonNull(mv);
 	}
 
