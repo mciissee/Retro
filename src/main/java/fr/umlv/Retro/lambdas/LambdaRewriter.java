@@ -18,6 +18,7 @@ import fr.umlv.Retro.models.InstUtils;
 class LambdaRewriter implements Opcodes {
 
 	private static int methodRefs;
+
 	private final ClassInfo ci;
 	private final MethodInfo mi;
 	private final LambdaDetector mv;
@@ -29,51 +30,41 @@ class LambdaRewriter implements Opcodes {
 	}
 
 	public void rewrite(String name, String descriptor, Handle bootstrap, Object... args) {
-		var lambdaReturn = Type.getReturnType(descriptor).getInternalName();
-		var lambdaCaptures = Type.getArgumentTypes(descriptor);
-		var lambdaCtor = Arrays.stream(lambdaCaptures).map(e -> e.toString()).collect(Collectors.joining("", "(", ")V"));
-
-		var lambda = (Handle) args[1];
-
-		var lambdaMethodName = lambda.getName();
-		var lambdaMethodOwner = lambda.getOwner();
-		var isMethodRef = !lambdaMethodName.contains("$");
-
-		var lambdaClassName = String.format("%s_%s", lambdaMethodOwner, lambdaMethodName);
-		if (isMethodRef) {
-			lambdaClassName = String.format("%s_%s$%d", ci.className(), lambdaMethodName, ++methodRefs);
+		var method = (Handle) args[1];
+		var clazz = String.format("%s_%s", method.getOwner(), method.getName());
+		if (!method.getName().contains("$")) { // method reference
+			clazz = String.format("%s_%s$%d", ci.className(), method.getName(), ++methodRefs);
 		}
-		lambdaClassName = lambdaClassName.replace("/", "_");
+		clazz = clazz.replace("/", "_");
 		
-
-		replaceDynamicInvoke(lambdaClassName, lambdaCtor, lambdaCaptures);
-
 		var cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		var captures = Type.getArgumentTypes(descriptor);
+		var constructor = Arrays.stream(captures).map(e -> e.toString()).collect(Collectors.joining("", "(", ")V"));
 
-		writeHeader(lambdaReturn, lambdaClassName, cw);
-		writeFields(lambdaCaptures, cw);
-		writeConstructor(cw, lambdaClassName, lambdaCaptures, lambdaCtor);
-		writeMethod(cw, name, lambda, lambdaClassName, lambdaCaptures, args);
+		writeHeader(cw, clazz, descriptor);
+		writeFields(cw, captures);
+		writeConstructor(cw, clazz, constructor, captures);
+		writeMethods(cw, clazz, captures, name, method, args);
 
-	
-		try (var fos = new FileOutputStream("../Drafts/" + lambdaClassName + ".class")) {
+		try (var fos = new FileOutputStream("../Drafts/" + clazz + ".class")) {
 			fos.write(cw.toByteArray());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+	
+		instantiate(clazz, constructor, captures);
 	}
 
-	private void writeHeader(String interfaces, String className, ClassWriter cw) {
-		cw.visit(VersionInfo.toMajor(ci.version()), ACC_SUPER, className, null, "java/lang/Object",
-				new String[] { interfaces });
+	private void writeHeader(ClassWriter cw, String clazz, String descriptor) {
+		var version = VersionInfo.toMajor(ci.version());
+		var itf = Type.getReturnType(descriptor).getInternalName();
+		cw.visit(version, ACC_SUPER, clazz, null, "java/lang/Object", new String[] { itf });
 		cw.visitSource(ci.className() + ".java", null);
-		cw.visitNestHost(ci.className());
 		cw.visitOuterClass(ci.className(), mi.methodName(), mi.descriptor());
-		cw.visitInnerClass(className, null, null, 0);
+		cw.visitInnerClass(clazz, ci.className(), clazz, 0);
 	}
 
-	private void writeFields(Type[] captures, ClassWriter cw) {
+	private void writeFields(ClassWriter cw, Type[] captures) {
 		var i = 0;
 		for (var capture : captures) {
 			var fv = cw.visitField(ACC_FINAL | ACC_SYNTHETIC, "f$" + i, capture.toString(), null, null);
@@ -82,17 +73,17 @@ class LambdaRewriter implements Opcodes {
 		}
 	}
 
-	private void writeConstructor(ClassWriter cw, String className, Type[] captures, String ctor) {
-		var mv = cw.visitMethod(ACC_PUBLIC, "<init>", ctor, null, null);
+	private void writeConstructor(ClassWriter cw, String clazz, String descriptor, Type[] arguments) {
+		var mv = cw.visitMethod(ACC_PUBLIC, "<init>", descriptor, null, null);
 		mv.visitCode();
 
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
-		for (int i = 0; i < captures.length; i++) {
+		for (int i = 0; i < arguments.length; i++) {
 			mv.visitVarInsn(ALOAD, 0);
-			InstUtils.load(mv, captures[i], i + 1);
-			mv.visitFieldInsn(PUTFIELD, className, "f$" + i, captures[i].toString());
+			InstUtils.load(mv, arguments[i], i + 1);
+			mv.visitFieldInsn(PUTFIELD, clazz, "f$" + i, arguments[i].toString());
 		}
 
 		mv.visitInsn(RETURN);
@@ -100,9 +91,11 @@ class LambdaRewriter implements Opcodes {
 		mv.visitEnd();
 	}
 
-	private void writeMethod(ClassWriter cw, String name, Handle lambda, String clazz, Type[] captures, Object... args) {
-		var description = args[2].toString();
-		var mv = cw.visitMethod(ACC_PUBLIC, name, description, null, null);
+	private void writeMethods(ClassWriter cw, String clazz, Type[] captures, String name, Handle bsm, Object... bsmArgs) {
+		var descriptor = bsmArgs[0].toString();
+		var signature = bsmArgs[2].toString();
+
+		var mv = cw.visitMethod(ACC_PUBLIC, name, signature, null, null);
 		mv.visitCode();
 
 		for (int i = 0; i < captures.length; i++) {
@@ -110,60 +103,102 @@ class LambdaRewriter implements Opcodes {
 			mv.visitFieldInsn(GETFIELD, clazz, "f$" + i, captures[i].toString());
 		}
 	
-		var loadedTypes = Type.getArgumentTypes(description);
-		var expectTypes = Arrays.stream(Type.getArgumentTypes(lambda.getDesc())).skip(captures.length).toArray(Type[]::new);
-		for (int i = 0; i < loadedTypes.length; i++) {
-			InstUtils.load(mv, loadedTypes[i], i + 1);
-			if (!expectTypes[i].equals(loadedTypes[i])) {
-				InstUtils.cast(mv, loadedTypes[i], expectTypes[i]);
+		var args = Type.getArgumentTypes(signature);
+		var params = parameters(bsm, captures);
+		for (int i = 0; i < args.length; i++) {
+			InstUtils.load(mv, args[i], i + 1);
+			if (!args[i].equals(params[i])) {
+				InstUtils.cast(mv, args[i], params[i]);
 			}
 		}
+
+		mv.visitMethodInsn(bsm.getTag() == H_INVOKESTATIC ? INVOKESTATIC : INVOKEVIRTUAL, bsm.getOwner(), accessor(bsm), bsm.getDesc(), false);
 		
-		var opcode = lambda.getTag() == H_INVOKESTATIC ? INVOKESTATIC : INVOKESPECIAL;
-		mv.visitMethodInsn(opcode, lambda.getOwner(), lambda.getName(), lambda.getDesc(), false);
-		
-		var r1 = Type.getReturnType(lambda.getDesc());
-		var r2 = Type.getReturnType(description);
+		var r1 = Type.getReturnType(bsm.getDesc());
+		var r2 = Type.getReturnType(signature);
 		if (!r1.equals(r2)) {
 			InstUtils.cast(mv, r1, r2);	
 		}
+
 		InstUtils.ret(mv, r2);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
 
-		var arg0 = args[0].toString();
-		if (!arg0.equals(description)) {
-			var types = Type.getArgumentTypes(arg0);
-			mv = cw.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, name, arg0, null, null);
+		if (!descriptor.equals(signature)) {
+			mv = cw.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, name, descriptor, null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
-			for (int i = 0; i < types.length; i++) {
-				InstUtils.load(mv, types[i], i + 1);
-				mv.visitTypeInsn(CHECKCAST, loadedTypes[i].getInternalName());
+			
+			params = Type.getArgumentTypes(descriptor);
+			for (int i = 0; i < params.length; i++) {
+				InstUtils.load(mv, params[i], i + 1);
+				mv.visitTypeInsn(CHECKCAST, args[i].getInternalName());
 			}
-			mv.visitMethodInsn(INVOKEVIRTUAL, clazz, name, args[2].toString(), false);
-			mv.visitInsn(Type.getReturnType(arg0).toString().equals("V") ? RETURN : ARETURN);		
+			mv.visitMethodInsn(INVOKEVIRTUAL, clazz, name, signature, false);
+
+			InstUtils.ret(mv, Type.getReturnType(descriptor));
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 	}
 
-	private void replaceDynamicInvoke(String name, String ctor, Type[] ctorArgTypes) {
+	private String accessor(Handle bsm) {
+		var owner = bsm.getOwner();
+		if (!owner.equals(ci.className())) {
+			return bsm.getName();
+		}
+
 		var cv = ci.visitor();
-		cv.visitNestMember(name);
-		cv.visitInnerClass(name, null, null, 0);
-		var args = new Integer[ctorArgTypes.length];
-		for (var i = ctorArgTypes.length - 1; i >= 0; i--) {
-			var arg = ctorArgTypes[i];
+		var desc = bsm.getDesc();
+		var name = String.format("access$%s", bsm.getName());
+		var isStatic = bsm.getTag() == H_INVOKESTATIC;
+	
+		var mv = cv.visitMethod((isStatic ? ACC_STATIC : 0) + ACC_SYNTHETIC, name, desc, null, null);
+		mv.visitCode();	
+	
+		var types = Type.getArgumentTypes(desc);
+		var i = 0;
+		if (!isStatic) {
+			mv.visitVarInsn(ALOAD, 0);
+			i++;
+		}
+
+		for (var type : types) {
+			InstUtils.load(mv, type, i);
+			i += type.getSize();
+		}
+
+		mv.visitMethodInsn(isStatic ? INVOKESTATIC : INVOKEVIRTUAL, bsm.getOwner(), bsm.getName(), desc, false);
+
+		InstUtils.ret(mv, Type.getReturnType(desc));
+		mv.visitMaxs(1, 1);
+		mv.visitEnd();
+	
+		return name;
+	}
+
+	private Type[] parameters(Handle method, Type[] captures) {
+		var params = Type.getArgumentTypes(method.getDesc());
+		var skip = params.length == captures.length ? 0 : captures.length;
+		return Arrays
+				.stream(params)
+				.skip(skip)
+				.toArray(Type[]::new);
+	}
+
+	
+	private void instantiate(String className, String constructor, Type[] arguments) {
+		var args = new Integer[arguments.length];
+		for (var i = arguments.length - 1; i >= 0; i--) {
+			var arg = arguments[i];
 			args[i] = mv.newLocal(arg);
 			InstUtils.store(mv, arg, args[i]);
 		}
-		mv.visitTypeInsn(NEW, name);
+		mv.visitTypeInsn(NEW, className);
 		mv.visitInsn(DUP);
-		for (var i = 0; i < ctorArgTypes.length; i++) {
-			InstUtils.load(mv, ctorArgTypes[i], args[i]);
+		for (var i = 0; i < arguments.length; i++) {
+			InstUtils.load(mv, arguments[i], args[i]);
 		}
-		mv.visitMethodInsn(INVOKESPECIAL, name, "<init>", ctor, false);
+		mv.visitMethodInsn(INVOKESPECIAL, className, "<init>", constructor, false);
 	}
-
 }

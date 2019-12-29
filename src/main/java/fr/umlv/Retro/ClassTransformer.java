@@ -35,15 +35,33 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		this.options = Objects.requireNonNull(options);
 	}
 	
+
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.version = VersionInfo.fromMajor(version);
 		this.className = name;
-		// TODO super.visit(VersionInfo.toMajor(options.target()), access, name, signature, superName, interfaces);
-		super.visit(version, access, name, signature, superName, interfaces);
+	    super.visit(VersionInfo.toMajor(options.target()), access, name, signature, superName, interfaces);
 
 	}
 	
+	@Override
+	public void visitNestMember(String nestMember) {
+		System.out.println(
+				String.format(
+					"NESTMATES AT %s (%s.java) nestmate of %s",
+					nestMember, className, className
+		));
+		super.visitNestMember(nestMember);
+	}
+	
+
+	@Override
+	public void visitNestHost(String nestHost) {
+		System.out.println("nest host" + nestHost);
+		super.visitNestHost(nestHost);
+	}
+	
+
 	@Override
 	public void visitSource(String source, String debug) {
 		this.fileName = source;
