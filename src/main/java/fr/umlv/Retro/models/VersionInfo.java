@@ -24,4 +24,8 @@ public class VersionInfo {
 	public static int fromMajor(int version) {
 		return version - 44;
 	}
+	
+	public static int toMajor(int version) {
+		return version + 44;
+	}
 }
