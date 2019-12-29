@@ -15,7 +15,7 @@ import fr.umlv.Retro.models.TransformOptions;;
 public class App {
     public static void main(String[] args) throws IOException {
 
-    	//var cr = new ClassReader(new FileInputStream("../Drafts/TestLambda.class"));
+    	//var cr = new ClassReader(new FileInputStream("../Drafts/TestConcatID.class"));
     	var cr = new ClassReader("TestLambda");
         var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         var options = TransformOptions.fromCommandLine(args);

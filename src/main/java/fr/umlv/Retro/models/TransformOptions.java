@@ -30,7 +30,7 @@ public class TransformOptions {
 	public static TransformOptions fromCommandLine(String[] args) {
 		// TODO parse args 
 		return new TransformOptions(
-			5,
+			7,
 			true,
 			true,
 			false,

@@ -17,14 +17,13 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 	private final ClassInfo ci;
 	private final MethodInfo mi;
 	private final TransformOptions options;
-	private final ConcatRewriter rewriter;
 
 	public ConcatDetector(ClassInfo ci, MethodInfo mi, TransformOptions options) {
 		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
+
 		this.ci = ci;
 		this.mi = mi;
 		this.options = Objects.requireNonNull(options);
-		this.rewriter = new ConcatRewriter(this);
 	}
 
 	@Override
@@ -43,6 +42,7 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 				System.out.println(printer);
 			}
 			if (options.target() < 9 && (options.hasFeature(Features.Concat) || options.force())) {
+				var rewriter = new ConcatRewriter(this);
 				rewriter.rewrite(descriptor, tokens);
 				rewritten = true;
 			}
