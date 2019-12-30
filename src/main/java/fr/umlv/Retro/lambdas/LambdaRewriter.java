@@ -1,89 +1,117 @@
 package fr.umlv.Retro.lambdas;
 
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import fr.umlv.Retro.Retro;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
 import fr.umlv.Retro.utils.InstUtils;
 import fr.umlv.Retro.utils.VersionUtils;
 
+/**
+ * Rewrites lambda implemented with an InvokeDynamic call to an inner class.
+ */
 class LambdaRewriter implements Opcodes {
 
 	private static int methodRefs;
 
+	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
 	private final LambdaDetector mv;
+	private final ClassWriter cw;
 
-	public LambdaRewriter(LambdaDetector ld, ClassInfo ci, MethodInfo mi) {
-		this.mv = Objects.requireNonNull(ld);
+	public LambdaRewriter(LambdaDetector mv,  Retro app, ClassInfo ci, MethodInfo mi) {
+		this.mv = Objects.requireNonNull(mv);
 		this.ci = Objects.requireNonNull(ci);
 		this.mi = Objects.requireNonNull(mi);
+		this.app = Objects.requireNonNull(app);
+		this.cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 	}
 
-	public void rewrite(String name, String descriptor, Handle bootstrap, Object... args) {
-		var method = (Handle) args[1];
-		var clazz = String.format("%s_%s", method.getOwner(), method.getName());
-		if (!method.getName().contains("$")) { // method reference
-			clazz = String.format("%s_%s$%d", ci.className(), method.getName(), ++methodRefs);
-		}
-		clazz = clazz.replace("/", "_");
-		
-		var cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+	/**
+	 * Rewrites an invoke dynamic instructor representing a lambda to an inner class.
+	 * @param name the method's name.
+	 * @param descriptor the method's descriptor (see Type).
+	 * @param bsm the bootstrap method.
+	 * @param bsmArgs the bootstrap method constant arguments.
+	 */
+	public void rewrite(String name, String descriptor, Handle bsm, Object... bsmArgs) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(descriptor);
+		Objects.requireNonNull(bsm);
+		Objects.requireNonNull(bsmArgs);
+
+		var lambda = (Handle)bsmArgs[1];
+		var clazz = createClassName(lambda);
 		var captures = Type.getArgumentTypes(descriptor);
-		var constructor = Arrays.stream(captures).map(e -> e.toString()).collect(Collectors.joining("", "(", ")V"));
+		var constructor = createConstructor(captures);
+		var interfacedesco = bsmArgs[0].toString(); // descriptor without generic type informations
+		var interfacedescg = bsmArgs[2].toString(); // descriptor with generic type informations
 
-		writeHeader(cw, clazz, descriptor);
-		writeFields(cw, captures);
-		writeConstructor(cw, clazz, constructor, captures);
-		writeMethods(cw, clazz, captures, name, method, args);
-		/*
-		try (var fos = new FileOutputStream("../Drafts/" + clazz + ".class")) {
-			fos.write(cw.toByteArray());
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		*/
-		instantiate(clazz, constructor, captures);
+		visitClass(clazz, descriptor);
+		visitFields(captures);
+		visitConstructor(clazz, constructor, captures);
+		visitMethodImplements(clazz, name, lambda, interfacedescg, captures);
+		visitMethodOverload(clazz, name, interfacedesco, interfacedescg);
+		visitCreateInstruction(clazz, constructor, captures);
+
+		app.write(ci.path(), clazz, cw.toByteArray());
 	}
 
-	private void writeHeader(ClassWriter cw, String clazz, String descriptor) {
+
+	/**
+	 * Writes bytecode instructions to declare the class heading.
+	 * @param name class name.
+	 * @param descriptor class descriptor.
+	 */
+	private void visitClass(String name, String descriptor) {
 		var version = VersionUtils.toBytecode(ci.version());
-		var itf = Type.getReturnType(descriptor).getInternalName();
-		cw.visit(version, ACC_SUPER, clazz, null, "java/lang/Object", new String[] { itf });
+		var interfaces =  new String[] {Type.getReturnType(descriptor).getInternalName()};
+		cw.visit(version, ACC_SUPER, name, null, "java/lang/Object", interfaces);
 		cw.visitSource(ci.className() + ".java", null);
 		cw.visitOuterClass(ci.className(), mi.methodName(), mi.descriptor());
-		cw.visitInnerClass(clazz, ci.className(), clazz, 0);
+		cw.visitInnerClass(name, ci.className(), name, 0);
 	}
 
-	private void writeFields(ClassWriter cw, Type[] captures) {
-		var i = 0;
-		for (var capture : captures) {
-			var fv = cw.visitField(ACC_FINAL | ACC_SYNTHETIC, "f$" + i, capture.toString(), null, null);
-			fv.visitEnd();
-			i++;
-		}
+	/**
+	 * Writes bytecode instructions to declare fields of the inner class.
+	 * @param types field types (type of the variables captured by the lambda function).
+	 */
+
+	private void visitFields(Type[] types) {
+		IntStream.range(0, types.length).forEach(i -> {
+			cw.visitField(ACC_FINAL | ACC_SYNTHETIC, "f$" + i, types[i].toString(), null, null).visitEnd();
+		});;
 	}
 
-	private void writeConstructor(ClassWriter cw, String clazz, String descriptor, Type[] arguments) {
+	/**
+	 * Writes bytecode instructions to declare the constructor of the inner class.
+	 * @param clazz name of the constructor
+	 * @param descriptor descriptor of the constructor
+	 * @param params type of the constructor's parameters.
+	 */
+	private void visitConstructor(String clazz, String descriptor, Type[] params) {
 		var mv = cw.visitMethod(ACC_PUBLIC, "<init>", descriptor, null, null);
 		mv.visitCode();
-
+	
+		// super()
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
-
-		for (int i = 0; i < arguments.length; i++) {
+		
+		// this.f$[i] = params[i]
+		for (int i = 0; i < params.length; i++) {
 			mv.visitVarInsn(ALOAD, 0);
-			InstUtils.load(mv, arguments[i], i + 1);
-			mv.visitFieldInsn(PUTFIELD, clazz, "f$" + i, arguments[i].toString());
+			InstUtils.load(mv, params[i], i + 1);
+			mv.visitFieldInsn(PUTFIELD, clazz, "f$" + i, params[i].toString());
 		}
 
 		mv.visitInsn(RETURN);
@@ -91,67 +119,133 @@ class LambdaRewriter implements Opcodes {
 		mv.visitEnd();
 	}
 
-	private void writeMethods(ClassWriter cw, String clazz, Type[] captures, String name, Handle bsm, Object... bsmArgs) {
-		var descriptor = bsmArgs[0].toString();
-		var signature = bsmArgs[2].toString();
-
-		var mv = cw.visitMethod(ACC_PUBLIC, name, signature, null, null);
+	
+	/**
+	 * Writes bytecode instructions to implement the method from the functional interface of the lambda with generic type informations.
+	 * @param clazz the name of the anonymous class.
+	 * @param name the name of the method to implement from the functional interface.
+	 * @param lambda reference to the method generated by the invoke dynamic instruction.
+	 * @param interfacedescg descriptor of the functional interface method (with generic types).
+	 * @param captures type of the variables captured by the lambda function.
+	 */
+	private void visitMethodImplements(String clazz, String name, Handle lambda, String interfacedescg, Type[] captures) {
+		var mv = cw.visitMethod(ACC_PUBLIC, name, interfacedescg, null, null);
 		mv.visitCode();
-
+		
+		// push the captures fields on the stack.
 		for (int i = 0; i < captures.length; i++) {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitFieldInsn(GETFIELD, clazz, "f$" + i, captures[i].toString());
 		}
 	
-		var args = Type.getArgumentTypes(signature);
-		var params = parameters(bsm, captures);
-		for (int i = 0; i < args.length; i++) {
-			InstUtils.load(mv, args[i], i + 1);
-			if (!args[i].equals(params[i])) {
-				InstUtils.cast(mv, args[i], params[i]);
+		// push the arguments of the method
+		var params = parameters(lambda, captures);
+		var interfaceargsg = Type.getArgumentTypes(interfacedescg);
+		for (int i = 0; i < interfaceargsg.length; i++) {
+			InstUtils.load(mv, interfaceargsg[i], i + 1);
+			if (!interfaceargsg[i].equals(params[i])) {
+				InstUtils.cast(mv, interfaceargsg[i], params[i]);
 			}
 		}
-
-		mv.visitMethodInsn(bsm.getTag() == H_INVOKESTATIC ? INVOKESTATIC : INVOKEVIRTUAL, bsm.getOwner(), accessor(bsm), bsm.getDesc(), false);
 		
-		var r1 = Type.getReturnType(bsm.getDesc());
-		var r2 = Type.getReturnType(signature);
+		// call the generated lambda method
+		var opcode = lambda.getTag() == H_INVOKESTATIC ? INVOKESTATIC : INVOKEVIRTUAL;
+		mv.visitMethodInsn(opcode, lambda.getOwner(), createMethodAccessor(lambda), lambda.getDesc(), false);
+		
+		var r1 = Type.getReturnType(lambda.getDesc());
+		var r2 = Type.getReturnType(interfacedescg);
 		if (!r1.equals(r2)) {
 			InstUtils.cast(mv, r1, r2);	
 		}
-
 		InstUtils.ret(mv, r2);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
+	}
 
-		if (!descriptor.equals(signature)) {
-			mv = cw.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, name, descriptor, null, null);
+	
+	/**
+	 * Writes bytecode instructions to implement the method from the functional interface of the lambda without generic type informations.
+	 * @param clazz the name of the anonymous class.
+	 * @param name the name of the method to implement from the functional interface.
+	 * @param interfacedesco descriptor of the functional interface method (without generic types erasure).
+	 * @param interfacedescg descriptor of the functional interface method (with generic types).
+	 */
+	private void visitMethodOverload(String clazz, String name, String interfacedesco, String interfacedescg) {
+		if (!interfacedesco.equals(interfacedescg)) {
+			var mv = cw.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, name, interfacedesco, null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
 			
-			params = Type.getArgumentTypes(descriptor);
+			var interfaceargsg = Type.getArgumentTypes(interfacedescg);
+			var params = Type.getArgumentTypes(interfacedesco);
 			for (int i = 0; i < params.length; i++) {
 				InstUtils.load(mv, params[i], i + 1);
-				mv.visitTypeInsn(CHECKCAST, args[i].getInternalName());
+				mv.visitTypeInsn(CHECKCAST, interfaceargsg[i].getInternalName());
 			}
-			mv.visitMethodInsn(INVOKEVIRTUAL, clazz, name, signature, false);
+			mv.visitMethodInsn(INVOKEVIRTUAL, clazz, name, interfacedescg, false);
 
-			InstUtils.ret(mv, Type.getReturnType(descriptor));
+			InstUtils.ret(mv, Type.getReturnType(interfacedesco));
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 	}
 
-	private String accessor(Handle bsm) {
-		var owner = bsm.getOwner();
-		if (!owner.equals(ci.className())) {
-			return bsm.getName();
+	
+	/**
+	 * Writes bytecode instructions to replace lambda invoke dynamic instruction with a creation of the 
+	 * inner class.
+	 * @param clazz the class name
+	 * @param constructor descriptor of the inner class constructor?
+	 * @param arguments type of the constructor's arguments.
+	 */
+	private void visitCreateInstruction(String clazz, String constructor, Type[] arguments) {
+		var args = new Integer[arguments.length];
+		for (var i = arguments.length - 1; i >= 0; i--) {
+			var arg = arguments[i];
+			args[i] = mv.newLocal(arg);
+			InstUtils.store(mv, arg, args[i]);
+		}
+		mv.visitTypeInsn(NEW, clazz);
+		mv.visitInsn(DUP);
+		for (var i = 0; i < arguments.length; i++) {
+			InstUtils.load(mv, arguments[i], args[i]);
+		}
+		mv.visitMethodInsn(INVOKESPECIAL, clazz, "<init>", constructor, false);
+	}
+
+	private String createClassName(Handle bsm) {
+		var clazz = String.format("%s$%s", bsm.getOwner(), bsm.getName());
+		if (!bsm.getName().contains("$")) { // method reference
+			clazz = String.format("%s$%s$Ref%d", ci.className(), bsm.getName(), ++methodRefs);
+		}
+		return clazz.replace("/", "$");
+	}
+
+	private String createConstructor(Type[] params) {
+		return Arrays.stream(params)
+				.map(e -> e.toString())
+				.collect(Collectors.joining("", "(", ")V"));
+	}
+
+	
+	/**
+	 * Since method generated with invoke dynamic for the lambda is private
+	 * this method creates new one with package level visibility that call the private method.
+	 * in this way the method can be called from the inner class.
+	 * 
+	 * @param lambda reference to the method generated by the invoke dynamic instruction.
+	 * @return name of the method to call.
+	 */
+	private String createMethodAccessor(Handle lambda) {
+		var owner = lambda.getOwner();
+		if (!owner.equals(ci.className())) { // skip method references like Integer::sum
+			return lambda.getName();
 		}
 
 		var cv = ci.visitor();
-		var desc = bsm.getDesc();
-		var name = String.format("access$%s", bsm.getName());
-		var isStatic = bsm.getTag() == H_INVOKESTATIC;
+		var desc = lambda.getDesc();
+		var name = String.format("access$%s", lambda.getName());
+		var isStatic = lambda.getTag() == H_INVOKESTATIC;
 	
 		var mv = cv.visitMethod((isStatic ? ACC_STATIC : 0) + ACC_SYNTHETIC, name, desc, null, null);
 		mv.visitCode();	
@@ -168,7 +262,7 @@ class LambdaRewriter implements Opcodes {
 			i += type.getSize();
 		}
 
-		mv.visitMethodInsn(isStatic ? INVOKESTATIC : INVOKEVIRTUAL, bsm.getOwner(), bsm.getName(), desc, false);
+		mv.visitMethodInsn(isStatic ? INVOKESTATIC : INVOKEVIRTUAL, lambda.getOwner(), lambda.getName(), desc, false);
 
 		InstUtils.ret(mv, Type.getReturnType(desc));
 		mv.visitMaxs(1, 1);
@@ -176,6 +270,7 @@ class LambdaRewriter implements Opcodes {
 	
 		return name;
 	}
+
 
 	private Type[] parameters(Handle method, Type[] captures) {
 		var params = Type.getArgumentTypes(method.getDesc());
@@ -186,19 +281,4 @@ class LambdaRewriter implements Opcodes {
 				.toArray(Type[]::new);
 	}
 
-	
-	private void instantiate(String className, String constructor, Type[] arguments) {
-		var args = new Integer[arguments.length];
-		for (var i = arguments.length - 1; i >= 0; i--) {
-			var arg = arguments[i];
-			args[i] = mv.newLocal(arg);
-			InstUtils.store(mv, arg, args[i]);
-		}
-		mv.visitTypeInsn(NEW, className);
-		mv.visitInsn(DUP);
-		for (var i = 0; i < arguments.length; i++) {
-			InstUtils.load(mv, arguments[i], args[i]);
-		}
-		mv.visitMethodInsn(INVOKESPECIAL, className, "<init>", constructor, false);
-	}
 }

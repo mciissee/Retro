@@ -8,10 +8,13 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 
 import fr.umlv.Retro.models.ClassInfo;
+import fr.umlv.Retro.models.FeaturePrinter;
 import fr.umlv.Retro.models.MethodInfo;
 
-
-class LambdaPrinter {
+/**
+ * Displays lambda method feature detection message.
+ */
+class LambdaPrinter implements FeaturePrinter {
 
 	private final int lineNumber;
 	private final ClassInfo ci;
@@ -35,6 +38,9 @@ class LambdaPrinter {
 		var cOwner = calling.getOwner();
 		var cName = calling.getName();
 		var cDesc = calling.getDesc();
+		var captures = Arrays.stream(this.captures).map(e -> {
+			return e.toString();
+		}).collect(Collectors.joining(",", "[", "]"));
 		return String.format(
 			"LAMBDA at %s.%s%s (%s:%d): lambda %s capture %s calling %s.%s%s",
 			ci.className(),
@@ -43,17 +49,10 @@ class LambdaPrinter {
 			ci.fileName(),
 			lineNumber,
 			rType,
-			captures(),
+			captures,
 			cOwner,
 			cName,
 			cDesc	
 		);
 	}
-	
-	private String captures() {
-		return Arrays.stream(captures).map(e -> {
-			return e.toString();
-		}).collect(Collectors.joining(",", "[", "]"));
-	}
-
 }

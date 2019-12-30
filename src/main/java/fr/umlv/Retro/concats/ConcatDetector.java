@@ -7,23 +7,23 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
+import fr.umlv.Retro.Retro;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.MethodInfo;
-import fr.umlv.Retro.models.TransformOptions;
 
 class ConcatDetector extends LocalVariablesSorter implements Opcodes {
+
 	private int lineNumber;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-	private final TransformOptions options;
+	private final Retro app;
 
-	public ConcatDetector(ClassInfo ci, MethodInfo mi, TransformOptions options) {
+	public ConcatDetector(Retro app, ClassInfo ci, MethodInfo mi) {
 		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
-
+		this.app = Objects.requireNonNull(app);
 		this.ci = ci;
 		this.mi = mi;
-		this.options = Objects.requireNonNull(options);
 	}
 
 	@Override
@@ -37,11 +37,8 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 		var rewritten = false;
 		if (handle.getOwner().equals("java/lang/invoke/StringConcatFactory")) {
 			var tokens = ((String) args[0]).split("((?<=\u0001)|(?=\u0001))");
-			var printer = new ConcatPrinter(ci, mi, lineNumber, tokens);
-			if (options.info()) {
-				System.out.println(printer);
-			}
-			if (options.target() < 9 && (options.hasFeature(Features.Concat) || options.force())) {
+			app.detectFeature(Features.Concat, new ConcatPrinter(ci, mi, lineNumber, tokens));
+			if (app.target() < 9 && app.hasFeature(Features.Concat)) {
 				var rewriter = new ConcatRewriter(this);
 				rewriter.rewrite(descriptor, tokens);
 				rewritten = true;

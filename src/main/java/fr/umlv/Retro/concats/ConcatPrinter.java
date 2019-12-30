@@ -4,11 +4,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import fr.umlv.Retro.models.ClassInfo;
+import fr.umlv.Retro.models.FeaturePrinter;
 import fr.umlv.Retro.models.MethodInfo;
 
 
-class ConcatPrinter {
-
+class ConcatPrinter implements FeaturePrinter {
 	private final int lineNumber;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
@@ -38,5 +38,4 @@ class ConcatPrinter {
 			pattern
 		);
 	}
-	
 }
