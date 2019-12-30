@@ -36,7 +36,7 @@ public class CommandLine {
 	 * @throws IllegalArgumentException if opt is null.
 	 * @throws AssertionError if option is not defined.
 	 */
-	public String[] argsOf(String opt) throws AssertionError, IllegalArgumentException  {
+	public String[] args(String opt) throws AssertionError, IllegalArgumentException  {
 		var option = new CommandLineOption(opt);
 		for (var e : options) {
 			if (e.equals(option)) {
@@ -53,7 +53,7 @@ public class CommandLine {
 	 * @throws AssertionError if option is not defined.
 	 */
 	public String[] args() {
-		return argsOf("^");
+		return args("^");
 	}
 	
 	@Override

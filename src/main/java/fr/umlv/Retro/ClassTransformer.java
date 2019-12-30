@@ -10,7 +10,6 @@ import fr.umlv.Retro.concats.ConcatMethodVisitor;
 import fr.umlv.Retro.lambdas.LambdaMethodVisitor;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
-import fr.umlv.Retro.models.TransformOptions;
 import fr.umlv.Retro.utils.VersionUtils;
 
 /**
@@ -19,29 +18,27 @@ import fr.umlv.Retro.utils.VersionUtils;
 public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	private final MethodFeatureVisitor[] methodVisitors =  {
-			new LambdaMethodVisitor(),
-			new ConcatMethodVisitor(),
+		new LambdaMethodVisitor(),
+		new ConcatMethodVisitor(),
 	};
-	
-	private final TransformOptions options;
+	private final Retro app;
+	private final String path;
 
 	private int version;
 	private String className;
 	private String fileName;
-
-	public ClassTransformer(ClassVisitor cv, TransformOptions options) {
+	
+	public ClassTransformer(ClassVisitor cv, Retro app, String path) {
 		super(ASM7, Objects.requireNonNull(cv));
-
-		this.options = Objects.requireNonNull(options);
+		this.app = Objects.requireNonNull(app);
+		this.path = Objects.requireNonNull(path);
 	}
 	
-
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.version = VersionUtils.toJDK(version);
 		this.className = name;
-	    super.visit(VersionUtils.toBytecode(options.target()), access, name, signature, superName, interfaces);
-
+	    super.visit(VersionUtils.toBytecode(app.target()), access, name, signature, superName, interfaces);
 	}
 	
 	@Override
@@ -54,14 +51,12 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		super.visitNestMember(nestMember);
 	}
 	
-
 	@Override
 	public void visitNestHost(String nestHost) {
 		System.out.println("nest host" + nestHost);
 		super.visitNestHost(nestHost);
 	}
 	
-
 	@Override
 	public void visitSource(String source, String debug) {
 		this.fileName = source;
@@ -75,6 +70,7 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 			var ci = new ClassInfo(
 					api,
 					version,
+					path,
 					fileName,
 					className,
 					cv
@@ -86,7 +82,7 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 					exceptions == null ? new String[0] : exceptions,
 					mv
 			);
-			mv = visitor.visit(ci, mi, options);
+			mv = visitor.visit(app, ci, mi);
 		}
 		return mv;
 	}

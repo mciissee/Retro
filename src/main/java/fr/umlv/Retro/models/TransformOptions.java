@@ -3,9 +3,10 @@ package fr.umlv.Retro.models;
 import java.util.EnumSet;
 import java.util.Objects;
 
+import fr.umlv.Retro.cli.CommandLine;
+
 /**
- * 
- * Byte code transformation options.
+ * Bytecode transformation options.
  */
 public class TransformOptions {
 
@@ -14,10 +15,8 @@ public class TransformOptions {
 	private final boolean info;
 	private final boolean help;
 	private final boolean force;
-	private final String path;
 
-	private TransformOptions(String path, int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
-		this.path = Objects.requireNonNull(path);
+	private TransformOptions(int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
 		this.target = target;
 		this.force = force;
 		this.info = info;
@@ -26,19 +25,33 @@ public class TransformOptions {
 	}
 	
 	/**
-	 * Creates options from command line arguments.
-	 * @param args The arguments of the command line.
+	 * Creates new TransformOptions object from command line arguments.
+	 * @param cli The command line.
 	 * @return new Instance of TransformOptions
+	 * @throws IllegalArgumentException if cl is null.
 	 */
-	public static TransformOptions fromCommandLine(String[] args) {
-		// TODO parse args 
+	public static TransformOptions fromCommandLine(CommandLine cl) {
+		if (cl == null) {
+			throw new IllegalArgumentException("cli");
+		}
+		var force = cl.hasOption("force");
+		var info = cl.hasOption("info");
+		var help = cl.hasOption("help");
+		var target = Integer.parseInt(cl.args("target")[0]);
+		var features = EnumSet.noneOf(Features.class);
+		for (var feature : cl.args("features")[0].split(",")) {
+			try {
+				features.add(Enum.valueOf(Features.class, feature));				
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("unknown feature " + feature);
+			}
+		}
 		return new TransformOptions(
-			"",
-			7,
-			true,
-			true,
-			false,
-			Features.ALL
+			target,
+			force,
+			info,
+			help,
+			features
 		);
 	}
 	

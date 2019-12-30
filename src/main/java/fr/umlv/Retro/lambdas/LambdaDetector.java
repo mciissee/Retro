@@ -8,24 +8,27 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
+import fr.umlv.Retro.Retro;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.MethodInfo;
-import fr.umlv.Retro.models.TransformOptions;
 
+/**
+ * Detects lambda method call and rewrite them if needed (target < JDK 8).
+ */
 class LambdaDetector extends LocalVariablesSorter implements Opcodes {
-
-	private int lineNumber;
+	
+	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-	private final TransformOptions options;
 
-	public LambdaDetector(ClassInfo ci, MethodInfo mi, TransformOptions options) {
+	private int lineNumber;
+	
+	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi) {
 		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
-
 		this.ci = ci;
 		this.mi = mi;
-		this.options = Objects.requireNonNull(options);
+		this.app = Objects.requireNonNull(app);
 	}
 
 	@Override
@@ -35,23 +38,19 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 	}
 
 	@Override
-	public void visitInvokeDynamicInsn(String name, String descriptor, Handle bootstrap, Object... args) {
+	public void visitInvokeDynamicInsn(String name, String descriptor, Handle bsm, Object... bsmArgs) {
 		var rewritten = false;
-		if (bootstrap.getOwner().equals("java/lang/invoke/LambdaMetafactory")) {
+		if (bsm.getOwner().equals("java/lang/invoke/LambdaMetafactory")) {
 			var captures = Type.getArgumentTypes(descriptor);
-			var calling = (Handle) args[1];
-			var printer = new LambdaPrinter(ci, mi, lineNumber, captures, descriptor, calling);
-			if (options.info()) {
-				System.out.println(printer);
-			}
-			if (options.target() < 8 && (options.hasFeature(Features.Lambda) || options.force())) {
-				var rewriter = new LambdaRewriter(this, ci, mi);
-				rewriter.rewrite(name, descriptor, bootstrap, args);
+			app.detectFeature(Features.Lambda, new LambdaPrinter(ci, mi, lineNumber, captures, descriptor, (Handle) bsmArgs[1]));
+			if (app.target() < 8 && app.hasFeature(Features.Lambda)) {
+				var rewriter = new LambdaRewriter(this, app, ci, mi);
+				rewriter.rewrite(name, descriptor, bsm, bsmArgs);
 				rewritten = true;
 			}
 		}
 		if (!rewritten) {
-			super.visitInvokeDynamicInsn(name, descriptor, bootstrap, args);
+			super.visitInvokeDynamicInsn(name, descriptor, bsm, bsmArgs);
 		}
 	}
 }
