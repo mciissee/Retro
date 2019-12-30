@@ -32,9 +32,8 @@ public class CommandLine {
 	/**
 	 * Gets the arguments associated with the given option.
 	 * @param opt the option.
-	 * @return a copy of the arguments.
+	 * @return a copy of the arguments (empty array if opt is not defined).
 	 * @throws IllegalArgumentException if opt is null.
-	 * @throws AssertionError if option is not defined.
 	 */
 	public String[] args(String opt) throws AssertionError, IllegalArgumentException  {
 		var option = new CommandLineOption(opt);
@@ -43,7 +42,7 @@ public class CommandLine {
 				return e.args();
 			}
 		}
-		throw new AssertionError("opt is not defined");
+		return new String[0];
 	}
 	
 	/**

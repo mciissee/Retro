@@ -4,17 +4,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeaturePrinter;
+import fr.umlv.Retro.models.FeatureDescriber;
 import fr.umlv.Retro.models.MethodInfo;
 
 
-class ConcatPrinter implements FeaturePrinter {
+class ConcatDescriber implements FeatureDescriber {
+
 	private final int lineNumber;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
 	private final String[] args;
 
-	public ConcatPrinter(ClassInfo ci, MethodInfo mi, int lineNumber, String[] args) {
+	public ConcatDescriber(ClassInfo ci, MethodInfo mi, int lineNumber, String[] args) {
 		this.ci = Objects.requireNonNull(ci);
 		this.mi = Objects.requireNonNull(mi);
 		Objects.requireNonNull(args);
@@ -23,7 +24,7 @@ class ConcatPrinter implements FeaturePrinter {
 	}
 	
 	@Override
-	public String toString() {
+	public String describe() {
 		var pattern = Arrays.stream(args)
 				.map(e -> e.equals("\u0001") ? "%1" : e)
 				.collect(Collectors.joining());
@@ -37,5 +38,10 @@ class ConcatPrinter implements FeaturePrinter {
 			lineNumber,
 			pattern
 		);
+	}
+
+	@Override
+	public String toString() {
+		return describe();
 	}
 }

@@ -1,5 +1,6 @@
 package fr.umlv.Retro;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.objectweb.asm.ClassVisitor;
@@ -9,6 +10,7 @@ import org.objectweb.asm.Opcodes;
 import fr.umlv.Retro.concats.ConcatMethodVisitor;
 import fr.umlv.Retro.lambdas.LambdaMethodVisitor;
 import fr.umlv.Retro.models.ClassInfo;
+import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.MethodInfo;
 import fr.umlv.Retro.utils.VersionUtils;
 
@@ -21,14 +23,15 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		new LambdaMethodVisitor(),
 		new ConcatMethodVisitor(),
 	};
+
 	private final Retro app;
-	private final String path;
+	private final Path path;
 
 	private int version;
 	private String className;
 	private String fileName;
 	
-	public ClassTransformer(ClassVisitor cv, Retro app, String path) {
+	public ClassTransformer(ClassVisitor cv, Retro app, Path path) {
 		super(ASM7, Objects.requireNonNull(cv));
 		this.app = Objects.requireNonNull(app);
 		this.path = Objects.requireNonNull(path);
@@ -43,17 +46,17 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 	
 	@Override
 	public void visitNestMember(String nestMember) {
-		System.out.println(
-				String.format(
-					"NESTMATES AT %s (%s.java) nestmate of %s",
-					nestMember, className, className
-		));
+		app.onFeatureDetected(Features.NestMates, () -> {
+			return String.format(
+				"NESTMATES AT %s (%s.java) nestmate of %s",
+				nestMember, className, className
+			);
+		});
 		super.visitNestMember(nestMember);
 	}
 	
 	@Override
 	public void visitNestHost(String nestHost) {
-		System.out.println("nest host" + nestHost);
 		super.visitNestHost(nestHost);
 	}
 	

@@ -8,13 +8,10 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 
 import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeaturePrinter;
+import fr.umlv.Retro.models.FeatureDescriber;
 import fr.umlv.Retro.models.MethodInfo;
 
-/**
- * Displays lambda method feature detection message.
- */
-class LambdaPrinter implements FeaturePrinter {
+class LambdaDescriber implements FeatureDescriber {
 
 	private final int lineNumber;
 	private final ClassInfo ci;
@@ -23,7 +20,7 @@ class LambdaPrinter implements FeaturePrinter {
 	private final String descriptor;
 	private final Handle calling;
 	
-	public LambdaPrinter(ClassInfo ci, MethodInfo mi, int lineNumber, Type[] captures, String descriptor, Handle calling) {
+	public LambdaDescriber(ClassInfo ci, MethodInfo mi, int lineNumber, Type[] captures, String descriptor, Handle calling) {
 		this.ci = Objects.requireNonNull(ci);
 		this.mi = Objects.requireNonNull(mi);
 		this.captures = Objects.requireNonNull(Arrays.copyOf(captures, captures.length));
@@ -33,7 +30,7 @@ class LambdaPrinter implements FeaturePrinter {
 	}
 	
 	@Override
-	public String toString() {
+	public String describe() {
 		var rType = Type.getReturnType(descriptor).getInternalName();
 		var cOwner = calling.getOwner();
 		var cName = calling.getName();
@@ -55,4 +52,10 @@ class LambdaPrinter implements FeaturePrinter {
 			cDesc	
 		);
 	}
+
+	@Override
+	public String toString() {
+		return this.describe();
+	}
+
 }

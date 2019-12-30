@@ -1,5 +1,6 @@
 package fr.umlv.Retro.models;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.objectweb.asm.ClassVisitor;
@@ -11,7 +12,7 @@ public class ClassInfo {
 
 	private final int api;
 	private final int version;
-	private final String path;
+	private final Path path;
 	private final String fileName;
 	private final String className;
 	private final ClassVisitor cv;
@@ -25,7 +26,7 @@ public class ClassInfo {
 	 * @param className The name of the parsed class.
 	 * @param cv The class visitor to which method calls should be delegated.
 	 */
-	public ClassInfo(int api, int version, String path, String fileName, String className, ClassVisitor cv) {
+	public ClassInfo(int api, int version, Path path, String fileName, String className, ClassVisitor cv) {
 		this.api = api;
 		this.version = version;
 		this.path = Objects.requireNonNull(path);
@@ -52,7 +53,7 @@ public class ClassInfo {
 	/**
 	 * Path of the file containing the bytecode.
 	 */
-	public String path() {
+	public Path path() {
 		return this.path;
 	}
 
