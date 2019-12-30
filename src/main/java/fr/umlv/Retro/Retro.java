@@ -1,152 +1,126 @@
 package fr.umlv.Retro;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.jar.JarOutputStream;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
 import fr.umlv.Retro.cli.CommandLine;
-import fr.umlv.Retro.models.FeaturePrinter;
+import fr.umlv.Retro.models.FeatureDescriber;
 import fr.umlv.Retro.models.Features;
-import fr.umlv.Retro.models.TransformOptions;
+import fr.umlv.Retro.models.Options;
 
 
+/**
+ * Core class of the program.
+ */
 public class Retro {
 
-	private final HashMap<String, byte[]> entries = new HashMap<>();
+	private final Options options;
+	private final FileSystem fs;
+	private final HashSet<Features> unsupported = new HashSet<>();
 
-	private final Path path;
-	private final boolean isJar;
-	private final boolean isClass;
-	private final boolean isDirectory;
-	private final TransformOptions options;
-
-	private Retro(Path path, TransformOptions options, boolean isDirectory, boolean isClass, boolean isJar) {
-		this.path = Objects.requireNonNull(path);
+	private Retro(FileSystem fs, Options options) {
+		this.fs = Objects.requireNonNull(fs);
 		this.options = Objects.requireNonNull(options);
-		this.isDirectory = isDirectory;
-		this.isClass = isClass;
-		this.isJar = isJar;
 	}
 
-	public static Retro fromCommandLine(CommandLine commandLine) {
+	/**
+	 * Creates new instance from command line arguments.
+	 * @param commandLine the command line arguments.
+	 * @return new instance of Retro class.
+	 * @throws IOException
+	 */
+	public static Retro fromCommandLine(CommandLine commandLine) throws IOException {
 		if (commandLine == null) {
 			throw new IllegalArgumentException("commandLine");
 		}
 
+    	var errormessage = new StringBuilder();
+    	errormessage.append("\nError: require speficication of a path pointing to a jar file, a class file or directory.\n");
+    	errormessage.append("use --help for a list of possible options");
+    	
         var args = commandLine.args();
         if (args.length == 0) {
-        	var message = new StringBuilder();
-        	message.append("\nError: require speficication of a path pointing to a jar file, a class file or directory.\n");
-        	message.append("use --help for a list of possible options");
-        	throw new AssertionError(message);
-        }
-
-        var path = Paths.get(args[0]);
-		var options = TransformOptions.fromCommandLine(commandLine);
-
-        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-        	throw new AssertionError("use --help for a list of possible options");
+        	throw new AssertionError(errormessage.toString());
         }
         
-        var name = path.getFileName().toString();
-        var isDirectory = Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);
-        var isClass = !isDirectory && name.endsWith(".class");
-        var isJar = !isDirectory && name.endsWith(".jar");
-        
-        if (!isDirectory && (!isJar && !isClass)) {
-        	throw new IllegalArgumentException("path must point to a directory or a jar file or a class file.");
+        try {
+        	var fs = FileSystem.create(Paths.get(args[0]));
+        	var options = Options.fromCommandLine(commandLine);
+        	return new Retro(fs, options);        	
+        } catch (IOException e) {
+        	throw new IOException(errormessage.toString(), e.getCause());
         }
- 
-        return new Retro(path, options, isDirectory, isClass, isJar);
 	}
 	
+	/**
+	 * Runs the program.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public void run() throws FileNotFoundException, IOException {
-		iterate((path, bytes) -> {
+		fs.clear();
+		unsupported.clear();
+
+		fs.iterate((path, bytes) -> {
 	        var cr = new ClassReader(bytes);
 	        var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 	        cr.accept(new ClassTransformer(cw, this, path), ClassReader.EXPAND_FRAMES);
-	        write(path, cw.toByteArray());
+	        fs.write(path, cw.toByteArray());
 		});
 		
-		//// System.out.println(entries.size());
+		if (unsupported.size() > 0) {
+			System.out.println("\n\nUnsupported features: Some bytecodes contains the following unsupported features : " + unsupported);
+			System.out.println("Run the program with --force or -features options");
+		} else {
+			fs.save();			
+		}
+	}
+		
+	/**
+	 * Adds the given class file to the file system.
+	 * @param path path where to write the class
+	 * @param clazz the class name
+	 * @param bytes the class bytecode
+	 */
+	public void write(Path path, String clazz, byte[] bytes) {
+		fs.write(path, clazz, bytes);
 	}
 	
-	public void write(String path, byte[] bytes) {
-		entries.put(path, bytes);
-	}
-	
-	public void write(String path, String clazz, byte[] bytes) {
-		System.out.println(this.path + " : " + path + " : " + clazz); ;
-		entries.put(path, bytes);
-	}
-	
-	public void detectFeature(Features feature, FeaturePrinter printer) {
+	/**
+	 * Handles feature detection.
+	 * @param feature the feature
+	 * @param describer feature describer.
+	 */
+	public void onFeatureDetected(Features feature, FeatureDescriber describer) {
 		if (options.info()) {
-			printer.print();
+			System.out.println(describer.describe());
+		}
+		if (!hasFeature(feature)) {
+			unsupported.add(feature);
 		}
 	}
 
-	public int target() {
-		return options.target();
-	}
-	
+	/**
+	 * Checks whether the given feature is in the list of features to transform.
+	 * @param feature the feature
+	 * @return true if the feature is present of if force option is enabled false otherwise.
+	 */
 	public boolean hasFeature(Features feature) {
 		return options.hasFeature(feature) || options.force();
 	}
-
-	private void open(Path path, BiConsumer<String, byte[]> consumer) throws FileNotFoundException, IOException {
-		try(var in = new FileInputStream(path.toFile())) {
-			consumer.accept(path.toString(), in.readAllBytes());
-		}
-	}
-
-	private void openJar(Path path, BiConsumer<String, byte[]> consumer) throws IOException {
-		try(var zip = new ZipFile(path.toString())) {
-			var entries = zip.stream()
-					.filter(e -> !e.isDirectory() && e.getName().endsWith(".class"))
-					.collect(Collectors.toList());
-			for (var entry : entries) {
-				try(var in = zip.getInputStream(entry)) {
-					consumer.accept(entry.toString(), in.readAllBytes());
-				}
-			}
-		}
-	}
-
-	private void iterate(BiConsumer<String, byte[]> consumer) throws FileNotFoundException, IOException {
-		if (this.isClass) {
-			open(path, consumer);
-		} else if (isDirectory) {
-			var entries = Files.list(path).filter(e -> {
-				return  e.toString().endsWith(".class");
-			}).collect(Collectors.toList());
-			for (var entry : entries) {
-				open(entry, consumer);
-			}
-		} else if (isJar) {
-			openJar(path, consumer);
-		}
+	
+	/**
+	 * The JDK version to which the byte codes should be transformed.
+	 */
+	public int target() {
+		return options.target();
 	}
 	
 }

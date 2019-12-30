@@ -8,7 +8,7 @@ import fr.umlv.Retro.cli.CommandLine;
 /**
  * Bytecode transformation options.
  */
-public class TransformOptions {
+public class Options {
 
 	private final EnumSet<Features> features;
 	private final int target;
@@ -16,7 +16,7 @@ public class TransformOptions {
 	private final boolean help;
 	private final boolean force;
 
-	private TransformOptions(int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
+	private Options(int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
 		this.target = target;
 		this.force = force;
 		this.info = info;
@@ -28,25 +28,33 @@ public class TransformOptions {
 	 * Creates new TransformOptions object from command line arguments.
 	 * @param cli The command line.
 	 * @return new Instance of TransformOptions
-	 * @throws IllegalArgumentException if cl is null.
+	 * @throws IllegalArgumentException if commandLine is null.
 	 */
-	public static TransformOptions fromCommandLine(CommandLine cl) {
-		if (cl == null) {
+	public static Options fromCommandLine(CommandLine commandLine) {
+		if (commandLine == null) {
 			throw new IllegalArgumentException("cli");
 		}
-		var force = cl.hasOption("force");
-		var info = cl.hasOption("info");
-		var help = cl.hasOption("help");
-		var target = Integer.parseInt(cl.args("target")[0]);
+		var force = commandLine.hasOption("force");
+		var info = commandLine.hasOption("info");
+		var help = commandLine.hasOption("help");
+		var target = Integer.parseInt(commandLine.args("target")[0]);
 		var features = EnumSet.noneOf(Features.class);
-		for (var feature : cl.args("features")[0].split(",")) {
+		var args = commandLine.args("features");
+		if (args.length > 0) {
+			args = args[0].split(",");
+		}
+		for (var feature : args) {
 			try {
 				features.add(Enum.valueOf(Features.class, feature));				
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("unknown feature " + feature);
 			}
 		}
-		return new TransformOptions(
+		if (features.size() == 0) {
+			features = Features.ALL;
+		}
+
+		return new Options(
 			target,
 			force,
 			info,
