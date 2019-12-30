@@ -1,0 +1,98 @@
+Compiled from "TestConcat.java"
+class TestConcat {
+  TestConcat();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private static void testConcat() throws java.net.URISyntaxException;
+    Code:
+       0: new           #7                  // class java/net/URI
+       3: dup
+       4: ldc           #9                  // String http://www.u-pem.fr
+       6: invokespecial #11                 // Method java/net/URI."<init>":(Ljava/lang/String;)V
+       9: astore_0
+      10: iconst_5
+      11: istore_1
+      12: aload_0
+      13: iload_1
+      14: invokedynamic #14,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/net/URI;I)Ljava/lang/String;
+      19: astore_2
+      20: getstatic     #18                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      23: aload_2
+      24: invokevirtual #24                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      27: return
+
+  private static void testConcat2();
+    Code:
+       0: ldc2_w        #29                 // long 5l
+       3: lstore_0
+       4: ldc2_w        #31                 // double 4.0d
+       7: dstore_2
+       8: iconst_3
+       9: istore        4
+      11: lload_0
+      12: dload_2
+      13: iload         4
+      15: invokedynamic #33,  0             // InvokeDynamic #1:makeConcatWithConstants:(JDI)Ljava/lang/String;
+      20: astore        5
+      22: getstatic     #18                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      25: aload         5
+      27: invokevirtual #24                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      30: return
+
+  private static void testConcat3();
+    Code:
+       0: ldc           #36                 // String hello
+       2: astore_0
+       3: aload_0
+       4: aload_0
+       5: invokedynamic #38,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      10: astore_1
+      11: getstatic     #18                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      14: aload_1
+      15: invokevirtual #24                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      18: return
+
+  private static void testConcat4();
+    Code:
+       0: iconst_2
+       1: anewarray     #2                  // class java/lang/Object
+       4: dup
+       5: iconst_0
+       6: ldc           #41                 // String Hello
+       8: aastore
+       9: dup
+      10: iconst_1
+      11: iconst_5
+      12: invokestatic  #43                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      15: aastore
+      16: astore_0
+      17: aload_0
+      18: iconst_0
+      19: aaload
+      20: aload_0
+      21: iconst_1
+      22: aaload
+      23: invokestatic  #49                 // Method F:()Ljava/lang/String;
+      26: invokedynamic #55,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;
+      31: astore_1
+      32: getstatic     #18                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      35: aload_1
+      36: invokevirtual #24                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      39: return
+
+  static java.lang.String F();
+    Code:
+       0: ldc           #58                 // String World
+       2: areturn
+
+  public static void main(java.lang.String[]) throws java.net.URISyntaxException;
+    Code:
+       0: invokestatic  #60                 // Method testConcat:()V
+       3: invokestatic  #63                 // Method testConcat2:()V
+       6: invokestatic  #66                 // Method testConcat3:()V
+       9: invokestatic  #69                 // Method testConcat4:()V
+      12: return
+}

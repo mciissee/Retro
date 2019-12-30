@@ -1,0 +1,409 @@
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.ConstantDynamic;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
+public class TestLambdaDump implements Opcodes {
+
+public static byte[] dump () throws Exception {
+
+ClassWriter classWriter = new ClassWriter(0);
+FieldVisitor fieldVisitor;
+MethodVisitor methodVisitor;
+AnnotationVisitor annotationVisitor0;
+
+classWriter.visit(V13, ACC_SUPER, "TestLambda", null, "java/lang/Object", null);
+
+classWriter.visitSource("TestLambda.java", null);
+
+classWriter.visitInnerClass("java/lang/invoke/MethodHandles$Lookup", "java/lang/invoke/MethodHandles", "Lookup", ACC_PUBLIC | ACC_FINAL | ACC_STATIC);
+
+{
+fieldVisitor = classWriter.visitField(ACC_PRIVATE, "i", "I", null, null);
+fieldVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(0, "<init>", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(9, label0);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(1, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testLambda", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(13, label0);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitVarInsn(ISTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(14, label1);
+methodVisitor.visitTypeInsn(NEW, "TestLambda");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "TestLambda", "<init>", "()V", false);
+methodVisitor.visitVarInsn(ASTORE, 1);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(15, label2);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitIntInsn(BIPUSH, 10);
+methodVisitor.visitFieldInsn(PUTFIELD, "TestLambda", "i", "I");
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(16, label3);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitVarInsn(ILOAD, 0);
+methodVisitor.visitInvokeDynamicInsn("applyAsInt", "(LTestLambda;I)Ljava/util/function/IntUnaryOperator;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(I)I"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "lambda$testLambda$0", "(LTestLambda;II)I", false), Type.getType("(I)I")});
+methodVisitor.visitVarInsn(ASTORE, 2);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(17, label4);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/IntUnaryOperator", "applyAsInt", "(I)I", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+Label label5 = new Label();
+methodVisitor.visitLabel(label5);
+methodVisitor.visitLineNumber(18, label5);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(3, 3);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testLambda1", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(21, label0);
+methodVisitor.visitInvokeDynamicInsn("applyAsInt", "()Ljava/util/function/IntBinaryOperator;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(II)I"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "lambda$testLambda1$1", "(II)I", false), Type.getType("(II)I")});
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(22, label1);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/IntBinaryOperator", "applyAsInt", "(II)I", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(23, label2);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(4, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testLambda2", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(26, label0);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitVarInsn(ISTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(27, label1);
+methodVisitor.visitVarInsn(ILOAD, 0);
+methodVisitor.visitInvokeDynamicInsn("applyAsInt", "(I)Ljava/util/function/IntUnaryOperator;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(I)I"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "lambda$testLambda2$2", "(II)I", false), Type.getType("(I)I")});
+methodVisitor.visitVarInsn(ASTORE, 1);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(28, label2);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/IntUnaryOperator", "applyAsInt", "(I)I", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(29, label3);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(3, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testLambda3", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(32, label0);
+methodVisitor.visitLdcInsn(new Double("40.0"));
+methodVisitor.visitVarInsn(DSTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(33, label1);
+methodVisitor.visitVarInsn(DLOAD, 0);
+methodVisitor.visitInvokeDynamicInsn("apply", "(D)Ljava/util/function/Function;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(Ljava/lang/Object;)Ljava/lang/Object;"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "lambda$testLambda3$3", "(DLjava/lang/Integer;)Ljava/lang/Double;", false), Type.getType("(Ljava/lang/Integer;)Ljava/lang/Double;")});
+methodVisitor.visitVarInsn(ASTORE, 2);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(34, label2);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/Function", "apply", "(Ljava/lang/Object;)Ljava/lang/Object;", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(35, label3);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(3, 3);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testMethodRef", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(38, label0);
+methodVisitor.visitInvokeDynamicInsn("applyAsInt", "()Ljava/util/function/IntBinaryOperator;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(II)I"), new Handle(Opcodes.H_INVOKESTATIC, "java/lang/Integer", "sum", "(II)I", false), Type.getType("(II)I")});
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(39, label1);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/IntBinaryOperator", "applyAsInt", "(II)I", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(40, label2);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(4, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testMethodRef2", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(43, label0);
+methodVisitor.visitInvokeDynamicInsn("apply", "()Ljava/util/function/BiFunction;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"), new Handle(Opcodes.H_INVOKESTATIC, "java/lang/Integer", "sum", "(II)I", false), Type.getType("(Ljava/lang/Integer;Ljava/lang/Integer;)Ljava/lang/Integer;")});
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(44, label1);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/BiFunction", "apply", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(45, label2);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(4, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "methodRef", "(D)B", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(48, label0);
+methodVisitor.visitIntInsn(BIPUSH, 40);
+methodVisitor.visitVarInsn(DLOAD, 0);
+methodVisitor.visitInsn(D2I);
+methodVisitor.visitInsn(IADD);
+methodVisitor.visitInsn(I2B);
+methodVisitor.visitInsn(IRETURN);
+methodVisitor.visitMaxs(3, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testMethodRef3", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(52, label0);
+methodVisitor.visitInvokeDynamicInsn("applyAsInt", "()Ljava/util/function/IntUnaryOperator;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(I)I"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "methodRef", "(D)B", false), Type.getType("(I)I")});
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(53, label1);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/function/IntUnaryOperator", "applyAsInt", "(I)I", true);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(54, label2);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(3, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_STATIC, "testMethodRef4", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(57, label0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/String");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitInsn(ICONST_0);
+methodVisitor.visitLdcInsn("A");
+methodVisitor.visitInsn(AASTORE);
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitInsn(ICONST_1);
+methodVisitor.visitLdcInsn("B");
+methodVisitor.visitInsn(AASTORE);
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(58, label1);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/util/Arrays", "stream", "([Ljava/lang/Object;)Ljava/util/stream/Stream;", false);
+methodVisitor.visitInvokeDynamicInsn("accept", "()Ljava/util/function/Consumer;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false), new Object[]{Type.getType("(Ljava/lang/Object;)V"), new Handle(Opcodes.H_INVOKESTATIC, "TestLambda", "lambda$testMethodRef4$4", "(Ljava/lang/String;)V", false), Type.getType("(Ljava/lang/String;)V")});
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/util/stream/Stream", "forEach", "(Ljava/util/function/Consumer;)V", true);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(61, label2);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(4, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(64, label0);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testLambda", "()V", false);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(65, label1);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testLambda1", "()V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(66, label2);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testLambda2", "()V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(67, label3);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testLambda3", "()V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(69, label4);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testMethodRef", "()V", false);
+Label label5 = new Label();
+methodVisitor.visitLabel(label5);
+methodVisitor.visitLineNumber(70, label5);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testMethodRef2", "()V", false);
+Label label6 = new Label();
+methodVisitor.visitLabel(label6);
+methodVisitor.visitLineNumber(71, label6);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testMethodRef3", "()V", false);
+Label label7 = new Label();
+methodVisitor.visitLabel(label7);
+methodVisitor.visitLineNumber(72, label7);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestLambda", "testMethodRef4", "()V", false);
+Label label8 = new Label();
+methodVisitor.visitLabel(label8);
+methodVisitor.visitLineNumber(73, label8);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(0, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC | ACC_SYNTHETIC, "lambda$testMethodRef4$4", "(Ljava/lang/String;)V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(59, label0);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(60, label1);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC | ACC_SYNTHETIC, "lambda$testLambda3$3", "(DLjava/lang/Integer;)Ljava/lang/Double;", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(33, label0);
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I", false);
+methodVisitor.visitInsn(I2D);
+methodVisitor.visitVarInsn(DLOAD, 0);
+methodVisitor.visitInsn(DADD);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
+methodVisitor.visitInsn(ARETURN);
+methodVisitor.visitMaxs(4, 3);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC | ACC_SYNTHETIC, "lambda$testLambda2$2", "(II)I", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(27, label0);
+methodVisitor.visitVarInsn(ILOAD, 1);
+methodVisitor.visitVarInsn(ILOAD, 0);
+methodVisitor.visitInsn(IADD);
+methodVisitor.visitInsn(IRETURN);
+methodVisitor.visitMaxs(2, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC | ACC_SYNTHETIC, "lambda$testLambda1$1", "(II)I", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(21, label0);
+methodVisitor.visitVarInsn(ILOAD, 0);
+methodVisitor.visitVarInsn(ILOAD, 1);
+methodVisitor.visitInsn(IADD);
+methodVisitor.visitInsn(IRETURN);
+methodVisitor.visitMaxs(2, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC | ACC_SYNTHETIC, "lambda$testLambda$0", "(LTestLambda;II)I", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(16, label0);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitFieldInsn(GETFIELD, "TestLambda", "i", "I");
+methodVisitor.visitVarInsn(ILOAD, 2);
+methodVisitor.visitInsn(IADD);
+methodVisitor.visitVarInsn(ILOAD, 1);
+methodVisitor.visitInsn(IADD);
+methodVisitor.visitInsn(IRETURN);
+methodVisitor.visitMaxs(2, 3);
+methodVisitor.visitEnd();
+}
+classWriter.visitEnd();
+
+return classWriter.toByteArray();
+}
+}

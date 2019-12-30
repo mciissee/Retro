@@ -1,0 +1,190 @@
+// class version 57.0 (57)
+// access flags 0x20
+class TestConcat {
+
+  // compiled from: TestConcat.java
+  // access flags 0x19
+  public final static INNERCLASS java/lang/invoke/MethodHandles$Lookup java/lang/invoke/MethodHandles Lookup
+
+  // access flags 0x0
+  <init>()V
+   L0
+    LINENUMBER 4 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static testConcat()V throws java/net/URISyntaxException 
+   L0
+    LINENUMBER 6 L0
+    NEW java/net/URI
+    DUP
+    LDC "http://www.u-pem.fr"
+    INVOKESPECIAL java/net/URI.<init> (Ljava/lang/String;)V
+    ASTORE 0
+   L1
+    LINENUMBER 7 L1
+    ICONST_5
+    ISTORE 1
+   L2
+    LINENUMBER 8 L2
+    ALOAD 0
+    ILOAD 1
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/net/URI;I)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "uri \u0001 value \u0001."
+    ]
+    ASTORE 2
+   L3
+    LINENUMBER 9 L3
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 2
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L4
+    LINENUMBER 10 L4
+    RETURN
+    MAXSTACK = 3
+    MAXLOCALS = 3
+
+  // access flags 0xA
+  private static testConcat2()V
+   L0
+    LINENUMBER 13 L0
+    LDC 5
+    LSTORE 0
+   L1
+    LINENUMBER 14 L1
+    LDC 4.0
+    DSTORE 2
+   L2
+    LINENUMBER 15 L2
+    ICONST_3
+    ISTORE 4
+   L3
+    LINENUMBER 16 L3
+    LLOAD 0
+    DLOAD 2
+    ILOAD 4
+    INVOKEDYNAMIC makeConcatWithConstants(JDI)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "\u0001 \u0001 \u0001"
+    ]
+    ASTORE 5
+   L4
+    LINENUMBER 17 L4
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 5
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L5
+    LINENUMBER 18 L5
+    RETURN
+    MAXSTACK = 5
+    MAXLOCALS = 6
+
+  // access flags 0xA
+  private static testConcat3()V
+   L0
+    LINENUMBER 21 L0
+    LDC "hello"
+    ASTORE 0
+   L1
+    LINENUMBER 22 L1
+    ALOAD 0
+    ALOAD 0
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "\u0001\u0001"
+    ]
+    ASTORE 1
+   L2
+    LINENUMBER 23 L2
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L3
+    LINENUMBER 24 L3
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0xA
+  private static testConcat4()V
+   L0
+    LINENUMBER 27 L0
+    ICONST_2
+    ANEWARRAY java/lang/Object
+    DUP
+    ICONST_0
+    LDC "Hello"
+    AASTORE
+    DUP
+    ICONST_1
+    ICONST_5
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    AASTORE
+    ASTORE 0
+   L1
+    LINENUMBER 28 L1
+    ALOAD 0
+    ICONST_0
+    AALOAD
+    ALOAD 0
+    ICONST_1
+    AALOAD
+    INVOKESTATIC TestConcat.F ()Ljava/lang/String;
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "\u0001\u0001:\u0001"
+    ]
+    ASTORE 1
+   L2
+    LINENUMBER 29 L2
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L3
+    LINENUMBER 30 L3
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 2
+
+  // access flags 0x8
+  static F()Ljava/lang/String;
+   L0
+    LINENUMBER 33 L0
+    LDC "World"
+    ARETURN
+    MAXSTACK = 1
+    MAXLOCALS = 0
+
+  // access flags 0x9
+  public static main([Ljava/lang/String;)V throws java/net/URISyntaxException 
+   L0
+    LINENUMBER 37 L0
+    INVOKESTATIC TestConcat.testConcat ()V
+   L1
+    LINENUMBER 38 L1
+    INVOKESTATIC TestConcat.testConcat2 ()V
+   L2
+    LINENUMBER 39 L2
+    INVOKESTATIC TestConcat.testConcat3 ()V
+   L3
+    LINENUMBER 40 L3
+    INVOKESTATIC TestConcat.testConcat4 ()V
+   L4
+    LINENUMBER 41 L4
+    RETURN
+    MAXSTACK = 0
+    MAXLOCALS = 1
+}

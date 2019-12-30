@@ -1,0 +1,234 @@
+// class version 57.0 (57)
+// access flags 0x20
+class TestTryWithResource {
+
+  // compiled from: TestTryWithResource.java
+  NESTMEMBER TestTryWithResource$4
+  NESTMEMBER TestTryWithResource$3
+  NESTMEMBER TestTryWithResource$2
+  NESTMEMBER TestTryWithResource$1
+  // access flags 0x0
+  INNERCLASS TestTryWithResource$1 null null
+  // access flags 0x0
+  INNERCLASS TestTryWithResource$2 null null
+  // access flags 0x0
+  INNERCLASS TestTryWithResource$3 null null
+  // access flags 0x0
+  INNERCLASS TestTryWithResource$4 null null
+
+  // access flags 0x0
+  <init>()V
+   L0
+    LINENUMBER 6 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static testTryWithResources()V throws java/io/IOException 
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L5 java/lang/Throwable
+   L6
+    LINENUMBER 8 L6
+    NEW TestTryWithResource$1
+    DUP
+    INVOKESPECIAL TestTryWithResource$1.<init> ()V
+    ASTORE 0
+   L7
+    LINENUMBER 14 L7
+    ALOAD 0
+    ASTORE 1
+   L0
+    LINENUMBER 15 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    LDC "testTryWithResources"
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L1
+    LINENUMBER 16 L1
+    ALOAD 1
+    IFNULL L8
+    ALOAD 1
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+    GOTO L8
+   L2
+    LINENUMBER 14 L2
+   FRAME FULL [java/io/Closeable java/io/Closeable] [java/lang/Throwable]
+    ASTORE 2
+    ALOAD 1
+    IFNULL L9
+   L3
+    ALOAD 1
+    INVOKEINTERFACE java/io/Closeable.close ()V (itf)
+   L4
+    GOTO L9
+   L5
+   FRAME FULL [java/io/Closeable java/io/Closeable java/lang/Throwable] [java/lang/Throwable]
+    ASTORE 3
+    ALOAD 2
+    ALOAD 3
+    INVOKEVIRTUAL java/lang/Throwable.addSuppressed (Ljava/lang/Throwable;)V
+   L9
+   FRAME SAME
+    ALOAD 2
+    ATHROW
+   L8
+    LINENUMBER 17 L8
+   FRAME CHOP 2
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 4
+
+  // access flags 0xA
+  private static testTryWithResources2()V
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L5 java/lang/Throwable
+   L6
+    LINENUMBER 20 L6
+    NEW TestTryWithResource$2
+    DUP
+    INVOKESPECIAL TestTryWithResource$2.<init> ()V
+    ASTORE 0
+   L7
+    LINENUMBER 26 L7
+    ALOAD 0
+    ASTORE 1
+   L0
+    LINENUMBER 27 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    LDC "testTryWithResources2"
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L1
+    LINENUMBER 28 L1
+    ALOAD 1
+    IFNULL L8
+    ALOAD 1
+    INVOKEVIRTUAL TestTryWithResource$2.close ()V
+    GOTO L8
+   L2
+    LINENUMBER 26 L2
+   FRAME FULL [TestTryWithResource$2 TestTryWithResource$2] [java/lang/Throwable]
+    ASTORE 2
+    ALOAD 1
+    IFNULL L9
+   L3
+    ALOAD 1
+    INVOKEVIRTUAL TestTryWithResource$2.close ()V
+   L4
+    GOTO L9
+   L5
+   FRAME FULL [TestTryWithResource$2 TestTryWithResource$2 java/lang/Throwable] [java/lang/Throwable]
+    ASTORE 3
+    ALOAD 2
+    ALOAD 3
+    INVOKEVIRTUAL java/lang/Throwable.addSuppressed (Ljava/lang/Throwable;)V
+   L9
+   FRAME SAME
+    ALOAD 2
+    ATHROW
+   L8
+    LINENUMBER 29 L8
+   FRAME CHOP 2
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 4
+
+  // access flags 0xA
+  private static testNotATryWithResources()V
+    TRYCATCHBLOCK L0 L1 L2 null
+   L3
+    LINENUMBER 32 L3
+    NEW TestTryWithResource$3
+    DUP
+    INVOKESPECIAL TestTryWithResource$3.<init> ()V
+    ASTORE 0
+   L0
+    LINENUMBER 39 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    LDC "testNotTryWithResources"
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L1
+    LINENUMBER 41 L1
+    ALOAD 0
+    INVOKEVIRTUAL TestTryWithResource$3.close ()V
+   L4
+    LINENUMBER 42 L4
+    GOTO L5
+   L2
+    LINENUMBER 41 L2
+   FRAME FULL [TestTryWithResource$3] [java/lang/Throwable]
+    ASTORE 1
+    ALOAD 0
+    INVOKEVIRTUAL TestTryWithResource$3.close ()V
+   L6
+    LINENUMBER 42 L6
+    ALOAD 1
+    ATHROW
+   L5
+    LINENUMBER 43 L5
+   FRAME SAME
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0xA
+  private static testNotATryWithResources2()V
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+   L3
+    LINENUMBER 46 L3
+    NEW TestTryWithResource$4
+    DUP
+    INVOKESPECIAL TestTryWithResource$4.<init> ()V
+    ASTORE 0
+   L0
+    LINENUMBER 53 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    LDC "testNotTryWithResources2"
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L4
+    LINENUMBER 54 L4
+    ALOAD 0
+    INVOKEVIRTUAL TestTryWithResource$4.close ()V
+   L1
+    LINENUMBER 58 L1
+    GOTO L5
+   L2
+    LINENUMBER 55 L2
+   FRAME FULL [TestTryWithResource$4] [java/lang/Throwable]
+    ASTORE 1
+   L6
+    LINENUMBER 56 L6
+    ALOAD 0
+    INVOKEVIRTUAL TestTryWithResource$4.close ()V
+   L7
+    LINENUMBER 57 L7
+    ALOAD 1
+    ATHROW
+   L5
+    LINENUMBER 59 L5
+   FRAME SAME
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x9
+  public static main([Ljava/lang/String;)V throws java/io/IOException 
+   L0
+    LINENUMBER 62 L0
+    INVOKESTATIC TestTryWithResource.testTryWithResources ()V
+   L1
+    LINENUMBER 63 L1
+    INVOKESTATIC TestTryWithResource.testTryWithResources2 ()V
+   L2
+    LINENUMBER 65 L2
+    INVOKESTATIC TestTryWithResource.testNotATryWithResources ()V
+   L3
+    LINENUMBER 66 L3
+    INVOKESTATIC TestTryWithResource.testNotATryWithResources2 ()V
+   L4
+    LINENUMBER 67 L4
+    RETURN
+    MAXSTACK = 0
+    MAXLOCALS = 1
+}

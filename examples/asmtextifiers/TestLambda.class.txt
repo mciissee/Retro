@@ -1,0 +1,386 @@
+// class version 57.0 (57)
+// access flags 0x20
+class TestLambda {
+
+  // compiled from: TestLambda.java
+  // access flags 0x19
+  public final static INNERCLASS java/lang/invoke/MethodHandles$Lookup java/lang/invoke/MethodHandles Lookup
+
+  // access flags 0x2
+  private I i
+
+  // access flags 0x0
+  <init>()V
+   L0
+    LINENUMBER 9 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static testLambda()V
+   L0
+    LINENUMBER 13 L0
+    BIPUSH 40
+    ISTORE 0
+   L1
+    LINENUMBER 14 L1
+    NEW TestLambda
+    DUP
+    INVOKESPECIAL TestLambda.<init> ()V
+    ASTORE 1
+   L2
+    LINENUMBER 15 L2
+    ALOAD 1
+    BIPUSH 10
+    PUTFIELD TestLambda.i : I
+   L3
+    LINENUMBER 16 L3
+    ALOAD 1
+    ILOAD 0
+    INVOKEDYNAMIC applyAsInt(LTestLambda;I)Ljava/util/function/IntUnaryOperator; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (I)I, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.lambda$testLambda$0(LTestLambda;II)I, 
+      (I)I
+    ]
+    ASTORE 2
+   L4
+    LINENUMBER 17 L4
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 2
+    ICONST_2
+    INVOKEINTERFACE java/util/function/IntUnaryOperator.applyAsInt (I)I (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L5
+    LINENUMBER 18 L5
+    RETURN
+    MAXSTACK = 3
+    MAXLOCALS = 3
+
+  // access flags 0xA
+  private static testLambda1()V
+   L0
+    LINENUMBER 21 L0
+    INVOKEDYNAMIC applyAsInt()Ljava/util/function/IntBinaryOperator; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (II)I, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.lambda$testLambda1$1(II)I, 
+      (II)I
+    ]
+    ASTORE 0
+   L1
+    LINENUMBER 22 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 0
+    ICONST_2
+    BIPUSH 40
+    INVOKEINTERFACE java/util/function/IntBinaryOperator.applyAsInt (II)I (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L2
+    LINENUMBER 23 L2
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static testLambda2()V
+   L0
+    LINENUMBER 26 L0
+    BIPUSH 40
+    ISTORE 0
+   L1
+    LINENUMBER 27 L1
+    ILOAD 0
+    INVOKEDYNAMIC applyAsInt(I)Ljava/util/function/IntUnaryOperator; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (I)I, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.lambda$testLambda2$2(II)I, 
+      (I)I
+    ]
+    ASTORE 1
+   L2
+    LINENUMBER 28 L2
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    ICONST_2
+    INVOKEINTERFACE java/util/function/IntUnaryOperator.applyAsInt (I)I (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L3
+    LINENUMBER 29 L3
+    RETURN
+    MAXSTACK = 3
+    MAXLOCALS = 2
+
+  // access flags 0xA
+  private static testLambda3()V
+   L0
+    LINENUMBER 32 L0
+    LDC 40.0
+    DSTORE 0
+   L1
+    LINENUMBER 33 L1
+    DLOAD 0
+    INVOKEDYNAMIC apply(D)Ljava/util/function/Function; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (Ljava/lang/Object;)Ljava/lang/Object;, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.lambda$testLambda3$3(DLjava/lang/Integer;)Ljava/lang/Double;, 
+      (Ljava/lang/Integer;)Ljava/lang/Double;
+    ]
+    ASTORE 2
+   L2
+    LINENUMBER 34 L2
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 2
+    ICONST_2
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    INVOKEINTERFACE java/util/function/Function.apply (Ljava/lang/Object;)Ljava/lang/Object; (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/Object;)V
+   L3
+    LINENUMBER 35 L3
+    RETURN
+    MAXSTACK = 3
+    MAXLOCALS = 3
+
+  // access flags 0xA
+  private static testMethodRef()V
+   L0
+    LINENUMBER 38 L0
+    INVOKEDYNAMIC applyAsInt()Ljava/util/function/IntBinaryOperator; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (II)I, 
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/Integer.sum(II)I, 
+      (II)I
+    ]
+    ASTORE 0
+   L1
+    LINENUMBER 39 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 0
+    ICONST_2
+    BIPUSH 40
+    INVOKEINTERFACE java/util/function/IntBinaryOperator.applyAsInt (II)I (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L2
+    LINENUMBER 40 L2
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static testMethodRef2()V
+   L0
+    LINENUMBER 43 L0
+    INVOKEDYNAMIC apply()Ljava/util/function/BiFunction; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;, 
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/Integer.sum(II)I, 
+      (Ljava/lang/Integer;Ljava/lang/Integer;)Ljava/lang/Integer;
+    ]
+    ASTORE 0
+   L1
+    LINENUMBER 44 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 0
+    ICONST_2
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    BIPUSH 40
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    INVOKEINTERFACE java/util/function/BiFunction.apply (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/Object;)V
+   L2
+    LINENUMBER 45 L2
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 1
+
+  // access flags 0xA
+  private static methodRef(D)B
+   L0
+    LINENUMBER 48 L0
+    BIPUSH 40
+    DLOAD 0
+    D2I
+    IADD
+    I2B
+    IRETURN
+    MAXSTACK = 3
+    MAXLOCALS = 2
+
+  // access flags 0xA
+  private static testMethodRef3()V
+   L0
+    LINENUMBER 52 L0
+    INVOKEDYNAMIC applyAsInt()Ljava/util/function/IntUnaryOperator; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (I)I, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.methodRef(D)B, 
+      (I)I
+    ]
+    ASTORE 0
+   L1
+    LINENUMBER 53 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 0
+    ICONST_2
+    INVOKEINTERFACE java/util/function/IntUnaryOperator.applyAsInt (I)I (itf)
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L2
+    LINENUMBER 54 L2
+    RETURN
+    MAXSTACK = 3
+    MAXLOCALS = 1
+
+  // access flags 0x8
+  static testMethodRef4()V
+   L0
+    LINENUMBER 57 L0
+    ICONST_2
+    ANEWARRAY java/lang/String
+    DUP
+    ICONST_0
+    LDC "A"
+    AASTORE
+    DUP
+    ICONST_1
+    LDC "B"
+    AASTORE
+    ASTORE 0
+   L1
+    LINENUMBER 58 L1
+    ALOAD 0
+    INVOKESTATIC java/util/Arrays.stream ([Ljava/lang/Object;)Ljava/util/stream/Stream;
+    INVOKEDYNAMIC accept()Ljava/util/function/Consumer; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      (Ljava/lang/Object;)V, 
+      // handle kind 0x6 : INVOKESTATIC
+      TestLambda.lambda$testMethodRef4$4(Ljava/lang/String;)V, 
+      (Ljava/lang/String;)V
+    ]
+    INVOKEINTERFACE java/util/stream/Stream.forEach (Ljava/util/function/Consumer;)V (itf)
+   L2
+    LINENUMBER 61 L2
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 1
+
+  // access flags 0x9
+  public static main([Ljava/lang/String;)V
+   L0
+    LINENUMBER 64 L0
+    INVOKESTATIC TestLambda.testLambda ()V
+   L1
+    LINENUMBER 65 L1
+    INVOKESTATIC TestLambda.testLambda1 ()V
+   L2
+    LINENUMBER 66 L2
+    INVOKESTATIC TestLambda.testLambda2 ()V
+   L3
+    LINENUMBER 67 L3
+    INVOKESTATIC TestLambda.testLambda3 ()V
+   L4
+    LINENUMBER 69 L4
+    INVOKESTATIC TestLambda.testMethodRef ()V
+   L5
+    LINENUMBER 70 L5
+    INVOKESTATIC TestLambda.testMethodRef2 ()V
+   L6
+    LINENUMBER 71 L6
+    INVOKESTATIC TestLambda.testMethodRef3 ()V
+   L7
+    LINENUMBER 72 L7
+    INVOKESTATIC TestLambda.testMethodRef4 ()V
+   L8
+    LINENUMBER 73 L8
+    RETURN
+    MAXSTACK = 0
+    MAXLOCALS = 1
+
+  // access flags 0x100A
+  private static synthetic lambda$testMethodRef4$4(Ljava/lang/String;)V
+   L0
+    LINENUMBER 59 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 0
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L1
+    LINENUMBER 60 L1
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 1
+
+  // access flags 0x100A
+  private static synthetic lambda$testLambda3$3(DLjava/lang/Integer;)Ljava/lang/Double;
+   L0
+    LINENUMBER 33 L0
+    ALOAD 2
+    INVOKEVIRTUAL java/lang/Integer.intValue ()I
+    I2D
+    DLOAD 0
+    DADD
+    INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+    ARETURN
+    MAXSTACK = 4
+    MAXLOCALS = 3
+
+  // access flags 0x100A
+  private static synthetic lambda$testLambda2$2(II)I
+   L0
+    LINENUMBER 27 L0
+    ILOAD 1
+    ILOAD 0
+    IADD
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x100A
+  private static synthetic lambda$testLambda1$1(II)I
+   L0
+    LINENUMBER 21 L0
+    ILOAD 0
+    ILOAD 1
+    IADD
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x100A
+  private static synthetic lambda$testLambda$0(LTestLambda;II)I
+   L0
+    LINENUMBER 16 L0
+    ALOAD 0
+    GETFIELD TestLambda.i : I
+    ILOAD 2
+    IADD
+    ILOAD 1
+    IADD
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 3
+}

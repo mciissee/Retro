@@ -1,0 +1,227 @@
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.ConstantDynamic;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
+public class TestConcatDump implements Opcodes {
+
+public static byte[] dump () throws Exception {
+
+ClassWriter classWriter = new ClassWriter(0);
+FieldVisitor fieldVisitor;
+MethodVisitor methodVisitor;
+AnnotationVisitor annotationVisitor0;
+
+classWriter.visit(V13, ACC_SUPER, "TestConcat", null, "java/lang/Object", null);
+
+classWriter.visitSource("TestConcat.java", null);
+
+classWriter.visitInnerClass("java/lang/invoke/MethodHandles$Lookup", "java/lang/invoke/MethodHandles", "Lookup", ACC_PUBLIC | ACC_FINAL | ACC_STATIC);
+
+{
+methodVisitor = classWriter.visitMethod(0, "<init>", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(4, label0);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(1, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testConcat", "()V", null, new String[] { "java/net/URISyntaxException" });
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(6, label0);
+methodVisitor.visitTypeInsn(NEW, "java/net/URI");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitLdcInsn("http://www.u-pem.fr");
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/net/URI", "<init>", "(Ljava/lang/String;)V", false);
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(7, label1);
+methodVisitor.visitInsn(ICONST_5);
+methodVisitor.visitVarInsn(ISTORE, 1);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(8, label2);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitVarInsn(ILOAD, 1);
+methodVisitor.visitInvokeDynamicInsn("makeConcatWithConstants", "(Ljava/net/URI;I)Ljava/lang/String;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/StringConcatFactory", "makeConcatWithConstants", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;", false), new Object[]{"uri \u0001 value \u0001."});
+methodVisitor.visitVarInsn(ASTORE, 2);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(9, label3);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(10, label4);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(3, 3);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testConcat2", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(13, label0);
+methodVisitor.visitLdcInsn(new Long(5L));
+methodVisitor.visitVarInsn(LSTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(14, label1);
+methodVisitor.visitLdcInsn(new Double("4.0"));
+methodVisitor.visitVarInsn(DSTORE, 2);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(15, label2);
+methodVisitor.visitInsn(ICONST_3);
+methodVisitor.visitVarInsn(ISTORE, 4);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(16, label3);
+methodVisitor.visitVarInsn(LLOAD, 0);
+methodVisitor.visitVarInsn(DLOAD, 2);
+methodVisitor.visitVarInsn(ILOAD, 4);
+methodVisitor.visitInvokeDynamicInsn("makeConcatWithConstants", "(JDI)Ljava/lang/String;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/StringConcatFactory", "makeConcatWithConstants", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;", false), new Object[]{"\u0001 \u0001 \u0001"});
+methodVisitor.visitVarInsn(ASTORE, 5);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(17, label4);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 5);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label5 = new Label();
+methodVisitor.visitLabel(label5);
+methodVisitor.visitLineNumber(18, label5);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(5, 6);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testConcat3", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(21, label0);
+methodVisitor.visitLdcInsn("hello");
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(22, label1);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInvokeDynamicInsn("makeConcatWithConstants", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/StringConcatFactory", "makeConcatWithConstants", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;", false), new Object[]{"\u0001\u0001"});
+methodVisitor.visitVarInsn(ASTORE, 1);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(23, label2);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(24, label3);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testConcat4", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(27, label0);
+methodVisitor.visitInsn(ICONST_2);
+methodVisitor.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitInsn(ICONST_0);
+methodVisitor.visitLdcInsn("Hello");
+methodVisitor.visitInsn(AASTORE);
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitInsn(ICONST_1);
+methodVisitor.visitInsn(ICONST_5);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+methodVisitor.visitInsn(AASTORE);
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(28, label1);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_0);
+methodVisitor.visitInsn(AALOAD);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitInsn(ICONST_1);
+methodVisitor.visitInsn(AALOAD);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestConcat", "F", "()Ljava/lang/String;", false);
+methodVisitor.visitInvokeDynamicInsn("makeConcatWithConstants", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;", new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/StringConcatFactory", "makeConcatWithConstants", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;", false), new Object[]{"\u0001\u0001:\u0001"});
+methodVisitor.visitVarInsn(ASTORE, 1);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(29, label2);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(30, label3);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(4, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_STATIC, "F", "()Ljava/lang/String;", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(33, label0);
+methodVisitor.visitLdcInsn("World");
+methodVisitor.visitInsn(ARETURN);
+methodVisitor.visitMaxs(1, 0);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null, new String[] { "java/net/URISyntaxException" });
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(37, label0);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestConcat", "testConcat", "()V", false);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(38, label1);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestConcat", "testConcat2", "()V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(39, label2);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestConcat", "testConcat3", "()V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(40, label3);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestConcat", "testConcat4", "()V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(41, label4);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(0, 1);
+methodVisitor.visitEnd();
+}
+classWriter.visitEnd();
+
+return classWriter.toByteArray();
+}
+}

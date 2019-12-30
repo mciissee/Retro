@@ -1,0 +1,309 @@
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.ConstantDynamic;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
+public class TestTryWithResourceDump implements Opcodes {
+
+public static byte[] dump () throws Exception {
+
+ClassWriter classWriter = new ClassWriter(0);
+FieldVisitor fieldVisitor;
+MethodVisitor methodVisitor;
+AnnotationVisitor annotationVisitor0;
+
+classWriter.visit(V13, ACC_SUPER, "TestTryWithResource", null, "java/lang/Object", null);
+
+classWriter.visitSource("TestTryWithResource.java", null);
+
+classWriter.visitNestMember("TestTryWithResource$4");
+
+classWriter.visitNestMember("TestTryWithResource$3");
+
+classWriter.visitNestMember("TestTryWithResource$2");
+
+classWriter.visitNestMember("TestTryWithResource$1");
+
+classWriter.visitInnerClass("TestTryWithResource$1", null, null, 0);
+
+classWriter.visitInnerClass("TestTryWithResource$2", null, null, 0);
+
+classWriter.visitInnerClass("TestTryWithResource$3", null, null, 0);
+
+classWriter.visitInnerClass("TestTryWithResource$4", null, null, 0);
+
+{
+methodVisitor = classWriter.visitMethod(0, "<init>", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(6, label0);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(1, 1);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testTryWithResources", "()V", null, new String[] { "java/io/IOException" });
+methodVisitor.visitCode();
+Label label0 = new Label();
+Label label1 = new Label();
+Label label2 = new Label();
+methodVisitor.visitTryCatchBlock(label0, label1, label2, "java/lang/Throwable");
+Label label3 = new Label();
+Label label4 = new Label();
+Label label5 = new Label();
+methodVisitor.visitTryCatchBlock(label3, label4, label5, "java/lang/Throwable");
+Label label6 = new Label();
+methodVisitor.visitLabel(label6);
+methodVisitor.visitLineNumber(8, label6);
+methodVisitor.visitTypeInsn(NEW, "TestTryWithResource$1");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "TestTryWithResource$1", "<init>", "()V", false);
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label7 = new Label();
+methodVisitor.visitLabel(label7);
+methodVisitor.visitLineNumber(14, label7);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitVarInsn(ASTORE, 1);
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(15, label0);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitLdcInsn("testTryWithResources");
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(16, label1);
+methodVisitor.visitVarInsn(ALOAD, 1);
+Label label8 = new Label();
+methodVisitor.visitJumpInsn(IFNULL, label8);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/io/Closeable", "close", "()V", true);
+methodVisitor.visitJumpInsn(GOTO, label8);
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(14, label2);
+methodVisitor.visitFrame(Opcodes.F_FULL, 2, new Object[] {"java/io/Closeable", "java/io/Closeable"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 2);
+methodVisitor.visitVarInsn(ALOAD, 1);
+Label label9 = new Label();
+methodVisitor.visitJumpInsn(IFNULL, label9);
+methodVisitor.visitLabel(label3);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEINTERFACE, "java/io/Closeable", "close", "()V", true);
+methodVisitor.visitLabel(label4);
+methodVisitor.visitJumpInsn(GOTO, label9);
+methodVisitor.visitLabel(label5);
+methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"java/io/Closeable", "java/io/Closeable", "java/lang/Throwable"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 3);
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitVarInsn(ALOAD, 3);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Throwable", "addSuppressed", "(Ljava/lang/Throwable;)V", false);
+methodVisitor.visitLabel(label9);
+methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitInsn(ATHROW);
+methodVisitor.visitLabel(label8);
+methodVisitor.visitLineNumber(17, label8);
+methodVisitor.visitFrame(Opcodes.F_CHOP,2, null, 0, null);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 4);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testTryWithResources2", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+Label label1 = new Label();
+Label label2 = new Label();
+methodVisitor.visitTryCatchBlock(label0, label1, label2, "java/lang/Throwable");
+Label label3 = new Label();
+Label label4 = new Label();
+Label label5 = new Label();
+methodVisitor.visitTryCatchBlock(label3, label4, label5, "java/lang/Throwable");
+Label label6 = new Label();
+methodVisitor.visitLabel(label6);
+methodVisitor.visitLineNumber(20, label6);
+methodVisitor.visitTypeInsn(NEW, "TestTryWithResource$2");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "TestTryWithResource$2", "<init>", "()V", false);
+methodVisitor.visitVarInsn(ASTORE, 0);
+Label label7 = new Label();
+methodVisitor.visitLabel(label7);
+methodVisitor.visitLineNumber(26, label7);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitVarInsn(ASTORE, 1);
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(27, label0);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitLdcInsn("testTryWithResources2");
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(28, label1);
+methodVisitor.visitVarInsn(ALOAD, 1);
+Label label8 = new Label();
+methodVisitor.visitJumpInsn(IFNULL, label8);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$2", "close", "()V", false);
+methodVisitor.visitJumpInsn(GOTO, label8);
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(26, label2);
+methodVisitor.visitFrame(Opcodes.F_FULL, 2, new Object[] {"TestTryWithResource$2", "TestTryWithResource$2"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 2);
+methodVisitor.visitVarInsn(ALOAD, 1);
+Label label9 = new Label();
+methodVisitor.visitJumpInsn(IFNULL, label9);
+methodVisitor.visitLabel(label3);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$2", "close", "()V", false);
+methodVisitor.visitLabel(label4);
+methodVisitor.visitJumpInsn(GOTO, label9);
+methodVisitor.visitLabel(label5);
+methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"TestTryWithResource$2", "TestTryWithResource$2", "java/lang/Throwable"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 3);
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitVarInsn(ALOAD, 3);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Throwable", "addSuppressed", "(Ljava/lang/Throwable;)V", false);
+methodVisitor.visitLabel(label9);
+methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+methodVisitor.visitVarInsn(ALOAD, 2);
+methodVisitor.visitInsn(ATHROW);
+methodVisitor.visitLabel(label8);
+methodVisitor.visitLineNumber(29, label8);
+methodVisitor.visitFrame(Opcodes.F_CHOP,2, null, 0, null);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 4);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testNotATryWithResources", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+Label label1 = new Label();
+Label label2 = new Label();
+methodVisitor.visitTryCatchBlock(label0, label1, label2, null);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(32, label3);
+methodVisitor.visitTypeInsn(NEW, "TestTryWithResource$3");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "TestTryWithResource$3", "<init>", "()V", false);
+methodVisitor.visitVarInsn(ASTORE, 0);
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(39, label0);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitLdcInsn("testNotTryWithResources");
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(41, label1);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$3", "close", "()V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(42, label4);
+Label label5 = new Label();
+methodVisitor.visitJumpInsn(GOTO, label5);
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(41, label2);
+methodVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] {"TestTryWithResource$3"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 1);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$3", "close", "()V", false);
+Label label6 = new Label();
+methodVisitor.visitLabel(label6);
+methodVisitor.visitLineNumber(42, label6);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitInsn(ATHROW);
+methodVisitor.visitLabel(label5);
+methodVisitor.visitLineNumber(43, label5);
+methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PRIVATE | ACC_STATIC, "testNotATryWithResources2", "()V", null, null);
+methodVisitor.visitCode();
+Label label0 = new Label();
+Label label1 = new Label();
+Label label2 = new Label();
+methodVisitor.visitTryCatchBlock(label0, label1, label2, "java/lang/Throwable");
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(46, label3);
+methodVisitor.visitTypeInsn(NEW, "TestTryWithResource$4");
+methodVisitor.visitInsn(DUP);
+methodVisitor.visitMethodInsn(INVOKESPECIAL, "TestTryWithResource$4", "<init>", "()V", false);
+methodVisitor.visitVarInsn(ASTORE, 0);
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(53, label0);
+methodVisitor.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+methodVisitor.visitLdcInsn("testNotTryWithResources2");
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(54, label4);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$4", "close", "()V", false);
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(58, label1);
+Label label5 = new Label();
+methodVisitor.visitJumpInsn(GOTO, label5);
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(55, label2);
+methodVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] {"TestTryWithResource$4"}, 1, new Object[] {"java/lang/Throwable"});
+methodVisitor.visitVarInsn(ASTORE, 1);
+Label label6 = new Label();
+methodVisitor.visitLabel(label6);
+methodVisitor.visitLineNumber(56, label6);
+methodVisitor.visitVarInsn(ALOAD, 0);
+methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "TestTryWithResource$4", "close", "()V", false);
+Label label7 = new Label();
+methodVisitor.visitLabel(label7);
+methodVisitor.visitLineNumber(57, label7);
+methodVisitor.visitVarInsn(ALOAD, 1);
+methodVisitor.visitInsn(ATHROW);
+methodVisitor.visitLabel(label5);
+methodVisitor.visitLineNumber(59, label5);
+methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(2, 2);
+methodVisitor.visitEnd();
+}
+{
+methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_STATIC, "main", "([Ljava/lang/String;)V", null, new String[] { "java/io/IOException" });
+methodVisitor.visitCode();
+Label label0 = new Label();
+methodVisitor.visitLabel(label0);
+methodVisitor.visitLineNumber(62, label0);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestTryWithResource", "testTryWithResources", "()V", false);
+Label label1 = new Label();
+methodVisitor.visitLabel(label1);
+methodVisitor.visitLineNumber(63, label1);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestTryWithResource", "testTryWithResources2", "()V", false);
+Label label2 = new Label();
+methodVisitor.visitLabel(label2);
+methodVisitor.visitLineNumber(65, label2);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestTryWithResource", "testNotATryWithResources", "()V", false);
+Label label3 = new Label();
+methodVisitor.visitLabel(label3);
+methodVisitor.visitLineNumber(66, label3);
+methodVisitor.visitMethodInsn(INVOKESTATIC, "TestTryWithResource", "testNotATryWithResources2", "()V", false);
+Label label4 = new Label();
+methodVisitor.visitLabel(label4);
+methodVisitor.visitLineNumber(67, label4);
+methodVisitor.visitInsn(RETURN);
+methodVisitor.visitMaxs(0, 1);
+methodVisitor.visitEnd();
+}
+classWriter.visitEnd();
+
+return classWriter.toByteArray();
+}
+}

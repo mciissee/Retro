@@ -1,0 +1,33 @@
+// class version 57.0 (57)
+// access flags 0x20
+class TestTryWithResource$1 implements java/io/Closeable {
+
+  // compiled from: TestTryWithResource.java
+  NESTHOST TestTryWithResource
+  OUTERCLASS TestTryWithResource testTryWithResources ()V
+  // access flags 0x0
+  INNERCLASS TestTryWithResource$1 null null
+
+  // access flags 0x0
+  <init>()V
+   L0
+    LINENUMBER 8 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x1
+  public close()V
+   L0
+    LINENUMBER 11 L0
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    LDC "close called !"
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L1
+    LINENUMBER 12 L1
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 1
+}
