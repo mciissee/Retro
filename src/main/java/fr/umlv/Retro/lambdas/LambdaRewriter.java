@@ -12,8 +12,8 @@ import org.objectweb.asm.Type;
 
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
-import fr.umlv.Retro.models.VersionInfo;
-import fr.umlv.Retro.models.InstUtils;
+import fr.umlv.Retro.utils.InstUtils;
+import fr.umlv.Retro.utils.VersionUtils;
 
 class LambdaRewriter implements Opcodes {
 
@@ -45,18 +45,18 @@ class LambdaRewriter implements Opcodes {
 		writeFields(cw, captures);
 		writeConstructor(cw, clazz, constructor, captures);
 		writeMethods(cw, clazz, captures, name, method, args);
-
+		/*
 		try (var fos = new FileOutputStream("../Drafts/" + clazz + ".class")) {
 			fos.write(cw.toByteArray());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-	
+		*/
 		instantiate(clazz, constructor, captures);
 	}
 
 	private void writeHeader(ClassWriter cw, String clazz, String descriptor) {
-		var version = VersionInfo.toMajor(ci.version());
+		var version = VersionUtils.toBytecode(ci.version());
 		var itf = Type.getReturnType(descriptor).getInternalName();
 		cw.visit(version, ACC_SUPER, clazz, null, "java/lang/Object", new String[] { itf });
 		cw.visitSource(ci.className() + ".java", null);

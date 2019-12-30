@@ -11,7 +11,7 @@ import fr.umlv.Retro.lambdas.LambdaMethodVisitor;
 import fr.umlv.Retro.models.ClassInfo;
 import fr.umlv.Retro.models.MethodInfo;
 import fr.umlv.Retro.models.TransformOptions;
-import fr.umlv.Retro.models.VersionInfo;
+import fr.umlv.Retro.utils.VersionUtils;
 
 /**
  * Transforms byte code from a version to another version.
@@ -38,9 +38,9 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		this.version = VersionInfo.fromMajor(version);
+		this.version = VersionUtils.toJDK(version);
 		this.className = name;
-	    super.visit(VersionInfo.toMajor(options.target()), access, name, signature, superName, interfaces);
+	    super.visit(VersionUtils.toBytecode(options.target()), access, name, signature, superName, interfaces);
 
 	}
 	

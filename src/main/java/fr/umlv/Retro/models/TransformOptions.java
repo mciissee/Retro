@@ -1,6 +1,7 @@
 package fr.umlv.Retro.models;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 /**
  * 
@@ -13,13 +14,15 @@ public class TransformOptions {
 	private final boolean info;
 	private final boolean help;
 	private final boolean force;
+	private final String path;
 
-	private TransformOptions(int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
+	private TransformOptions(String path, int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
+		this.path = Objects.requireNonNull(path);
 		this.target = target;
 		this.force = force;
 		this.info = info;
 		this.help = help;
-		this.features = features;
+		this.features = Objects.requireNonNull(features);
 	}
 	
 	/**
@@ -30,6 +33,7 @@ public class TransformOptions {
 	public static TransformOptions fromCommandLine(String[] args) {
 		// TODO parse args 
 		return new TransformOptions(
+			"",
 			7,
 			true,
 			true,
