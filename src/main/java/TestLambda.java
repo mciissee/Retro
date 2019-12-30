@@ -6,6 +6,7 @@ import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 
 class TestLambda {
+
 	interface MyConsumer<T> {
 		void accept(T e);
 	}

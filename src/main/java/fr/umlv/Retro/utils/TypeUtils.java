@@ -1,4 +1,4 @@
-package fr.umlv.Retro.models;
+package fr.umlv.Retro.utils;
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.Map;
 import org.objectweb.asm.Type;
 
 public class TypeUtils {
+
 	/**
 	 * Gets a value indicating whether the given type is a primitive type (except void)
 	 * @param type the type
