@@ -9,16 +9,18 @@ public class VersionUtils {
 	 * Transforms bytecode major version to JDK version using the following
 	 * associations:
 	 * 
-	 *  49 -> 5,
-	 *  50 -> 6,
-	 *  51 -> 7,
-	 *  52 -> 8,
-	 *  53 -> 9,
-	 *  54 -> 10,
-	 *  55 -> 11,
-	 *  56 -> 12,
-	 *  57 -> 13,
-	 *  58 -> 14
+	 * <pre>
+	 *  49  5
+	 *  50  6
+	 *  51  7
+	 *  52  8
+	 *  53  9
+	 *  54  10
+	 *  55  11
+	 *  56  12
+	 *  57  13
+	 *  58  14s
+	 *  </pre>
 	 * @param version A bytecode major version.
 	 * @return a JDK version.
 	 */
