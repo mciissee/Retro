@@ -16,7 +16,7 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 	
 	@Override
 	public MethodVisitor visit(Retro app, ClassInfo ci, MethodInfo mi) {
-		return new LambdaDetector(app, ci, mi);
+		return new LambdaDetector(app, ci, mi, this);
 	}
 
 	@Override

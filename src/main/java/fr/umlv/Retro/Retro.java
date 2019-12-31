@@ -2,6 +2,7 @@ package fr.umlv.Retro;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -32,47 +33,59 @@ public class Retro {
 	/**
 	 * Creates new instance from command line arguments.
 	 * @param commandLine the command line arguments.
-	 * @return new instance of Retro class.
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public static Retro fromCommandLine(CommandLine commandLine) throws IOException {
-		if (commandLine == null) {
-			throw new IllegalArgumentException("commandLine");
-		}
-
-    	var errormessage = new StringBuilder();
-    	errormessage.append("\nError: require speficication of a path pointing to a jar file, a class file or directory.\n");
-    	errormessage.append("use --help for a list of possible options");
-    	
-        var args = commandLine.args();
-        if (args.length == 0) {
-        	throw new AssertionError(errormessage.toString());
+	public static void fromCommandLine(CommandLine commandLine) throws IOException, URISyntaxException {
+		Contracts.requires(commandLine, "commandLine");
+		   
+        if (commandLine.hasOption("help")) {
+    		try(var stream = ClassLoader.getSystemClassLoader().getResourceAsStream("help.txt")) {
+    			System.out.println(new String(stream.readAllBytes()));
+    		}
+        	return;
         }
-        
+       
+    	var error = new StringBuilder();
+    	error.append("\nError: require speficication of a path pointing to a jar file, a class file or directory.\n");
+    	error.append("use -help for a list of possible options");
+    	
+        var files = commandLine.args();
+        if (files.length == 0) {
+        	throw new AssertionError(error.toString());
+        }
+     
         try {
-        	var fs = FileSystem.create(Paths.get(args[0]));
-        	var options = Options.fromCommandLine(commandLine);
-        	return new Retro(fs, options);        	
+        	for (var path : files) {
+        		if (!path.isBlank() && !path.isEmpty()) {
+        			var fs = FileSystem.create(Paths.get(path));
+        			var options = Options.fromCommandLine(commandLine);
+        			var retro = new Retro(fs, options); 
+        			retro.run();        			
+        		}
+        	}
         } catch (IOException e) {
-        	throw new IOException(errormessage.toString(), e.getCause());
+        	throw new IOException(error.toString(), e.getCause());
         }
 	}
+
 	
 	/**
 	 * Runs the program.
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public void run() throws FileNotFoundException, IOException {
+	private void run() throws FileNotFoundException, IOException, URISyntaxException {
 		fs.clear();
 		unsupported.clear();
-
+		
 		fs.iterate((path, bytes) -> {
 			ClassTransformer.transform(this, path, bytes);
 		});
 		
 		if (unsupported.size() > 0) {
-			System.out.println("\n\nUnsupported features: Some bytecodes contains the following unsupported features : " + unsupported);
+			System.out.println("\nUnsupported features: Some bytecodes contains the following unsupported features : " + unsupported);
 			System.out.println("Run the program with --force or -features options");
 		} else {
 			fs.save();			

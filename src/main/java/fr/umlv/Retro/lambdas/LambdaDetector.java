@@ -21,13 +21,14 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-
+	private final LambdaMethodVisitor vi;
 	private int lineNumber;
 	
-	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi) {
+	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi, LambdaMethodVisitor vi) {
 		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
 		this.ci = ci;
 		this.mi = mi;
+		this.vi = Objects.requireNonNull(vi);
 		this.app = Objects.requireNonNull(app);
 	}
 
@@ -43,7 +44,7 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 		if (bsm.getOwner().equals("java/lang/invoke/LambdaMetafactory")) {
 			var captures = Type.getArgumentTypes(descriptor);
 			app.onFeatureDetected(Features.Lambda, new LambdaDescriber(ci, mi, lineNumber, captures, descriptor, (Handle) bsmArgs[1]));
-			if (app.target() < 8 && app.hasFeature(Features.Lambda)) {
+			if (vi.canRewrite(app)) {
 				var rewriter = new LambdaRewriter(this, app, ci, mi);
 				rewriter.rewrite(name, descriptor, bsm, bsmArgs);
 				rewritten = true;
