@@ -17,10 +17,12 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import fr.umlv.Retro.utils.Contracts;
+
 /**
  * Representation of a virtual file system.
  */
-public class FileSystem {
+public final class FileSystem {
 	
 	private final HashMap<String, byte[]> entries = new HashMap<>();
 	private final Path root;
@@ -62,28 +64,42 @@ public class FileSystem {
 	 * @param consumer function to call for each file.
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws IllegalArgumentException
 	 */
 	public void iterate(BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
+		Contracts.requires(consumer, "consumer");
+
+		// parse nest members only once.
+		BiConsumer<Path, byte[]> action = (path, bytes) -> {
+			if (!entries.containsKey(path.toString())) {
+				consumer.accept(path, bytes);				
+			}
+		};
+
 		if (this.isClass) {
-			open(root, consumer);
+			openClass(root, action);
 		} else if (isDirectory) {
 			var entries = Files.list(root).filter(e -> {
 				return  e.toString().endsWith(".class");
 			}).collect(Collectors.toList());
 			for (var entry : entries) {
-				open(entry, consumer);
+				openClass(entry, action);
 			}
 		} else if (isJar) {
-			openJar(root, e -> !e.isDirectory() && e.getName().endsWith(".class"), consumer);
+			openJar(root, e -> !e.isDirectory() && e.getName().endsWith(".class"), action);
 		}
 	}
 	
-	/**
+	/*
 	 * Adds the given class file to the file system.
 	 * @param path path to the class file.
 	 * @param bytes the class bytecode
+	 * @throws IllegalArgumentException
 	 */
-	public void write(Path path, byte[] bytes) {
+	public void writeClass(Path path, byte[] bytes) {
+		Contracts.requires(path, "path");
+		Contracts.requires(bytes, "bytes");
+	
 		entries.put(path.toString(), bytes);
 	}
 
@@ -92,8 +108,13 @@ public class FileSystem {
 	 * @param path path where to write the class
 	 * @param clazz the class name
 	 * @param bytes the class bytecode
+	 * @throws IllegalArgumentException
 	 */
-	public void write(Path path, String clazz, byte[] bytes) {
+	public void writeClass(Path path, String clazz, byte[] bytes) {
+		Contracts.requires(path, "path");
+		Contracts.requires(clazz, "clazz");
+		Contracts.requires(bytes, "bytes");
+	
 		Path parent = Paths.get("./");
 		if (isClass || isJar) {
 			parent = path.getParent();
@@ -119,13 +140,60 @@ public class FileSystem {
 		}
 	}
 
+
+	/**
+	 * Gets the bytecode of a class file from the disk relative to the given path.
+	 * @param path path where to search the class.
+	 * @param clazz class name
+	 * @param consumer consumer.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void openClassRelativeTo(Path path, String clazz, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
+		Contracts.requires(path, "path");
+		Contracts.requires(clazz, "clazz");
+		Contracts.requires(consumer, "consumer");
+	
+		if (!clazz.endsWith(".class")) {
+			clazz += ".class";
+		}
+		
+		path = path.getParent();
+		if (path == null) {
+			path = Paths.get(clazz);
+		} else {
+			path = Paths.get(path.toString(), clazz);				
+		}
+
+		if (isJar) {
+			try(var zip = new ZipFile(path.toString())) {
+				var entries = zip.stream().collect(Collectors.toList());
+				for (var entry : entries) {
+					if (entry.getName().equals(path.toString())) {						
+						try(var in = zip.getInputStream(entry)) {
+							consumer.accept(Paths.get(entry.getName()), in.readAllBytes());
+						}
+						return;
+					}
+				}
+			}
+			throw new FileNotFoundException(path.toString());
+		}
+
+		try(var in = new FileInputStream(path.toFile())) {
+			consumer.accept(path, in.readAllBytes());
+		}
+	}
+
 	/**
 	 * Removes files added with a call to write() method.
 	 */
 	public void clear() {
 		this.entries.clear();
 	}
-	
+
+
+
 	private void saveAsJar() throws IOException  {
 		openJar(root, e -> !e.isDirectory() && !e.getName().endsWith(".class"), (p, b) -> {
 			entries.put(p.toString(), b);
@@ -165,12 +233,12 @@ public class FileSystem {
 		return path;
 	}
 
-	private void open(Path path, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
+	private void openClass(Path path, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
 		try(var in = new FileInputStream(path.toFile())) {
 			consumer.accept(path, in.readAllBytes());
 		}
 	}
-
+	
 	private void openJar(Path path, Predicate<? super ZipEntry> predicate, BiConsumer<Path, byte[]> consumer) throws IOException {
 		try(var zip = new ZipFile(path.toString())) {
 			var entries = zip.stream()
@@ -183,5 +251,5 @@ public class FileSystem {
 			}
 		}
 	}
-
+	
 }

@@ -6,14 +6,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
-
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
+import java.util.function.BiConsumer;
 
 import fr.umlv.Retro.cli.CommandLine;
 import fr.umlv.Retro.models.FeatureDescriber;
 import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.Options;
+import fr.umlv.Retro.utils.Contracts;
 
 
 /**
@@ -69,10 +68,7 @@ public class Retro {
 		unsupported.clear();
 
 		fs.iterate((path, bytes) -> {
-	        var cr = new ClassReader(bytes);
-	        var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-	        cr.accept(new ClassTransformer(cw, this, path), ClassReader.EXPAND_FRAMES);
-	        fs.write(path, cw.toByteArray());
+			ClassTransformer.transform(this, path, bytes);
 		});
 		
 		if (unsupported.size() > 0) {
@@ -88,20 +84,48 @@ public class Retro {
 	 * @param path path where to write the class
 	 * @param clazz the class name
 	 * @param bytes the class bytecode
+	 * @throws IllegalArgumentException
 	 */
-	public void write(Path path, String clazz, byte[] bytes) {
-		fs.write(path, clazz, bytes);
+	public void writeClass(Path path, String clazz, byte[] bytes) {
+		fs.writeClass(path, clazz, bytes);
 	}
 	
+	/**
+	 * Adds the given class file to the file system.
+	 * @param path path where to write the class
+	 * @param bytes the class bytecode
+	 * @throws IllegalArgumentException
+	 */
+	public void writeClass(Path path, byte[] bytes) {
+		fs.writeClass(path, bytes);
+	}
+	
+	/**
+	 * Gets the bytecode of a class file from the disk relative to the given path.
+	 * @param path path where to search the class.
+	 * @param clazz class name
+	 * @param consumer consumer.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void openClassRelativeTo(Path path, String clazz, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
+		fs.openClassRelativeTo(path, clazz, consumer);
+	}
+
 	/**
 	 * Handles feature detection.
 	 * @param feature the feature
 	 * @param describer feature describer.
+	 * @throws IllegalArgumentException
 	 */
 	public void onFeatureDetected(Features feature, FeatureDescriber describer) {
+		Contracts.requires(feature, "feature");
+		Contracts.requires(describer, "describer");
+
 		if (options.info()) {
 			System.out.println(describer.describe());
 		}
+
 		if (!hasFeature(feature)) {
 			unsupported.add(feature);
 		}
@@ -111,8 +135,10 @@ public class Retro {
 	 * Checks whether the given feature is in the list of features to transform.
 	 * @param feature the feature
 	 * @return true if the feature is present of if force option is enabled false otherwise.
+	 * @throws IllegalArgumentException
 	 */
 	public boolean hasFeature(Features feature) {
+		Contracts.requires(feature, "feature");
 		return options.hasFeature(feature) || options.force();
 	}
 	

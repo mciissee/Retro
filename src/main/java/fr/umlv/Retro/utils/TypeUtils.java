@@ -31,7 +31,11 @@ public class TypeUtils {
 		.contains(type.toString());
 	}
 	
-	
+	/**
+	 * Converts the primitive "type" to it's wrapper version if possible (int -> Integer, double -> Double...)
+	 * @param type the type
+	 * @return A wrapper type or the type if it's not a primitive.
+	 */
 	public static Type wrapper(Type type) {
 		if (isWrapper(type)) {
 			return type;
@@ -45,6 +49,11 @@ public class TypeUtils {
 		.get(type.toString());
 	}
 	
+	/**
+	 * Converts the wrapper "type" to it's wrapper version if possible (Integer -> int, Double -> double...)
+	 * @param type the type
+	 * @return A primitive type or the type if it's not a wrapper.
+	 */
 	public static Type primitive(Type type) {
 		if (isPrimitive(type)) {
 			return type;

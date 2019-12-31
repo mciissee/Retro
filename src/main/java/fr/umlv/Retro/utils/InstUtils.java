@@ -10,9 +10,24 @@ import org.objectweb.asm.Type;
  */
 public class InstUtils implements Opcodes {
 
+	/**
+	 * Generates the bytecode to push the local variable `var` to the stack.
+	 * @param mv method visitor
+	 * @param type type of the variable
+	 * @param var index of the variable in local variables tables.
+	 * @throws IllegalArgumentException if any argument is null.
+	 * @throws IndexOutOfBoundsException if var < 0
+	 */
 	public static void load(MethodVisitor mv, Type type, int var) {
+		Contracts.requires(mv, "mv");
+		Contracts.requires(type, "type");
+
+		if (var < 0) {
+			throw new IndexOutOfBoundsException("local variable index must be >= 0");
+		}
+
 		var e = type.toString();
-		if (e.startsWith("L")) {
+		if (e.startsWith("L") || e.startsWith("[")) {
 			mv.visitVarInsn(ALOAD, var);
 		} else {
 			var map = Map.of("I", ILOAD, "C", ILOAD, "S", ILOAD, "B", ILOAD, "Z", ILOAD, "J", LLOAD, "D", DLOAD, "F",
@@ -21,9 +36,22 @@ public class InstUtils implements Opcodes {
 		}
 	}
 
+	/**
+	 * Generates the bytecode to pop the current value from the top of the stack into the local variable `var`.
+	 * @param mv method visitor
+	 * @param type type of the variable
+	 * @param var index of the variable in local variables tables.
+	 * @throws IllegalArgumentException if any argument is null.
+	 * @throws IndexOutOfBoundsException if var < 0
+	 */
 	public static void store(MethodVisitor mv, Type type, int var) {
+		Contracts.requires(mv, "mv");
+		Contracts.requires(type, "type");
+		if (var < 0) {
+			throw new IndexOutOfBoundsException("local variable index must be >= 0");
+		}
 		var e = type.toString();
-		if (e.startsWith("L")) {
+		if (e.startsWith("L") || e.startsWith("[")) {
 			mv.visitVarInsn(ASTORE, var);
 		} else {
 			var map = Map.of("I", ISTORE, "C", ISTORE, "S", ISTORE, "B", ISTORE, "Z", ISTORE, "J", LSTORE, "D", DSTORE,
@@ -33,11 +61,20 @@ public class InstUtils implements Opcodes {
 		}
 	}
 
+	/**
+	 * Generates the bytecode to return from the current method.
+	 * @param mv method visitor.
+	 * @param type return type
+	 * @throws IllegalArgumentException if any argument is null.
+	 */
 	public static void ret(MethodVisitor mv, Type type) {
+		Contracts.requires(mv, "mv");
+		Contracts.requires(type, "type");
+
 		var e = type.toString();
 		if (e.endsWith("V")) {
 			mv.visitInsn(RETURN);
-		} else if (e.startsWith("L")) {
+		} else if (e.startsWith("L") || e.startsWith("[")) {
 			mv.visitInsn(ARETURN);
 		} else {
 			var map = Map.of("I", IRETURN, "C", IRETURN, "S", IRETURN, "B", IRETURN, "Z", IRETURN, "J", LRETURN, "D",
@@ -53,8 +90,13 @@ public class InstUtils implements Opcodes {
 	 * @param mv method visitor
 	 * @param from current type on the stack (primitive).
 	 * @param to the target type (wrapper).
+	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public static void box(MethodVisitor mv, Type from, Type to) {
+		Contracts.requires(mv, "mv");
+		Contracts.requires(from, "from");
+		Contracts.requires(to, "to");
+
 		if (TypeUtils.isWrapper(from)) {
 			return;
 		}
@@ -72,8 +114,13 @@ public class InstUtils implements Opcodes {
 	 * @param mv   method visitor
 	 * @param from current type on the stack (wrapper).
 	 * @param to the target type (primitive).
+	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public static void unbox(MethodVisitor mv, Type from, Type to) {
+		Contracts.requires(mv, "mv");
+		Contracts.requires(from, "from");
+		Contracts.requires(to, "to");
+
 		if (TypeUtils.isPrimitive(from)) {
 			return;
 		}
@@ -82,6 +129,12 @@ public class InstUtils implements Opcodes {
 		mv.visitMethodInsn(INVOKEVIRTUAL, wrapper, primitve.getClassName() + "Value", "()" + primitve, false);
 	}
 
+	/**
+	 * Generates the bytecode to do a cast. 
+	 * @param mv method visitor
+	 * @param from source type
+	 * @param to target type
+	 */
 	public static void cast(MethodVisitor mv, Type from, Type to) {
 		if (TypeUtils.isPrimitive(from) && TypeUtils.isWrapper(to)) {
 			InstUtils.box(mv, from, to);
@@ -96,37 +149,6 @@ public class InstUtils implements Opcodes {
 			}
 		} else {
 			mv.visitTypeInsn(CHECKCAST, to.getInternalName());
-		}
-	}
-
-	public static void push(MethodVisitor mv, int value) {
-		switch (value) {
-		case 0:
-			mv.visitInsn(ICONST_0);
-			break;
-		case 1:
-			mv.visitInsn(ICONST_1);
-			break;
-		case 2:
-			mv.visitInsn(ICONST_2);
-			break;
-		case 3:
-			mv.visitInsn(ICONST_3);
-			break;
-		case 4:
-			mv.visitInsn(ICONST_4);
-			break;
-		case 5:
-			mv.visitInsn(ICONST_5);
-			break;
-		default:
-			if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
-				mv.visitIntInsn(BIPUSH, value);
-			} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
-				mv.visitIntInsn(SIPUSH, value);
-			} else {
-				mv.visitLdcInsn(Integer.valueOf(value));
-			}
 		}
 	}
 
