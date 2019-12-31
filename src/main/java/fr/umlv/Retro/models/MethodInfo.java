@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.objectweb.asm.MethodVisitor;
 
 /**
- * Provides informations about a class byte code method structure.
+ * Provides informations about a class byte code method structure (Immutable). 
  */
 public class MethodInfo {
 

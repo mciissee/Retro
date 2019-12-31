@@ -20,7 +20,7 @@ public class ConcatMethodVisitor implements MethodFeatureVisitor {
 	}
 
 	@Override
-	public boolean isFor(Features feature) {
+	public boolean canDetect(Features feature) {
 		if (feature == null) {
 			throw new IllegalArgumentException("app");
 		}

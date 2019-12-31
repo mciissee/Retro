@@ -6,7 +6,7 @@ import java.util.Objects;
 import fr.umlv.Retro.cli.CommandLine;
 
 /**
- * Bytecode transformation options.
+ * Bytecode transformation options (Immutable).
  */
 public class Options {
 
@@ -34,10 +34,6 @@ public class Options {
 		if (commandLine == null) {
 			throw new IllegalArgumentException("cli");
 		}
-		var force = commandLine.hasOption("force");
-		var info = commandLine.hasOption("info");
-		var help = commandLine.hasOption("help");
-		
 		var op = commandLine.args("target");
 		var target = 0;
 		if (!op.isEmpty()) {
@@ -45,10 +41,9 @@ public class Options {
 			if (target < 5) {
 				throw new AssertionError("Error: option target must be >= 5");
 			}
-		} else if (!help) {
+		} else if (!commandLine.hasOption("help")) {
 			throw new AssertionError("Error: option target is required");
 		}
-		
 		op = commandLine.args("features");
 		var features = EnumSet.noneOf(Features.class);
 		for (var feature : op.isEmpty() ? new String[0] : op.get()[0].split(",")) {
@@ -58,16 +53,14 @@ public class Options {
 				throw new AssertionError("unknown feature " + feature);
 			}
 		}
-
 		if (features.size() == 0) {
 			features = Features.ALL;
 		}
-
 		return new Options(
 			target,
-			force,
-			info,
-			help,
+			commandLine.hasOption("force"),
+			commandLine.hasOption("info"),
+			commandLine.hasOption("help"),
 			features
 		);
 	}

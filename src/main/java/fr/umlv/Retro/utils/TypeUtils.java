@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.objectweb.asm.Type;
 
+/**
+ * Provides static methods for ASM Type manipulations.
+ */
 public class TypeUtils {
 
 	/**

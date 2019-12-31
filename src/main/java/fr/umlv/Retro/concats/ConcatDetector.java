@@ -39,7 +39,7 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 		var rewritten = false;
 		if (handle.getOwner().equals("java/lang/invoke/StringConcatFactory")) {
 			var tokens = ((String) args[0]).split("((?<=\u0001)|(?=\u0001))");
-			app.onFeatureDetected(Features.Concat, new ConcatDescriber(ci, mi, lineNumber, tokens));
+			app.detectFeature(ci.path(), Features.Concat, new ConcatDescriber(ci, mi, lineNumber, tokens));
 			if (vi.canRewrite(app)) {
 				var rewriter = new ConcatRewriter(this);
 				rewriter.rewrite(descriptor, tokens);
