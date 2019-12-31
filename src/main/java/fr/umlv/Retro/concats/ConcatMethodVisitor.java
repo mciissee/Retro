@@ -16,7 +16,7 @@ public class ConcatMethodVisitor implements MethodFeatureVisitor {
 
 	@Override
 	public MethodVisitor visit(Retro app, ClassInfo ci, MethodInfo mi) {
-		return new ConcatDetector(app, ci, mi);
+		return new ConcatDetector(app, ci, mi, this);
 	}
 
 	@Override

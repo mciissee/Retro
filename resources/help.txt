@@ -1,0 +1,20 @@
+Usage: java -jar retro.jar [option] files
+
+where options include:
+
+    -target 
+    	target JDK version
+    
+    --force 
+    	force mode
+    
+    -features <A , separated list of the following features TryWithResources, Lambda, Concat, NestMates, Record>
+   		if not specified the program will search all features 
+   
+    -info 
+    	print informative messages
+    	
+    -help 
+    	print help
+    	
+The program will not modify the original files and will output the result in a subfolder "retro-output"
