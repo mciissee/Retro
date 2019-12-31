@@ -37,19 +37,28 @@ public class Options {
 		var force = commandLine.hasOption("force");
 		var info = commandLine.hasOption("info");
 		var help = commandLine.hasOption("help");
-		var target = Integer.parseInt(commandLine.args("target")[0]);
-		var features = EnumSet.noneOf(Features.class);
-		var args = commandLine.args("features");
-		if (args.length > 0) {
-			args = args[0].split(",");
+		
+		var op = commandLine.args("target");
+		var target = 0;
+		if (!op.isEmpty()) {
+			target = Integer.parseInt(op.get()[0]);	
+			if (target < 5) {
+				throw new AssertionError("Error: option target must be >= 5");
+			}
+		} else if (!help) {
+			throw new AssertionError("Error: option target is required");
 		}
-		for (var feature : args) {
+		
+		op = commandLine.args("features");
+		var features = EnumSet.noneOf(Features.class);
+		for (var feature : op.isEmpty() ? new String[0] : op.get()[0].split(",")) {
 			try {
 				features.add(Enum.valueOf(Features.class, feature));				
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("unknown feature " + feature);
+				throw new AssertionError("unknown feature " + feature);
 			}
 		}
+
 		if (features.size() == 0) {
 			features = Features.ALL;
 		}

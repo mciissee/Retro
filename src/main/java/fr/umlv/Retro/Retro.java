@@ -37,9 +37,8 @@ public class Retro {
 	 * @throws URISyntaxException 
 	 */
 	public static void fromCommandLine(CommandLine commandLine) throws IOException, URISyntaxException {
-		Contracts.requires(commandLine, "commandLine");
-		   
-        if (commandLine.hasOption("help")) {
+		Contracts.requires(commandLine, "commandLine");	   
+        if (commandLine.hasOption("help") || commandLine.isEmpty()) {
     		try(var stream = ClassLoader.getSystemClassLoader().getResourceAsStream("help.txt")) {
     			System.out.println(new String(stream.readAllBytes()));
     		}
@@ -51,17 +50,19 @@ public class Retro {
     	error.append("use -help for a list of possible options");
     	
         var files = commandLine.args();
-        if (files.length == 0) {
+        if (files.isEmpty()) {
         	throw new AssertionError(error.toString());
         }
      
         try {
-        	for (var path : files) {
+        	for (var path : files.get()) {
         		if (!path.isBlank() && !path.isEmpty()) {
         			var fs = FileSystem.create(Paths.get(path));
         			var options = Options.fromCommandLine(commandLine);
         			var retro = new Retro(fs, options); 
-        			retro.run();        			
+        			if (!retro.run()) {
+        				return;
+        			}        			
         		}
         	}
         } catch (IOException e) {
@@ -74,22 +75,24 @@ public class Retro {
 	 * Runs the program.
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
+	 * @return false if a problem is not occurred true otherwise.
 	 */
-	private void run() throws FileNotFoundException, IOException, URISyntaxException {
+	private boolean run() throws FileNotFoundException, IOException, URISyntaxException {
 		fs.clear();
 		unsupported.clear();
-		
 		fs.iterate((path, bytes) -> {
 			ClassTransformer.transform(this, path, bytes);
 		});
 		
 		if (unsupported.size() > 0) {
-			System.out.println("\nUnsupported features: Some bytecodes contains the following unsupported features : " + unsupported);
-			System.out.println("Run the program with --force or -features options");
+			System.out.println("\nUnsupported features: the bytecodes contains the following unsupported features : " + unsupported);
+			System.out.println("Run the program with --force or -features options\n");
+			return false;
 		} else {
 			fs.save();			
 		}
+		return true;
 	}
 		
 	/**
@@ -141,6 +144,7 @@ public class Retro {
 
 		if (!hasFeature(feature)) {
 			unsupported.add(feature);
+
 		}
 	}
 
@@ -162,4 +166,5 @@ public class Retro {
 		return options.target();
 	}
 	
+
 }

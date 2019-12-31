@@ -10,7 +10,7 @@ public class App {
 	// -target 7 --force -info  examples
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        var commandLine = CommandLineParser.parse(args, ":*target :features force info help");
+        var commandLine = CommandLineParser.parse(args, ":target :features force info help");
         Retro.fromCommandLine(commandLine);
     }
 }

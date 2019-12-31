@@ -57,7 +57,9 @@ public class CommandLineParser {
 			}
 			i++;
 		}
-		options.add(new CommandLineOption("^", defaults.toArray(new String[defaults.size()])));
+		if (!defaults.isEmpty()) {
+			options.add(new CommandLineOption("^", defaults.toArray(new String[defaults.size()])));			
+		}
 		checkRequirements(patterns, options);
 		return new CommandLine(options);
 	}
