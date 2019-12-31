@@ -2,6 +2,7 @@ package fr.umlv.Retro.cli;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +16,14 @@ public class CommandLine {
 		this.options = new ArrayList<>(Objects.requireNonNull(options));
 	}
 		
+
+	/**
+	 * Gets a value indicating whether any option is specified.
+	 * @return true if any option is specified false otherwise.
+	 */
+	public boolean isEmpty() {
+		return options.isEmpty();
+	}
 
 	/**
 	 * Checks whether an option has been set.
@@ -32,26 +41,25 @@ public class CommandLine {
 	/**
 	 * Gets the arguments associated with the given option.
 	 * @param opt the option.
-	 * @return a copy of the arguments (empty array if opt is not defined).
+	 * @return a copy of the arguments.
 	 * @throws IllegalArgumentException if opt is null.
 	 */
-	public String[] args(String opt) throws AssertionError, IllegalArgumentException  {
+	public Optional<String[]> args(String opt) throws AssertionError, IllegalArgumentException  {
 		var option = new CommandLineOption(opt);
 		for (var e : options) {
 			if (e.equals(option)) {
-				return e.args();
+				return Optional.of(e.args());
 			}
 		}
-		return new String[0];
+		return Optional.empty();
 	}
 	
 	/**
 	 * Gets the arguments not associated with a specific option.
 	 * @return a copy of the arguments.
 	 * @throws IllegalArgumentException if opt is null.
-	 * @throws AssertionError if option is not defined.
 	 */
-	public String[] args() {
+	public Optional<String[]> args() {
 		return args("^");
 	}
 	

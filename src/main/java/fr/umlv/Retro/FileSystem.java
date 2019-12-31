@@ -192,7 +192,10 @@ public final class FileSystem {
 		this.entries.clear();
 	}
 
-
+	@Override
+	public String toString() {
+		return root.toString();
+	}
 
 	private void saveAsJar() throws IOException  {
 		openJar(root, e -> !e.isDirectory() && !e.getName().endsWith(".class"), (p, b) -> {

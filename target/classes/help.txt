@@ -3,7 +3,7 @@ Usage: java -jar retro.jar [option] files
 where options include:
 
     -target 
-    	target JDK version
+    	target JDK version >= 5
     
     --force 
     	force mode
