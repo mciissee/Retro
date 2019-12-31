@@ -29,7 +29,7 @@ public class VersionUtils {
 	}
 	
 	/**
-	 * Opposite of {@link toJDK } method.
+	 * Opposite of {@link #toJDK(int) } method.
 	 * @param version A JDK version.
 	 * @return A bytecode major version.
 	 */

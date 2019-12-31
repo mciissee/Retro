@@ -1,5 +1,8 @@
 package fr.umlv.Retro.utils;
 
+/**
+ * Provides access to static methods for checking method pre and post conditions. 
+ */
 public class Contracts {
 	/**
 	 * Throws IllegalArgumentException if o is null

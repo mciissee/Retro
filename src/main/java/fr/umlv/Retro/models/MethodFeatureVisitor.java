@@ -23,18 +23,17 @@ public interface MethodFeatureVisitor {
 	 * @param feature the feature.
 	 * @return true if the visitor is for the feature false otherwise.
 	 */
-	boolean isFor(Features feature);	
+	boolean canDetect(Features feature);	
 
 	/**
 	 * Gets a value indicating whether the visitor can rewrite the feature depending on application state.
-	 * @param app app reference.
+	 * @param app application instance.
 	 * @return true if can rewrite false otherwise.
 	 */
 	boolean canRewrite(Retro app);
 
 	/**
 	 * Handles class visit end event.
-	 * @param app
 	 * @param app instance of the application facade.
 	 * @param ci informations about the method's class.
 	 */

@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
@@ -17,13 +18,13 @@ import fr.umlv.Retro.utils.Contracts;
 
 
 /**
- * Core class of the program.
+ * Facade of the application.
  */
 public class Retro {
 
 	private final Options options;
 	private final FileSystem fs;
-	private final HashSet<Features> unsupported = new HashSet<>();
+	private final HashMap<Features, ArrayList<String>> unsupported = new HashMap<>();
 
 	private Retro(FileSystem fs, Options options) {
 		this.fs = Objects.requireNonNull(fs);
@@ -35,8 +36,9 @@ public class Retro {
 	 * @param commandLine the command line arguments.
 	 * @throws IOException
 	 * @throws URISyntaxException 
+	 * @throws IllegalArgumentException
 	 */
-	public static void fromCommandLine(CommandLine commandLine) throws IOException, URISyntaxException {
+	public static void create(CommandLine commandLine) throws IOException, URISyntaxException {
 		Contracts.requires(commandLine, "commandLine");	   
         if (commandLine.hasOption("help") || commandLine.isEmpty()) {
     		try(var stream = ClassLoader.getSystemClassLoader().getResourceAsStream("help.txt")) {
@@ -69,85 +71,14 @@ public class Retro {
         	throw new IOException(error.toString(), e.getCause());
         }
 	}
-
 	
 	/**
-	 * Runs the program.
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws URISyntaxException
-	 * @return false if a problem is not occurred true otherwise.
+	 * The JDK version to which the byte codes should be transformed.
 	 */
-	private boolean run() throws FileNotFoundException, IOException, URISyntaxException {
-		fs.clear();
-		unsupported.clear();
-		fs.iterate((path, bytes) -> {
-			ClassTransformer.transform(this, path, bytes);
-		});
-		
-		if (unsupported.size() > 0) {
-			System.out.println("\nUnsupported features: the bytecodes contains the following unsupported features : " + unsupported);
-			System.out.println("Run the program with --force or -features options\n");
-			return false;
-		} else {
-			fs.save();			
-		}
-		return true;
-	}
-		
-	/**
-	 * Adds the given class file to the file system.
-	 * @param path path where to write the class
-	 * @param clazz the class name
-	 * @param bytes the class bytecode
-	 * @throws IllegalArgumentException
-	 */
-	public void writeClass(Path path, String clazz, byte[] bytes) {
-		fs.writeClass(path, clazz, bytes);
+	public int target() {
+		return options.target();
 	}
 	
-	/**
-	 * Adds the given class file to the file system.
-	 * @param path path where to write the class
-	 * @param bytes the class bytecode
-	 * @throws IllegalArgumentException
-	 */
-	public void writeClass(Path path, byte[] bytes) {
-		fs.writeClass(path, bytes);
-	}
-	
-	/**
-	 * Gets the bytecode of a class file from the disk relative to the given path.
-	 * @param path path where to search the class.
-	 * @param clazz class name
-	 * @param consumer consumer.
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public void openClassRelativeTo(Path path, String clazz, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
-		fs.openClassRelativeTo(path, clazz, consumer);
-	}
-
-	/**
-	 * Handles feature detection.
-	 * @param feature the feature
-	 * @param describer feature describer.
-	 * @throws IllegalArgumentException
-	 */
-	public void onFeatureDetected(Features feature, FeatureDescriber describer) {
-		Contracts.requires(feature, "feature");
-		Contracts.requires(describer, "describer");
-
-		if (options.info()) {
-			System.out.println(describer.describe());
-		}
-
-		if (!hasFeature(feature)) {
-			unsupported.add(feature);
-
-		}
-	}
-
 	/**
 	 * Checks whether the given feature is in the list of features to transform.
 	 * @param feature the feature
@@ -160,11 +91,87 @@ public class Retro {
 	}
 	
 	/**
-	 * The JDK version to which the byte codes should be transformed.
+	 * Writes the given {@code bytecode} in the class file {@code className} 
+	 * on the file system relative to {@code path}. <br/> <br/>
+	 * 
+	 * Note: the bytecode will not be written on the disk until {@link #save()} method is called.
+	 * @param path path where to write the class.
+	 * @param className class name (without an extension)..
+	 * @param bytecode bytecode to write.
+	 * @throws IllegalArgumentException if any of the arguments is null.
 	 */
-	public int target() {
-		return options.target();
+	public void write(Path path, String className, byte[] bytes) {
+		fs.write(path, className, bytes);
 	}
 	
+	/**
+	 * Writes the given {@code bytecode} at {@code path} on the file system. <br/> <br/>
+	 * 
+	 * Note: the bytecode will not be written on the disk until {@link #save()} method is called.
+	 * @param path path where to write the bytecode.
+	 * @param bytecode bytecode to write.
+	 * @throws IllegalArgumentException if any of the arguments is null.
+	 */
+	public void write(Path path, byte[] bytecode) {
+		fs.write(path, bytecode);
+	}
+	
+	/**
+	 * Gets the bytecode of the class {@code className} relative to the given {@code path}. <br><br>
+	 * 
+	 * The method will always return the last modified version of the bytecode since program the class is created.
+	 * @param path path where to search the class.
+	 * @param className class name
+	 * @param consumer bytecode consumer.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws IllegalArgumentException if any of the arguments is null.
+	 */
+	public void bytecode(Path path, String clazz, BiConsumer<Path, byte[]> consumer) throws FileNotFoundException, IOException {
+		fs.bytecode(path, clazz, consumer);
+	}
 
+	/**
+	 * Handles feature detection.
+	 * @param path path where the feature is detected.
+	 * @param feature the feature.
+	 * @param describer feature describer.
+	 * @throws IllegalArgumentException if any of the arguments is null.
+	 */
+	public void detectFeature(Path path, Features feature, FeatureDescriber describer) {
+		Contracts.requires(feature, "feature");
+		Contracts.requires(describer, "describer");
+		if (options.info()) {
+			System.out.println(describer.describe());
+		}
+		if (!hasFeature(feature)) {
+			var files = unsupported.get(feature);
+			if (files == null) {
+				files = new ArrayList<>();
+				unsupported.put(feature, files);
+			}
+			files.add(path.toString());
+		}
+	}
+
+	private boolean run() throws FileNotFoundException, IOException, URISyntaxException {
+		fs.clear();
+		unsupported.clear();
+		fs.iterate((path, bytes) -> {
+			ClassTransformer.transform(this, path, bytes);
+		});
+		if (unsupported.size() > 0) {
+			System.out.println("\nCancelled because of the following reasons :\n");
+			System.out.println("warning: unsupported features on JDK: " + target());
+			unsupported.forEach((k, v) -> {
+				v.forEach(e -> System.out.println("<" + k + "> on " + e));
+			});
+			System.out.print("\nRun the program with --force option or add the features using -features options ");
+			System.out.println("or use -help for more options");
+			return false;
+		} else {
+			fs.save();			
+		}
+		return true;
+	}
 }

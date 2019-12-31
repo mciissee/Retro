@@ -34,7 +34,7 @@ public class NestMateMethodVisitor implements MethodFeatureVisitor {
 	}
 	
 	@Override
-	public boolean isFor(Features feature) {
+	public boolean canDetect(Features feature) {
 		if (feature == null) {
 			throw new IllegalArgumentException("app");
 		}
@@ -59,7 +59,7 @@ public class NestMateMethodVisitor implements MethodFeatureVisitor {
 			}
 			var members = nestMembers.get(ci.className());
 			if (members != null) {
-				app.onFeatureDetected(Features.NestMates, new NestMateHostDescriber(ci.className(), members));
+				app.detectFeature(ci.path(), Features.NestMates, new NestMateHostDescriber(ci.className(), members));
 				nestMembers.remove(ci.className());
 			}
 		}

@@ -6,7 +6,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
- * A helper class for bytecode generation with ASM.
+ * Provides static methods for bytecode generation with ASM.
  */
 public class InstUtils implements Opcodes {
 

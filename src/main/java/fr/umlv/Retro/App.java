@@ -11,6 +11,6 @@ public class App {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         var commandLine = CommandLineParser.parse(args, ":target :features force info help");
-        Retro.fromCommandLine(commandLine);
+        Retro.create(commandLine);
     }
 }

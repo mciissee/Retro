@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.objectweb.asm.ClassVisitor;
 
 /**
- * Provides informations about a class bytecode structure.
+ * Provides informations about a class bytecode structure (Immutable).
  */
 public class ClassInfo {
 

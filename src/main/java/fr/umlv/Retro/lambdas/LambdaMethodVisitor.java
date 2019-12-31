@@ -20,7 +20,7 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 	}
 
 	@Override
-	public boolean isFor(Features feature) {
+	public boolean canDetect(Features feature) {
 		if (feature == null) {
 			throw new IllegalArgumentException("app");
 		}
@@ -34,5 +34,5 @@ public class LambdaMethodVisitor implements MethodFeatureVisitor {
 		}
 		return app.target() < 8 && app.hasFeature(Features.Lambda);
 	}
-
+	
 }
