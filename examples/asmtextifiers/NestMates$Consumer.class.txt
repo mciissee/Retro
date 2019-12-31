@@ -1,0 +1,12 @@
+// class version 57.0 (57)
+// access flags 0x600
+abstract interface NestMates$Consumer {
+
+  // compiled from: NestMates.java
+  NESTHOST NestMates
+  // access flags 0x608
+  static abstract INNERCLASS NestMates$Consumer NestMates Consumer
+
+  // access flags 0x401
+  public abstract consume()V
+}

@@ -1,0 +1,4 @@
+Compiled from "NestMates.java"
+interface NestMates$Consumer {
+  public abstract void consume();
+}

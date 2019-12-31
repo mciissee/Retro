@@ -64,7 +64,7 @@ class LambdaRewriter implements Opcodes {
 		visitMethodOverload(clazz, name, interfacedesco, interfacedescg);
 		visitCreateInstruction(clazz, constructor, captures);
 
-		app.write(ci.path(), clazz, cw.toByteArray());
+		app.writeClass(ci.path(), clazz, cw.toByteArray());
 	}
 
 

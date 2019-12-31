@@ -1,0 +1,63 @@
+// class version 57.0 (57)
+// access flags 0x20
+class NestMates$Inner {
+
+  // compiled from: NestMates.java
+  NESTHOST NestMates
+  // access flags 0x0
+  INNERCLASS NestMates$Inner NestMates Inner
+  // access flags 0x19
+  public final static INNERCLASS java/lang/invoke/MethodHandles$Lookup java/lang/invoke/MethodHandles Lookup
+
+  // access flags 0x1010
+  final synthetic LNestMates; this$0
+
+  // access flags 0x0
+  <init>(LNestMates;)V
+   L0
+    LINENUMBER 6 L0
+    ALOAD 0
+    ALOAD 1
+    PUTFIELD NestMates$Inner.this$0 : LNestMates;
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x0
+  sayHi()Ljava/lang/String;
+   L0
+    LINENUMBER 8 L0
+    ALOAD 0
+    GETFIELD NestMates$Inner.this$0 : LNestMates;
+    LDC "mamadou"
+    PUTFIELD NestMates.name : Ljava/lang/String;
+   L1
+    LINENUMBER 9 L1
+    ALOAD 0
+    GETFIELD NestMates$Inner.this$0 : LNestMates;
+    GETFIELD NestMates.name : Ljava/lang/String;
+    ALOAD 0
+    GETFIELD NestMates$Inner.this$0 : LNestMates;
+    ICONST_2
+    ANEWARRAY java/lang/String
+    DUP
+    ICONST_0
+    LDC "a"
+    AASTORE
+    DUP
+    ICONST_1
+    LDC "b"
+    AASTORE
+    INVOKEVIRTUAL NestMates.concat ([Ljava/lang/String;)Ljava/lang/String;
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "Hi, \u0001!\u0001"
+    ]
+    ARETURN
+    MAXSTACK = 6
+    MAXLOCALS = 1
+}

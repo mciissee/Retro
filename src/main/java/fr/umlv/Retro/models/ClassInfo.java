@@ -15,8 +15,9 @@ public class ClassInfo {
 	private final Path path;
 	private final String fileName;
 	private final String className;
+	private final String nestHost;
 	private final ClassVisitor cv;
-
+	
 	/**
 	 * Creates new instance of ClassInfo
 	 * @param api ASM version
@@ -24,15 +25,17 @@ public class ClassInfo {
 	 * @param path path to the source file.
 	 * @param fileName source file name
 	 * @param className The name of the parsed class.
+	 * @param nestHost The name of the host class JDK >= 11 (nullable).
 	 * @param cv The class visitor to which method calls should be delegated.
 	 */
-	public ClassInfo(int api, int version, Path path, String fileName, String className, ClassVisitor cv) {
+	public ClassInfo(int api, int version, Path path, String fileName, String className, String nestHost, ClassVisitor cv) {
 		this.api = api;
 		this.version = version;
 		this.path = Objects.requireNonNull(path);
 		this.fileName = Objects.requireNonNull(fileName);
 		this.className = Objects.requireNonNull(className);
 		this.cv = Objects.requireNonNull(cv);
+		this.nestHost = nestHost;
 	}
 	
 	/**
@@ -71,6 +74,14 @@ public class ClassInfo {
 	public String className() {
 		return this.className;
 	}
+	
+	/**
+	 * Name of the host class JDK >= 11 (nullable).
+	 */
+	public String nestHost() {
+		return this.nestHost;
+	}
+	
 	
 	/**
 	 * Reference to the class visitor to which method calls should be delegated.
