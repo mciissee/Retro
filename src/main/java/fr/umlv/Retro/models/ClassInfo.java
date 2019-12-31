@@ -25,7 +25,7 @@ public class ClassInfo {
 	 * @param path path to the source file.
 	 * @param fileName source file name
 	 * @param className The name of the parsed class.
-	 * @param nestHost The name of the host class JDK >= 11 (nullable).
+	 * @param nestHost The name of the host class JDK &gt;= 11 (nullable).
 	 * @param cv The class visitor to which method calls should be delegated.
 	 */
 	public ClassInfo(int api, int version, Path path, String fileName, String className, String nestHost, ClassVisitor cv) {
