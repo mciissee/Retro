@@ -25,7 +25,7 @@ import fr.umlv.Retro.utils.Contracts;
 import fr.umlv.Retro.utils.VersionUtils;
 
 /**
- * Retro grade a bytecode from a version to another version by
+ * Transforms a bytecode from a version to another version by
  * keeping the retro compatibility of the features.
  */
 public class ClassTransformer extends ClassVisitor implements Opcodes {
@@ -76,16 +76,6 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		if (version < app.target()) {
-			throw new AssertionError(
-				String.format(
-					"Error: bytecode (%s.class) version %s is lower than  ",
-					name,
-					version,
-					app.target()
-				)
-			);
-		}
 		this.version = VersionUtils.toJDK(version);
 	    super.visit(VersionUtils.toBytecode(app.target()), access, name, signature, superName, interfaces);
 	}
@@ -152,8 +142,9 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 	
 	@Override
 	public void visitEnd() {
+		var ci = new ClassInfo(api, version, path, fileName, className, nestHost, cv);
 		for (var visitor : visitors) {
-			visitor.visitEnd(app, new ClassInfo(api, version, path, fileName, className, nestHost, cv));
+			visitor.visitEnd(app, ci);
 		}
 		super.visitEnd();
 	}
@@ -166,5 +157,4 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		}
 		return false;
 	}
-
 }

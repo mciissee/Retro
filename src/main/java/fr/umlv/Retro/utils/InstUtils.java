@@ -1,6 +1,5 @@
 package fr.umlv.Retro.utils;
 
-import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -11,11 +10,12 @@ import org.objectweb.asm.Type;
 public class InstUtils implements Opcodes {
 
 	/**
-	 * Generates the bytecode to push the local variable `var` to the stack.
-	 * @param mv method visitor
+	 * Generates the bytecode to push the local variable {@code var} to the stack.
+	 * 
+	 * @param mv   method visitor
 	 * @param type type of the variable
-	 * @param var index of the variable in local variables tables.
-	 * @throws IllegalArgumentException if any argument is null.
+	 * @param var  index of the variable in local variables tables.
+	 * @throws IllegalArgumentException  if any argument is null.
 	 * @throws IndexOutOfBoundsException if var < 0
 	 */
 	public static void load(MethodVisitor mv, Type type, int var) {
@@ -25,24 +25,18 @@ public class InstUtils implements Opcodes {
 		if (var < 0) {
 			throw new IndexOutOfBoundsException("local variable index must be >= 0");
 		}
-
-		var e = type.toString();
-		if (e.startsWith("L") || e.startsWith("[")) {
-			mv.visitVarInsn(ALOAD, var);
-		} else {
-			var map = Map.of("I", ILOAD, "C", ILOAD, "S", ILOAD, "B", ILOAD, "Z", ILOAD, "J", LLOAD, "D", DLOAD, "F",
-					FLOAD);
-			mv.visitVarInsn(map.get(type.toString()), var);
-		}
+		mv.visitVarInsn(type.getOpcode(ILOAD), var);
 	}
 
 	/**
-	 * Generates the bytecode to pop the current value from the top of the stack into the local variable `var`.
-	 * @param mv method visitor
+	 * Generates the bytecode to pop the current value from the top of the stack
+	 * into the local variable {@code var}.
+	 * 
+	 * @param mv   method visitor
 	 * @param type type of the variable
-	 * @param var index of the variable in local variables tables.
-	 * @throws IllegalArgumentException if any argument is null.
-	 * @throws IndexOutOfBoundsException if var < 0
+	 * @param var  index of the variable in local variables tables.
+	 * @throws IllegalArgumentException  if any argument is null.
+	 * @throws IndexOutOfBoundsException if {@code var} < 0
 	 */
 	public static void store(MethodVisitor mv, Type type, int var) {
 		Contracts.requires(mv, "mv");
@@ -50,46 +44,29 @@ public class InstUtils implements Opcodes {
 		if (var < 0) {
 			throw new IndexOutOfBoundsException("local variable index must be >= 0");
 		}
-		var e = type.toString();
-		if (e.startsWith("L") || e.startsWith("[")) {
-			mv.visitVarInsn(ASTORE, var);
-		} else {
-			var map = Map.of("I", ISTORE, "C", ISTORE, "S", ISTORE, "B", ISTORE, "Z", ISTORE, "J", LSTORE, "D", DSTORE,
-					"F", FSTORE);
-
-			mv.visitVarInsn(map.get(type.toString()), var);
-		}
+		mv.visitVarInsn(type.getOpcode(ISTORE), var);
 	}
 
 	/**
 	 * Generates the bytecode to return from the current method.
-	 * @param mv method visitor.
+	 * 
+	 * @param mv   method visitor.
 	 * @param type return type
 	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public static void ret(MethodVisitor mv, Type type) {
 		Contracts.requires(mv, "mv");
 		Contracts.requires(type, "type");
-
-		var e = type.toString();
-		if (e.endsWith("V")) {
-			mv.visitInsn(RETURN);
-		} else if (e.startsWith("L") || e.startsWith("[")) {
-			mv.visitInsn(ARETURN);
-		} else {
-			var map = Map.of("I", IRETURN, "C", IRETURN, "S", IRETURN, "B", IRETURN, "Z", IRETURN, "J", LRETURN, "D",
-					DRETURN, "F", FRETURN);
-			mv.visitInsn(map.get(type.toString()));
-		}
+		mv.visitInsn(type.getOpcode(IRETURN));
 	}
 
 	/**
 	 * Generates the bytecode to convert the current primitive (int, long, double)
 	 * value on the stack to it's wrapper type (Integer, Long, Double).
 	 * 
-	 * @param mv method visitor
+	 * @param mv   method visitor
 	 * @param from current type on the stack (primitive).
-	 * @param to the target type (wrapper).
+	 * @param to   the target type (wrapper).
 	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public static void box(MethodVisitor mv, Type from, Type to) {
@@ -113,7 +90,7 @@ public class InstUtils implements Opcodes {
 	 * 
 	 * @param mv   method visitor
 	 * @param from current type on the stack (wrapper).
-	 * @param to the target type (primitive).
+	 * @param to   the target type (primitive).
 	 * @throws IllegalArgumentException if any argument is null.
 	 */
 	public static void unbox(MethodVisitor mv, Type from, Type to) {
@@ -130,10 +107,11 @@ public class InstUtils implements Opcodes {
 	}
 
 	/**
-	 * Generates the bytecode to do a cast. 
-	 * @param mv method visitor
+	 * Generates the bytecode to do a cast.
+	 * 
+	 * @param mv   method visitor
 	 * @param from source type
-	 * @param to target type
+	 * @param to   target type
 	 */
 	public static void cast(MethodVisitor mv, Type from, Type to) {
 		if (TypeUtils.isPrimitive(from) && TypeUtils.isWrapper(to)) {

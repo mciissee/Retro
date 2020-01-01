@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-class NestMates {
+class TestNestMate {
     private String name;
 
     class Inner {
@@ -20,7 +20,7 @@ class NestMates {
    }
 
     public static void main(String[] args) {
-        NestMates.Inner inner = new NestMates().new Inner();
+        TestNestMate.Inner inner = new TestNestMate().new Inner();
         System.out.println(inner.sayHi());
     }
 }
