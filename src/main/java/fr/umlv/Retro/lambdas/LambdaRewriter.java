@@ -74,7 +74,7 @@ class LambdaRewriter implements Opcodes {
 	 * @param descriptor class descriptor.
 	 */
 	private void visitClass(String name, String descriptor) {
-		var version = VersionUtils.toBytecode(ci.version());
+		var version = VersionUtils.toBytecode(app.target());
 		var interfaces =  new String[] {Type.getReturnType(descriptor).getInternalName()};
 		cw.visit(version, ACC_SUPER, name, null, "java/lang/Object", interfaces);
 		cw.visitSource(ci.className() + ".java", null);
