@@ -46,7 +46,7 @@ public class ClassInfo {
 	}
 
 	/**
-	 * JDK version of the byte code. [5, 14]
+	 * JDK version of the bytecode. [5, 14]
 	 * @return
 	 */
 	public int version() {
