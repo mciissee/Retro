@@ -67,7 +67,6 @@ class LambdaRewriter implements Opcodes {
 		app.write(ci.path(), clazz, cw.toByteArray());
 	}
 
-
 	/**
 	 * Writes bytecode instructions to declare the class heading.
 	 * @param name class name.
@@ -86,10 +85,9 @@ class LambdaRewriter implements Opcodes {
 	 * Writes bytecode instructions to declare fields of the inner class.
 	 * @param types field types (type of the variables captured by the lambda function).
 	 */
-
 	private void visitFields(Type[] types) {
 		IntStream.range(0, types.length).forEach(i -> {
-			cw.visitField(ACC_FINAL | ACC_SYNTHETIC, "f$" + i, types[i].toString(), null, null).visitEnd();
+			cw.visitField(ACC_FINAL | ACC_SYNTHETIC, "this$" + i, types[i].toString(), null, null).visitEnd();
 		});;
 	}
 
@@ -102,23 +100,17 @@ class LambdaRewriter implements Opcodes {
 	private void visitConstructor(String clazz, String descriptor, Type[] params) {
 		var mv = cw.visitMethod(ACC_PUBLIC, "<init>", descriptor, null, null);
 		mv.visitCode();
-	
-		// super()
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
-		
-		// this.f$[i] = params[i]
-		for (int i = 0; i < params.length; i++) {
+		IntStream.range(0, params.length).forEach(i -> {
 			mv.visitVarInsn(ALOAD, 0);
 			InstUtils.load(mv, params[i], i + 1);
-			mv.visitFieldInsn(PUTFIELD, clazz, "f$" + i, params[i].toString());
-		}
-
+			mv.visitFieldInsn(PUTFIELD, clazz, "this$" + i, params[i].toString());
+		});
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
 	}
-
 	
 	/**
 	 * Writes bytecode instructions to implement the method from the functional interface of the lambda with generic type informations.
@@ -135,7 +127,7 @@ class LambdaRewriter implements Opcodes {
 		// push the captures fields on the stack.
 		for (int i = 0; i < captures.length; i++) {
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, clazz, "f$" + i, captures[i].toString());
+			mv.visitFieldInsn(GETFIELD, clazz, "this$" + i, captures[i].toString());
 		}
 	
 		// push the arguments of the method
@@ -161,7 +153,6 @@ class LambdaRewriter implements Opcodes {
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
 	}
-
 	
 	/**
 	 * Writes bytecode instructions to implement the method from the functional interface of the lambda without generic type informations.
@@ -174,8 +165,7 @@ class LambdaRewriter implements Opcodes {
 		if (!interfacedesco.equals(interfacedescg)) {
 			var mv = cw.visitMethod(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, name, interfacedesco, null, null);
 			mv.visitCode();
-			mv.visitVarInsn(ALOAD, 0);
-			
+			mv.visitVarInsn(ALOAD, 0);		
 			var interfaceargsg = Type.getArgumentTypes(interfacedescg);
 			var params = Type.getArgumentTypes(interfacedesco);
 			for (int i = 0; i < params.length; i++) {
@@ -183,14 +173,12 @@ class LambdaRewriter implements Opcodes {
 				mv.visitTypeInsn(CHECKCAST, interfaceargsg[i].getInternalName());
 			}
 			mv.visitMethodInsn(INVOKEVIRTUAL, clazz, name, interfacedescg, false);
-
 			InstUtils.ret(mv, Type.getReturnType(interfacedesco));
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 	}
 
-	
 	/**
 	 * Writes bytecode instructions to replace lambda invoke dynamic instruction with a creation of the 
 	 * inner class.
@@ -227,7 +215,6 @@ class LambdaRewriter implements Opcodes {
 				.collect(Collectors.joining("", "(", ")V"));
 	}
 
-	
 	/**
 	 * Since method generated with invoke dynamic for the lambda is private
 	 * this method creates new one with package level visibility that call the private method.
@@ -241,36 +228,28 @@ class LambdaRewriter implements Opcodes {
 		if (!owner.equals(ci.className())) { // skip method references like Integer::sum
 			return lambda.getName();
 		}
-
 		var cv = ci.visitor();
 		var desc = lambda.getDesc();
-		var name = String.format("access$%s", lambda.getName());
+		var name = String.format("$%s", lambda.getName());
 		var isStatic = lambda.getTag() == H_INVOKESTATIC;
-	
+		
 		var mv = cv.visitMethod((isStatic ? ACC_STATIC : 0) + ACC_SYNTHETIC, name, desc, null, null);
 		mv.visitCode();	
-	
-		var types = Type.getArgumentTypes(desc);
 		var i = 0;
 		if (!isStatic) {
 			mv.visitVarInsn(ALOAD, 0);
 			i++;
 		}
-
-		for (var type : types) {
+		for (var type : Type.getArgumentTypes(desc)) {
 			InstUtils.load(mv, type, i);
 			i += type.getSize();
 		}
-
 		mv.visitMethodInsn(isStatic ? INVOKESTATIC : INVOKEVIRTUAL, lambda.getOwner(), lambda.getName(), desc, false);
-
 		InstUtils.ret(mv, Type.getReturnType(desc));
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
-	
 		return name;
 	}
-
 
 	private Type[] parameters(Handle method, Type[] captures) {
 		var params = Type.getArgumentTypes(method.getDesc());

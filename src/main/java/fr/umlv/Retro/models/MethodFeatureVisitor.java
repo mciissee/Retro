@@ -8,7 +8,7 @@ import fr.umlv.Retro.Retro;
  * Visit method code to detect and rewrite a feature.
  */
 public interface MethodFeatureVisitor {
-	
+
 	/**
 	 * Visit the method code.
 	 * @param app instance of the application facade.

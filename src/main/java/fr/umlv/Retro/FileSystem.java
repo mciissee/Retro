@@ -167,7 +167,7 @@ public final class FileSystem {
 		Contracts.requires(consumer, "consumer");
 		path = resolve(path, className + ".class");
 		if (isJar) {
-			try(var zip = new ZipFile(path.toString())) {
+			try(var zip = new ZipFile(root.toString())) {
 				var entries = zip.stream().collect(Collectors.toList());
 				for (var entry : entries) {
 					if (entry.getName().equals(path.toString())) {						

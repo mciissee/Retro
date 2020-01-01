@@ -1,0 +1,4 @@
+Compiled from "TestNestMate.java"
+interface TestNestMate$Consumer {
+  public abstract void consume();
+}

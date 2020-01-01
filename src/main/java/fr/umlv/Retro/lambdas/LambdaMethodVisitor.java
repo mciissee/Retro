@@ -8,10 +8,6 @@ import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.MethodFeatureVisitor;
 import fr.umlv.Retro.models.MethodInfo;
 
-/**
- * Transform lambda functions from the method to Anonymous functions
- * if target version is lower than JDK 8.
- */
 public class LambdaMethodVisitor implements MethodFeatureVisitor {
 	
 	@Override

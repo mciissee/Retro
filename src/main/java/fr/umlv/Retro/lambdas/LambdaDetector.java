@@ -14,7 +14,7 @@ import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.MethodInfo;
 
 /**
- * Detects lambda method call and rewrite them if needed (target < JDK 8).
+ * Detects lambda method calls and rewrite them if needed (target < JDK 8).
  */
 class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 	
@@ -51,6 +51,7 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 				rewritten = true;
 			}
 		}
+
 		if (!rewritten) {
 			super.visitInvokeDynamicInsn(name, descriptor, bsm, bsmArgs);
 		}

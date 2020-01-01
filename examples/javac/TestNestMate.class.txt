@@ -1,0 +1,31 @@
+Compiled from "TestNestMate.java"
+class TestNestMate {
+  private java.lang.String name;
+
+  TestNestMate();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private java.lang.String concat(java.lang.String...);
+    Code:
+       0: aload_1
+       1: invokestatic  #7                  // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+       4: areturn
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: new           #13                 // class TestNestMate$Inner
+       3: dup
+       4: new           #15                 // class TestNestMate
+       7: dup
+       8: invokespecial #17                 // Method "<init>":()V
+      11: invokespecial #18                 // Method TestNestMate$Inner."<init>":(LTestNestMate;)V
+      14: astore_1
+      15: getstatic     #21                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      18: aload_1
+      19: invokevirtual #27                 // Method TestNestMate$Inner.sayHi:()Ljava/lang/String;
+      22: invokevirtual #31                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      25: return
+}

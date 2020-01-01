@@ -1,0 +1,38 @@
+Compiled from "TestNestMate.java"
+class TestNestMate$Inner {
+  final TestNestMate this$0;
+
+  TestNestMate$Inner(TestNestMate);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:LTestNestMate;
+       5: aload_0
+       6: invokespecial #7                  // Method java/lang/Object."<init>":()V
+       9: return
+
+  java.lang.String sayHi();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field this$0:LTestNestMate;
+       4: ldc           #13                 // String mamadou
+       6: putfield      #15                 // Field TestNestMate.name:Ljava/lang/String;
+       9: aload_0
+      10: getfield      #1                  // Field this$0:LTestNestMate;
+      13: getfield      #15                 // Field TestNestMate.name:Ljava/lang/String;
+      16: aload_0
+      17: getfield      #1                  // Field this$0:LTestNestMate;
+      20: iconst_2
+      21: anewarray     #21                 // class java/lang/String
+      24: dup
+      25: iconst_0
+      26: ldc           #23                 // String a
+      28: aastore
+      29: dup
+      30: iconst_1
+      31: ldc           #25                 // String b
+      33: aastore
+      34: invokevirtual #27                 // Method TestNestMate.concat:([Ljava/lang/String;)Ljava/lang/String;
+      37: invokedynamic #31,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      42: areturn
+}
