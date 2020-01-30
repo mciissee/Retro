@@ -10,11 +10,6 @@ class TestNestMate {
         }
     }
 
-    interface Consumer {
-        void consume();
-    }
-    
-
     private String concat(String... args) {
       return Arrays.toString(args);
    }

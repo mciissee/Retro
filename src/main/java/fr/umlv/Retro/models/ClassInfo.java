@@ -10,41 +10,43 @@ import org.objectweb.asm.ClassVisitor;
  */
 public class ClassInfo {
 
-	private final int api;
 	private final int version;
 	private final Path path;
 	private final String fileName;
 	private final String className;
 	private final String nestHost;
 	private final ClassVisitor cv;
-	
+
 	/**
 	 * Creates new instance of ClassInfo
-	 * @param api ASM version
 	 * @param version JDK version of the bytecode
 	 * @param path path to the source file.
 	 * @param fileName source file name
 	 * @param className The name of the parsed class.
-	 * @param nestHost The name of the host class JDK &gt;= 11 (nullable).
 	 * @param cv The class visitor to which method calls should be delegated.
 	 */
-	public ClassInfo(int api, int version, Path path, String fileName, String className, String nestHost, ClassVisitor cv) {
-		this.api = api;
+	public ClassInfo(int version, Path path, String fileName, String className, ClassVisitor cv) {
+		this(version, path, fileName, className, null, cv);
+	}
+	
+	/**
+	 * Creates new instance of ClassInfo
+	 * @param version JDK version of the bytecode
+	 * @param path path to the source file.
+	 * @param fileName source file name
+	 * @param className The name of the parsed class.
+	 * @param nestHost The nestHost of the class (nullable).
+	 * @param cv The class visitor to which method calls should be delegated.
+	 */
+	public ClassInfo(int version, Path path, String fileName, String className, String nestHost, ClassVisitor cv) {
 		this.version = version;
 		this.path = Objects.requireNonNull(path);
 		this.fileName = Objects.requireNonNull(fileName);
 		this.className = Objects.requireNonNull(className);
-		this.cv = Objects.requireNonNull(cv);
 		this.nestHost = nestHost;
+		this.cv = Objects.requireNonNull(cv);
 	}
 	
-	/**
-	 * ASM version used to read the bytecode.
-	 */
-	public int api() {
-		return this.api;
-	}
-
 	/**
 	 * JDK version of the bytecode. [5, 14]
 	 * @return
@@ -69,25 +71,23 @@ public class ClassInfo {
 	
 	/**
 	 * Name of the class.
-	 * @return
 	 */
 	public String className() {
 		return this.className;
 	}
 	
 	/**
-	 * Name of the host class JDK >= 11 (nullable).
+	 * NestHost attribute of the class (nullable).
 	 */
 	public String nestHost() {
 		return this.nestHost;
 	}
-	
-	
+
 	/**
-	 * Reference to the class visitor to which method calls should be delegated.
+	 * The class visitor to which method calls should be delegated.
 	 */
 	public ClassVisitor visitor() {
 		return this.cv;
 	}
-
+	
 }

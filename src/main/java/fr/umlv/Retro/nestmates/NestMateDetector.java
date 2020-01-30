@@ -13,15 +13,13 @@ import fr.umlv.Retro.models.MethodInfo;
  * Replaces private members access of an outer class from it's inner classes.
  */
 public class NestMateDetector extends MethodVisitor implements Opcodes {
-	private final Retro app;
 	private final ClassInfo ci;
-	private final NestMateMethodVisitor vi;
+	private final NestMateVisitor vi;
 
-	public NestMateDetector(Retro app, ClassInfo ci, MethodInfo mi, NestMateMethodVisitor vi) {
-		super(ci.api(), mi.visitor());
+	public NestMateDetector(Retro app, ClassInfo ci, MethodInfo mi, NestMateVisitor vi) {
+		super(app.api(), mi.visitor());
 		this.ci = ci;
 		this.vi = Objects.requireNonNull(vi);
-		this.app = Objects.requireNonNull(app);
 	}
 	
 	// TODO skip non private fields
@@ -29,11 +27,7 @@ public class NestMateDetector extends MethodVisitor implements Opcodes {
 	public void visitFieldInsn(int opcode, String owner, String name, String descriptor) {
 		var rewritten = false;
 		if (owner.equals(ci.nestHost())) {
-			var rewriter = vi.findRewriter(owner, name, descriptor);
-			if (vi.canRewrite(app)) {
-				rewriter.rewrite(this, opcode);
-				rewritten = true;
-			}	
+			rewritten = vi.detectNestMate(owner, name,  descriptor, rw -> rw.rewrite(this, opcode));	
 		}
 		if (!rewritten) {
 			super.visitFieldInsn(opcode, owner, name, descriptor);				
@@ -45,11 +39,7 @@ public class NestMateDetector extends MethodVisitor implements Opcodes {
 	public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
 		var rewritten = false;
 		if (owner.equals(ci.nestHost()) && !name.contains("$")) {
-			var rewriter = vi.findRewriter(owner, name, descriptor);
-			if (vi.canRewrite(app)) {
-				rewriter.rewrite(this, opcode);
-				rewritten = true;
-			}	
+			rewritten = vi.detectNestMate(owner, name,  descriptor, rw -> rw.rewrite(this, opcode));
 		}
 		if (!rewritten) {
 			super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
