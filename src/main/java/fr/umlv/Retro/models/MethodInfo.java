@@ -20,14 +20,14 @@ public class MethodInfo {
 	 * Creates new instance of MethodInfo
 	 * @param name The name of the method.
 	 * @param descriptor The descriptor of the method.
-	 * @param exceptions A list of exceptions of thrown by the method.
+	 * @param exceptions A list of exceptions of thrown by the method (nullable).
 	 * @param mv The method visitor to which method calls should be delegated.
 	 */
 	public MethodInfo(int access, String name, String descriptor, String[] exceptions, MethodVisitor mv) {
 		this.access = access;
 		this.methodName = Objects.requireNonNull(name);
 		this.descriptor = Objects.requireNonNull(descriptor);
-		this.exceptions = Objects.requireNonNull(exceptions);
+		this.exceptions = exceptions == null ? new String[0] : Arrays.copyOf(exceptions, exceptions.length);
 		this.mv = Objects.requireNonNull(mv);
 	}
 

@@ -6,14 +6,21 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
+import org.objectweb.asm.Opcodes;
+
 import fr.umlv.Retro.cli.CommandLine;
+import fr.umlv.Retro.concats.ConcatVisitor;
+import fr.umlv.Retro.lambdas.LambdaVisitor;
 import fr.umlv.Retro.models.FeatureDescriber;
+import fr.umlv.Retro.models.FeatureVisitor;
 import fr.umlv.Retro.models.Features;
 import fr.umlv.Retro.models.Options;
+import fr.umlv.Retro.nestmates.NestMateVisitor;
 import fr.umlv.Retro.utils.Contracts;
 
 
@@ -25,7 +32,12 @@ public class Retro {
 	private final Options options;
 	private final FileSystem fs;
 	private final HashMap<Features, ArrayList<String>> unsupported = new HashMap<>();
-
+	private final FeatureVisitor[] visitors = new FeatureVisitor[] {
+		new NestMateVisitor(this),
+		new ConcatVisitor(this),
+		new LambdaVisitor(this),
+    };
+	
 	private Retro(FileSystem fs, Options options) {
 		this.fs = Objects.requireNonNull(fs);
 		this.options = Objects.requireNonNull(options);
@@ -72,6 +84,10 @@ public class Retro {
         }
 	}
 	
+	public int api() {
+		return Opcodes.ASM7;
+	}
+
 	/**
 	 * The JDK version to which the byte codes should be transformed.
 	 */
@@ -90,6 +106,10 @@ public class Retro {
 		return options.hasFeature(feature) || options.force();
 	}
 	
+	public FeatureVisitor[] visitors() {
+		return Arrays.copyOf(visitors, visitors.length);
+	}
+
 	/**
 	 * Writes the given {@code bytecode} in the class file {@code className} 
 	 * on the file system relative to {@code path}. <br/> <br/>
@@ -152,6 +172,7 @@ public class Retro {
 			}
 			files.add(path.toString());
 		}
+		
 	}
 
 	private boolean run() throws FileNotFoundException, IOException, URISyntaxException {

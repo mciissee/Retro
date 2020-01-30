@@ -14,16 +14,15 @@ import fr.umlv.Retro.models.MethodInfo;
 
 class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 
-	private int lineNumber;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
 	private final Retro app;
-	private final ConcatMethodVisitor vi;
 
-	public ConcatDetector(Retro app, ClassInfo ci, MethodInfo mi, ConcatMethodVisitor vi) {
-		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
+	private int lineNumber;
+
+	public ConcatDetector(Retro app, ClassInfo ci, MethodInfo mi) {
+		super(app.api(), mi.access(), mi.descriptor(), mi.visitor());
 		this.app = Objects.requireNonNull(app);
-		this.vi = Objects.requireNonNull(vi);
 		this.ci = ci;
 		this.mi = mi;
 	}
@@ -40,7 +39,7 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 		if (handle.getOwner().equals("java/lang/invoke/StringConcatFactory")) {
 			var tokens = ((String) args[0]).split("((?<=\u0001)|(?=\u0001))");
 			app.detectFeature(ci.path(), Features.Concat, new ConcatDescriber(ci, mi, lineNumber, tokens));
-			if (vi.canRewrite(app)) {
+			if (app.target() < 9 && app.hasFeature(Features.Concat)) {
 				var rewriter = new ConcatRewriter(this);
 				rewriter.rewrite(descriptor, tokens);
 				rewritten = true;

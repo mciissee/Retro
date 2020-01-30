@@ -3,12 +3,9 @@
 class TestNestMate {
 
   // compiled from: TestNestMate.java
-  NESTMEMBER TestNestMate$Consumer
   NESTMEMBER TestNestMate$Inner
   // access flags 0x0
   INNERCLASS TestNestMate$Inner TestNestMate Inner
-  // access flags 0x608
-  static abstract INNERCLASS TestNestMate$Consumer TestNestMate Consumer
 
   // access flags 0x2
   private Ljava/lang/String; name
@@ -26,7 +23,7 @@ class TestNestMate {
   // access flags 0x82
   private varargs concat([Ljava/lang/String;)Ljava/lang/String;
    L0
-    LINENUMBER 19 L0
+    LINENUMBER 14 L0
     ALOAD 1
     INVOKESTATIC java/util/Arrays.toString ([Ljava/lang/Object;)Ljava/lang/String;
     ARETURN
@@ -36,7 +33,7 @@ class TestNestMate {
   // access flags 0x9
   public static main([Ljava/lang/String;)V
    L0
-    LINENUMBER 23 L0
+    LINENUMBER 18 L0
     NEW TestNestMate$Inner
     DUP
     NEW TestNestMate
@@ -45,13 +42,13 @@ class TestNestMate {
     INVOKESPECIAL TestNestMate$Inner.<init> (LTestNestMate;)V
     ASTORE 1
    L1
-    LINENUMBER 24 L1
+    LINENUMBER 19 L1
     GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
     ALOAD 1
     INVOKEVIRTUAL TestNestMate$Inner.sayHi ()Ljava/lang/String;
     INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
    L2
-    LINENUMBER 25 L2
+    LINENUMBER 20 L2
     RETURN
     MAXSTACK = 4
     MAXLOCALS = 2

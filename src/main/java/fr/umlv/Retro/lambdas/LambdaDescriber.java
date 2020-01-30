@@ -18,23 +18,23 @@ class LambdaDescriber implements FeatureDescriber {
 	private final MethodInfo mi;
 	private final Type[] captures;
 	private final String descriptor;
-	private final Handle calling;
+	private final Handle method;
 	
-	public LambdaDescriber(ClassInfo ci, MethodInfo mi, int lineNumber, Type[] captures, String descriptor, Handle calling) {
+	public LambdaDescriber(ClassInfo ci, MethodInfo mi, int lineNumber, Type[] captures, String descriptor, Handle method) {
 		this.ci = Objects.requireNonNull(ci);
 		this.mi = Objects.requireNonNull(mi);
 		this.captures = Objects.requireNonNull(Arrays.copyOf(captures, captures.length));
 		this.descriptor = Objects.requireNonNull(descriptor);
-		this.calling = Objects.requireNonNull(calling);
+		this.method = Objects.requireNonNull(method);
 		this.lineNumber = lineNumber;
 	}
 	
 	@Override
 	public String describe() {
 		var rType = Type.getReturnType(descriptor).getInternalName();
-		var cOwner = calling.getOwner();
-		var cName = calling.getName();
-		var cDesc = calling.getDesc();
+		var cOwner = method.getOwner();
+		var cName = method.getName();
+		var cDesc = method.getDesc();
 		var captures = Arrays.stream(this.captures).map(e -> {
 			return e.toString();
 		}).collect(Collectors.joining(",", "[", "]"));

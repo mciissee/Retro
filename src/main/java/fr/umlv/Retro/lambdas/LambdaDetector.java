@@ -1,6 +1,7 @@
 package fr.umlv.Retro.lambdas;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
@@ -21,14 +22,14 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-	private final LambdaMethodVisitor vi;
+	private final Supplier<String> nextName;
 	private int lineNumber;
 	
-	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi, LambdaMethodVisitor vi) {
-		super(ci.api(), mi.access(), mi.descriptor(), mi.visitor());
+	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi, Supplier<String> nextName) {
+		super(app.api(), mi.access(), mi.descriptor(), mi.visitor());
 		this.ci = ci;
 		this.mi = mi;
-		this.vi = Objects.requireNonNull(vi);
+		this.nextName = Objects.requireNonNull(nextName);
 		this.app = Objects.requireNonNull(app);
 	}
 
@@ -45,13 +46,12 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 			var captures = Type.getArgumentTypes(descriptor);
 			var describer = new LambdaDescriber(ci, mi, lineNumber, captures, descriptor, (Handle) bsmArgs[1]);
 			app.detectFeature(ci.path(), Features.Lambda, describer);
-			if (vi.canRewrite(app)) {
+			if (app.target() < 8 && app.hasFeature(Features.Lambda)) {
 				var rewriter = new LambdaRewriter(this, app, ci, mi);
-				rewriter.rewrite(name, descriptor, bsm, bsmArgs);
+				rewriter.rewrite(nextName.get(), name, descriptor, bsm, bsmArgs);
 				rewritten = true;
 			}
 		}
-
 		if (!rewritten) {
 			super.visitInvokeDynamicInsn(name, descriptor, bsm, bsmArgs);
 		}
