@@ -1,0 +1,40 @@
+// class version 58.65535 (-65478)
+// access flags 0x21
+public class TestRecord {
+
+  // compiled from: TestRecord.java
+  NESTMEMBER TestRecord$Range
+  // access flags 0x18
+  final static INNERCLASS TestRecord$Range TestRecord Range
+
+  // access flags 0x1
+  public <init>()V
+   L0
+    LINENUMBER 2 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x9
+  public static main([Ljava/lang/String;)V
+   L0
+    LINENUMBER 12 L0
+    NEW TestRecord$Range
+    DUP
+    ICONST_0
+    BIPUSH 10
+    INVOKESPECIAL TestRecord$Range.<init> (II)V
+    ASTORE 1
+   L1
+    LINENUMBER 13 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/Object;)V
+   L2
+    LINENUMBER 14 L2
+    RETURN
+    MAXSTACK = 4
+    MAXLOCALS = 2
+}

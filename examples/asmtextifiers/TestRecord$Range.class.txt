@@ -1,0 +1,148 @@
+// class version 58.65535 (-65478)
+// access flags 0x30
+final class TestRecord$Range extends java/lang/Record {
+
+  // compiled from: TestRecord.java
+  NESTHOST TestRecord
+
+  ATTRIBUTE Record : unknown
+  // access flags 0x18
+  final static INNERCLASS TestRecord$Range TestRecord Range
+  // access flags 0x19
+  public final static INNERCLASS java/lang/invoke/MethodHandles$Lookup java/lang/invoke/MethodHandles Lookup
+
+  // access flags 0x12
+  private final I lo
+
+  // access flags 0x12
+  private final I hi
+
+  // access flags 0x1
+  public <init>(II)V
+    // parameter final  lo
+    // parameter final  hi
+   L0
+    LINENUMBER 4 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Record.<init> ()V
+   L1
+    LINENUMBER 5 L1
+    ILOAD 1
+    ILOAD 2
+    IF_ICMPLE L2
+   L3
+    LINENUMBER 6 L3
+    NEW java/lang/IllegalArgumentException
+    DUP
+    LDC "(%d,%d)"
+    ICONST_2
+    ANEWARRAY java/lang/Object
+    DUP
+    ICONST_0
+    ILOAD 1
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    AASTORE
+    DUP
+    ICONST_1
+    ILOAD 2
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    AASTORE
+    INVOKESTATIC java/lang/String.format (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    INVOKESPECIAL java/lang/IllegalArgumentException.<init> (Ljava/lang/String;)V
+    ATHROW
+   L2
+    LINENUMBER 4 L2
+   FRAME FULL [TestRecord$Range I I] []
+    ALOAD 0
+    ILOAD 1
+    PUTFIELD TestRecord$Range.lo : I
+    ALOAD 0
+    ILOAD 2
+    PUTFIELD TestRecord$Range.hi : I
+   L4
+    LINENUMBER 7 L4
+    RETURN
+    MAXSTACK = 7
+    MAXLOCALS = 3
+
+  // access flags 0x1
+  public toString()Ljava/lang/String;
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    INVOKEDYNAMIC toString(LTestRecord$Range;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/ObjectMethods.bootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;
+      // arguments:
+      TestRecord$Range.class, 
+      "lo;hi", 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.lo(I), 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.hi(I)
+    ]
+    ARETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x11
+  public final hashCode()I
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    INVOKEDYNAMIC hashCode(LTestRecord$Range;)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/ObjectMethods.bootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;
+      // arguments:
+      TestRecord$Range.class, 
+      "lo;hi", 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.lo(I), 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.hi(I)
+    ]
+    IRETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x11
+  public final equals(Ljava/lang/Object;)Z
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    ALOAD 1
+    INVOKEDYNAMIC equals(LTestRecord$Range;Ljava/lang/Object;)Z [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/ObjectMethods.bootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;
+      // arguments:
+      TestRecord$Range.class, 
+      "lo;hi", 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.lo(I), 
+      // handle kind 0x1 : GETFIELD
+      TestRecord$Range.hi(I)
+    ]
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x1
+  public lo()I
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    GETFIELD TestRecord$Range.lo : I
+    IRETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x1
+  public hi()I
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    GETFIELD TestRecord$Range.hi : I
+    IRETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+}

@@ -19,7 +19,7 @@ FieldVisitor fieldVisitor;
 MethodVisitor methodVisitor;
 AnnotationVisitor annotationVisitor0;
 
-classWriter.visit(V14, ACC_SUPER, "TestLambda", null, "java/lang/Object", null);
+classWriter.visit(-65478, ACC_SUPER, "TestLambda", null, "java/lang/Object", null);
 
 classWriter.visitSource("TestLambda.java", null);
 
