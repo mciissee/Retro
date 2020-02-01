@@ -21,6 +21,8 @@ import fr.umlv.retro.models.Features;
 import fr.umlv.retro.models.Logger;
 import fr.umlv.retro.models.Options;
 import fr.umlv.retro.nestmates.NestMateVisitor;
+import fr.umlv.retro.records.RecordVisitor;
+import fr.umlv.retro.trywithresources.TryWithResourceVisitor;
 import fr.umlv.retro.utils.Contracts;
 
 
@@ -38,6 +40,8 @@ public class Retro {
 		new NestMateVisitor(this),
 		new ConcatVisitor(this),
 		new LambdaVisitor(this),
+		new RecordVisitor(this),
+		new TryWithResourceVisitor(this),
     };
 	
 	private Retro(FileSystem fs, Options options, Logger logger) {
