@@ -1,4 +1,4 @@
-package fr.umlv.Retro.utils;
+package fr.umlv.retro.utils;
 
 /**
  * Provides access to static methods for checking method pre and post conditions. 

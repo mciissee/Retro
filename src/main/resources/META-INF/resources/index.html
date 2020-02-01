@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="assets/vendors/uikit-3.3.0/css/uikit.min.css" />
+    <link rel="stylesheet" href="styles.css">
+    <title>Retro API</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Retro API</h1>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <div class="section-header">
+                <h5 class="section-title">
+                    [<span class="section-toggle">-</span>] Request
+                    <div id="spinner" uk-spinner="ratio: .5" hidden></div>
+                </h5>
+                <button class="uk-button uk-button-primary" id="submit" disabled>Send</button>
+            </div>
+            <div class="card">
+                <div class="uk-child-width-expand@s uk-text-right uk-margin-small-bottom" uk-grid>
+                    <div class="uk-flex uk-flex-middle">
+                        <label  class="uk-margin-small-right" for="target">Target</label>
+                        <select class="uk-select uk-margin-small-right" name="target" id="target"></select>
+                    </div>
+                    <div class="uk-width-1-6 uk-flex uk-flex-middle">
+                        <label class="uk-margin-small-right" for="info">Force</label>
+                        <input class="uk-checkbox" type="checkbox" name="force" id="force">
+                    </div>
+                </div>
+                <div uk-accordion="multiple: true">
+                    <div class="uk-open">
+                        <a class="uk-accordion-title" href="#">Features</a>
+                        <table class="uk-accordion-content uk-table uk-table-small uk-table-responsive uk-table-striped uk-table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Features</th>
+                                    <th>Rewrite Condition</th>
+                                    <th>Rewrite</th>
+                                </tr>
+                            </thead>
+                            <tbody id="features"></tbody>
+                        </table>
+                    </div>
+                    <div class="uk-open">
+                        <a class="uk-accordion-title" href="#">Class Files</a>
+                        <div class="uk-accordion-content">
+                            <div class="uk-placeholder uk-text-center">
+                                <span uk-icon="icon: cloud-upload"></span>
+                                <span class="uk-text-middle">Attach class files or jar files by dropping them here or</span>
+                                <div uk-form-custom>
+                                    <input type="file" name="files[]" accept=".class,.jar" multiple>
+                                    <span class="uk-link">selecting one</span>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="uk-accordion-content uk-table uk-table-small uk-table-responsive uk-table-striped uk-table-hover">
+                            <tbody id="files"></tbody>
+                        </table>
+                    </div>
+                </div>
+        </section>
+        <section>
+            <div class="section-header">
+                <h5 class="section-title">
+                    [<span class="section-toggle">-</span>] Response
+                </h5>
+                <a class="uk-button uk-button-primary" id="download" href="#" target="_blank" download hidden>Download Env</a>
+                <span id="time-to-live"></span>
+            </div>
+            <div class="card" style="min-height: 100px;" id="response"></div>
+        </section>
+    </main>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="assets/vendors/uikit-3.3.0/js/uikit.min.js"></script>
+    <script src="assets/vendors/uikit-3.3.0/js/uikit-icons.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

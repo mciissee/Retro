@@ -1,6 +1,7 @@
-package fr.umlv.Retro.cli;
+package fr.umlv.retro.cli;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +13,7 @@ public class CommandLine {
 
 	private final ArrayList<CommandLineOption> options;;
 	
-	CommandLine(ArrayList<CommandLineOption> options) {
+	public CommandLine(ArrayList<CommandLineOption> options) {
 		this.options = new ArrayList<>(Objects.requireNonNull(options));
 	}
 		
@@ -41,14 +42,16 @@ public class CommandLine {
 	/**
 	 * Gets the arguments associated with the given option.
 	 * @param opt the option.
-	 * @return a copy of the arguments.
+	 * @return a copy of the arguments (without empty string).
 	 * @throws IllegalArgumentException if opt is null.
 	 */
 	public Optional<String[]> args(String opt) throws AssertionError, IllegalArgumentException  {
 		var option = new CommandLineOption(opt);
 		for (var e : options) {
 			if (e.equals(option)) {
-				return Optional.of(e.args());
+				return Optional.of(Arrays.stream(e.args()).filter(arg -> {
+					return !arg.isBlank() && !arg.isEmpty();
+				}).toArray(String[]::new));
 			}
 		}
 		return Optional.empty();

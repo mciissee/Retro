@@ -1,9 +1,9 @@
-package fr.umlv.Retro.nestmates;
+package fr.umlv.retro.nestmates;
 
 import java.util.HashSet;
 import java.util.Objects;
 
-import fr.umlv.Retro.models.FeatureDescriber;
+import fr.umlv.retro.models.FeatureDescriber;
 
 public class NestMateHostDescriber implements FeatureDescriber {
 	private final String hostName;

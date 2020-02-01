@@ -1,4 +1,4 @@
-package fr.umlv.Retro.nestmates;
+package fr.umlv.retro.nestmates;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import fr.umlv.Retro.utils.InstUtils;
+import fr.umlv.retro.utils.InstUtils;
 
 public class NestMateRewriter implements Opcodes {
 

@@ -1,4 +1,4 @@
-package fr.umlv.Retro;
+package fr.umlv.retro;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,8 +16,9 @@ import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
-import fr.umlv.Retro.utils.Contracts;
+import fr.umlv.retro.utils.Contracts;
 
 /**
  * Representation of a virtual file system that maintain a reference to opened class files until they
@@ -199,8 +200,7 @@ public final class FileSystem {
 			}
 		}
 		path = Paths.get(path.toString(), "retro-output");
-		Files.createDirectories(path);
-		return path;
+		return Files.createDirectories(path);
 	}
 
 	private Path resolve(Path path, String name) {
@@ -262,4 +262,21 @@ public final class FileSystem {
 		}
 	}
 	
+	public static void makeZip(Path sourceDirPath, Path zipFilePath) throws IOException {
+	    var p = Files.createFile(zipFilePath);
+	    try (var zs = new ZipOutputStream(Files.newOutputStream(p))) {
+	        Files.walk(sourceDirPath)
+	          .filter(path -> !Files.isDirectory(path))
+	          .forEach(path -> {
+	              ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+	              try {
+	                  zs.putNextEntry(zipEntry);
+	                  Files.copy(path, zs);
+	                  zs.closeEntry();
+	            } catch (IOException e) {
+	                System.err.println(e);
+	            }
+	          });
+	    }
+	}
 }

@@ -1,4 +1,4 @@
-package fr.umlv.Retro.concats;
+package fr.umlv.retro.concats;
 
 import java.util.Objects;
 
@@ -7,10 +7,10 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.Features;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.Features;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.Retro;
 
 class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 

@@ -1,15 +1,15 @@
-package fr.umlv.Retro.concats;
+package fr.umlv.retro.concats;
 
 import java.util.Objects;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-import fr.umlv.Retro.ClassTransformer;
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeatureVisitor;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.FeatureVisitor;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.ClassTransformer;
+import fr.umlv.retro.Retro;
 
 /**
  * Transforms string concatenation feature from Java 9 (implemented using

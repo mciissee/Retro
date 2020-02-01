@@ -1,4 +1,4 @@
-package fr.umlv.Retro.models;
+package fr.umlv.retro.models;
 
 /**
  * Informations about a feature detection

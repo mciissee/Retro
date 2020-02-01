@@ -1,6 +1,7 @@
-package fr.umlv.Retro.models;
+package fr.umlv.retro.models;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 
 /**
@@ -34,4 +35,14 @@ public enum Features {
 	Record;
 	
     public static final EnumSet<Features> ALL = EnumSet.allOf(Features.class);
+    
+    public static Map<Features, Integer> supported() {
+    	return Map.of(
+    			Features.TryWithResources, 7,
+    			Features.Lambda, 8,
+    			Features.Concat, 9,
+    			Features.NestMates, 11,
+    			Features.Record, 14
+    	);
+    }
 }

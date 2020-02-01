@@ -1,4 +1,4 @@
-package fr.umlv.Retro.utils;
+package fr.umlv.retro.utils;
 
 import java.util.List;
 import java.util.Map;

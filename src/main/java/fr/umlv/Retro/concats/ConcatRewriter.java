@@ -1,4 +1,4 @@
-package fr.umlv.Retro.concats;
+package fr.umlv.retro.concats;
 
 import java.util.Objects;
 

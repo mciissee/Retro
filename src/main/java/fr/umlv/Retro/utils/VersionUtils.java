@@ -1,4 +1,4 @@
-package fr.umlv.Retro.utils;
+package fr.umlv.retro.utils;
 
 /**
  * Provides informations about bytecode and JDK versions.

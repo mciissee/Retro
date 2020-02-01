@@ -1,9 +1,9 @@
-package fr.umlv.Retro.models;
+package fr.umlv.retro.models;
 
 import java.util.EnumSet;
 import java.util.Objects;
 
-import fr.umlv.Retro.cli.CommandLine;
+import fr.umlv.retro.cli.CommandLine;
 
 /**
  * Bytecode transformation options (Immutable).
@@ -16,6 +16,7 @@ public class Options {
 	private final boolean help;
 	private final boolean force;
 
+
 	private Options(int target, boolean force, boolean info, boolean help, EnumSet<Features> features) {
 		this.target = target;
 		this.force = force;
@@ -24,6 +25,10 @@ public class Options {
 		this.features = Objects.requireNonNull(features);
 	}
 	
+	public Options(int target, boolean force, EnumSet<Features> features) {
+		this(target, force, true, false, features);
+	}
+
 	/**
 	 * Creates new TransformOptions object from command line arguments.
 	 * @param cli The command line.
