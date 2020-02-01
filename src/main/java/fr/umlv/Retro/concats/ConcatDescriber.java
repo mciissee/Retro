@@ -1,11 +1,11 @@
-package fr.umlv.Retro.concats;
+package fr.umlv.retro.concats;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeatureDescriber;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.FeatureDescriber;
+import fr.umlv.retro.models.MethodInfo;
 
 
 class ConcatDescriber implements FeatureDescriber {

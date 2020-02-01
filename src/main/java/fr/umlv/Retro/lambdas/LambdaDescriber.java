@@ -1,4 +1,4 @@
-package fr.umlv.Retro.lambdas;
+package fr.umlv.retro.lambdas;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeatureDescriber;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.FeatureDescriber;
+import fr.umlv.retro.models.MethodInfo;
 
 class LambdaDescriber implements FeatureDescriber {
 

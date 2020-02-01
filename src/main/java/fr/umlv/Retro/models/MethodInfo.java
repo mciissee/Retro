@@ -1,4 +1,4 @@
-package fr.umlv.Retro.models;
+package fr.umlv.retro.models;
 
 import java.util.Arrays;
 import java.util.Objects;

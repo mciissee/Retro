@@ -1,4 +1,4 @@
-package fr.umlv.Retro;
+package fr.umlv.retro;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -8,10 +8,10 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.FeatureVisitor;
-import fr.umlv.Retro.utils.Contracts;
-import fr.umlv.Retro.utils.VersionUtils;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.FeatureVisitor;
+import fr.umlv.retro.utils.Contracts;
+import fr.umlv.retro.utils.VersionUtils;
 
 /**
  * Visit a bytecode to backport bytecode it to a specific version of Java.

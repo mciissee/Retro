@@ -1,4 +1,4 @@
-package fr.umlv.Retro.lambdas;
+package fr.umlv.retro.lambdas;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -10,11 +10,11 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.MethodInfo;
-import fr.umlv.Retro.utils.InstUtils;
-import fr.umlv.Retro.utils.VersionUtils;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.utils.InstUtils;
+import fr.umlv.retro.utils.VersionUtils;
+import fr.umlv.retro.Retro;
 
 /**
  * Backports lambda expressions to anonymous inner classes.
@@ -60,7 +60,6 @@ class LambdaRewriter implements Opcodes {
 		visitMethodImplements(clazz, name, lambda, interfacedescg, captures);
 		visitMethodOverload(clazz, name, interfacedesco, interfacedescg);
 		visitCreateInstruction(clazz, constructor, captures);
-
 		app.write(ci.path(), clazz, cw.toByteArray());
 	}
 
@@ -128,15 +127,15 @@ class LambdaRewriter implements Opcodes {
 		}
 	
 		// push the arguments of the method
-		var params = parameters(lambda, captures);
 		var interfaceargsg = Type.getArgumentTypes(interfacedescg);
+		var lambdaArgs = skipCaptures(lambda, interfaceargsg);
 		for (int i = 0; i < interfaceargsg.length; i++) {
 			InstUtils.load(mv, interfaceargsg[i], i + 1);
-			if (!interfaceargsg[i].equals(params[i])) {
-				InstUtils.cast(mv, interfaceargsg[i], params[i]);
+			if (!interfaceargsg[i].equals(lambdaArgs[i])) {
+				InstUtils.cast(mv, interfaceargsg[i], lambdaArgs[i]);
 			}
 		}
-		
+
 		// call the generated lambda method
 		var opcode = lambda.getTag() == H_INVOKESTATIC ? INVOKESTATIC : INVOKEVIRTUAL;
 		mv.visitMethodInsn(opcode, lambda.getOwner(), createAccessMethod(lambda), lambda.getDesc(), false);
@@ -239,12 +238,15 @@ class LambdaRewriter implements Opcodes {
 		return name;
 	}
 
-	private Type[] parameters(Handle method, Type[] captures) {
-		var params = Type.getArgumentTypes(method.getDesc());
-		var skip = params.length == captures.length ? 0 : captures.length;
+
+	private Type[] skipCaptures(Handle method, Type[] interfaceargsg) {
+		var types = Type.getArgumentTypes(method.getDesc());
+		if (types.length == 0) {
+			return interfaceargsg;
+		}
 		return Arrays
-				.stream(params)
-				.skip(skip)
+				.stream(types)
+				.skip(types.length -  interfaceargsg.length)
 				.toArray(Type[]::new);
 	}
 

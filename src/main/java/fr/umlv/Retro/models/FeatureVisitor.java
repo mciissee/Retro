@@ -1,8 +1,8 @@
-package fr.umlv.Retro.models;
+package fr.umlv.retro.models;
 
 import org.objectweb.asm.ClassVisitor;
 
-import fr.umlv.Retro.ClassTransformer;
+import fr.umlv.retro.ClassTransformer;
 
 
 public interface FeatureVisitor {

@@ -1,4 +1,4 @@
-package fr.umlv.Retro;
+package fr.umlv.retro;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

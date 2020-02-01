@@ -1,4 +1,4 @@
-package fr.umlv.Retro.lambdas;
+package fr.umlv.retro.lambdas;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -9,10 +9,10 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.Features;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.Features;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.Retro;
 
 /**
  * Detects lambda method calls and rewrite them if needed (target < JDK 8).

@@ -1,4 +1,4 @@
-package fr.umlv.Retro.nestmates;
+package fr.umlv.retro.nestmates;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,12 +12,12 @@ import java.util.function.Consumer;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-import fr.umlv.Retro.ClassTransformer;
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.Features;
-import fr.umlv.Retro.models.FeatureVisitor;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.Features;
+import fr.umlv.retro.models.FeatureVisitor;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.ClassTransformer;
+import fr.umlv.retro.Retro;
 
 public class NestMateVisitor extends ClassVisitor implements FeatureVisitor {
 
@@ -62,13 +62,20 @@ public class NestMateVisitor extends ClassVisitor implements FeatureVisitor {
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
 		if (canRewrite() && findNestMembers(ci.className()).contains(name)) {
 			try {
-				app.bytecode(ci.path(), name, (path, bytes) -> {
+				var tokens = name.split("/");
+				app.bytecode(ci.path(), tokens[tokens.length - 1], (path, bytes) -> {
 					ClassTransformer.transform(app, path, bytes, tr);
 				});
 			} catch (FileNotFoundException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(
+					"FileNotFound: missing inner class file '" + name + ".class'",
+					e.getCause()
+				);
 			} catch (IOException e) {
-				throw new AssertionError(e);
+				throw new AssertionError(
+					"IOException: cannot open inner class file '" + name + ".class'",
+					e.getCause()
+				);
 			}		
 		}
 		super.visitInnerClass(name, outerName, innerName, access);

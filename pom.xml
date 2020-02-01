@@ -35,7 +35,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>fr.umlv.Retro.App</mainClass>
+							<mainClass>fr.umlv.retro.App</mainClass>
 							<classpathLayoutType>custom</classpathLayoutType>
                				<customClasspathLayout>$${artifact.groupId}.$${artifact.artifactId}-$${artifact.version}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout>
 						</manifest>
@@ -68,6 +68,7 @@
 	      <version>3.8.1</version>
 	      <scope>test</scope>
 	    </dependency>
+   		<!-- ASM -->
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
@@ -78,6 +79,7 @@
 			<artifactId>asm-commons</artifactId>
 			<version>7.2</version>
 		</dependency>
+		<!-- QUARKUS -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-resteasy</artifactId>
@@ -88,5 +90,11 @@
 			<artifactId>quarkus-resteasy-jsonb</artifactId>
 			<version>1.2.0.Final</version>
 		</dependency>
+		
+		 <dependency>
+        	<groupId>org.jboss.resteasy</groupId>
+        	<artifactId>resteasy-multipart-provider</artifactId>
+			<version>4.4.2.Final</version>
+    </dependency>
 	</dependencies>
 </project>

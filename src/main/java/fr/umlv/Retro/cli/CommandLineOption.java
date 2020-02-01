@@ -1,4 +1,4 @@
-package fr.umlv.Retro.cli;
+package fr.umlv.retro.cli;
 
 import java.util.Arrays;
 import java.util.Objects;

@@ -1,13 +1,13 @@
-package fr.umlv.Retro.nestmates;
+package fr.umlv.retro.nestmates;
 
 import java.util.Objects;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import fr.umlv.Retro.Retro;
-import fr.umlv.Retro.models.ClassInfo;
-import fr.umlv.Retro.models.MethodInfo;
+import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.MethodInfo;
+import fr.umlv.retro.Retro;
 
 /**
  * Replaces private members access of an outer class from it's inner classes.
