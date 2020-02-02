@@ -92,7 +92,12 @@ public class NestMateVisitor extends ClassVisitor implements FeatureVisitor {
 			members.add(ci.className());
 		}
 		var mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-		return new NestMateDetector(app, ci, new MethodInfo(access, name, descriptor, exceptions, mv), this);
+		return new NestMateDetector(
+			app,
+			ci,
+			new MethodInfo(access, name, descriptor, exceptions, mv),
+			this
+		);
 	}
 	
 	@Override

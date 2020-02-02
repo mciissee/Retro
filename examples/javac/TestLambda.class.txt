@@ -119,50 +119,28 @@ class TestLambda {
 
   static void testMethodRef4();
     Code:
-       0: iconst_2
-       1: anewarray     #78                 // class java/lang/String
-       4: dup
-       5: iconst_0
-       6: ldc           #80                 // String A
-       8: aastore
-       9: dup
-      10: iconst_1
-      11: ldc           #82                 // String B
-      13: aastore
-      14: astore_0
-      15: aload_0
-      16: invokestatic  #84                 // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
-      19: invokedynamic #90,  0             // InvokeDynamic #7:accept:()Ljava/util/function/Consumer;
-      24: invokeinterface #94,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
-      29: return
+       0: return
 
   public static void main(java.lang.String[]);
     Code:
-       0: invokestatic  #100                // Method testLambda:()V
-       3: invokestatic  #103                // Method testLambda1:()V
-       6: invokestatic  #106                // Method testLambda2:()V
-       9: invokestatic  #109                // Method testLambda3:()V
-      12: invokestatic  #112                // Method testMethodRef:()V
-      15: invokestatic  #115                // Method testMethodRef2:()V
-      18: invokestatic  #118                // Method testMethodRef3:()V
-      21: invokestatic  #121                // Method testMethodRef4:()V
+       0: invokestatic  #78                 // Method testLambda:()V
+       3: invokestatic  #81                 // Method testLambda1:()V
+       6: invokestatic  #84                 // Method testLambda2:()V
+       9: invokestatic  #87                 // Method testLambda3:()V
+      12: invokestatic  #90                 // Method testMethodRef:()V
+      15: invokestatic  #93                 // Method testMethodRef2:()V
+      18: invokestatic  #96                 // Method testMethodRef3:()V
+      21: invokestatic  #99                 // Method testMethodRef4:()V
       24: return
-
-  private static void lambda$testMethodRef4$4(java.lang.String);
-    Code:
-       0: getstatic     #18                 // Field java/lang/System.out:Ljava/io/PrintStream;
-       3: aload_0
-       4: invokevirtual #124                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-       7: return
 
   private static java.lang.Double lambda$testLambda3$3(double, java.lang.Integer);
     Code:
        0: aload_2
-       1: invokevirtual #127                // Method java/lang/Integer.intValue:()I
+       1: invokevirtual #102                // Method java/lang/Integer.intValue:()I
        4: i2d
        5: dload_0
        6: dadd
-       7: invokestatic  #131                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       7: invokestatic  #106                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
       10: areturn
 
   private static int lambda$testLambda2$2(int, int);

@@ -53,7 +53,7 @@ public final class FileSystem {
 		Contracts.requires(root, "root");
 
 		if (!Files.exists(root, LinkOption.NOFOLLOW_LINKS)) {
-        	throw new IOException("path must point to a directory or a jar file or a class file.");
+        	throw new IOException("path '" + root + "' must point to a directory or a jar file or a class file.");
         }
 	    var name = root.getFileName().toString();
         var isDirectory = Files.isDirectory(root, LinkOption.NOFOLLOW_LINKS);
@@ -66,6 +66,18 @@ public final class FileSystem {
         return new FileSystem(root, isDirectory, isClass, isJar);
 	}
 
+	/** root directory */
+ 	public Path root() {
+ 		if (isJar) {
+ 			return Paths.get("");
+ 		}
+ 		if (isClass) {
+ 			return root.getParent();
+ 		}
+		return root;
+	}
+
+ 	
 	/**
 	 * Saves the files to the disk.
 	 * @throws IOException
@@ -199,7 +211,7 @@ public final class FileSystem {
 				path = Paths.get("./");
 			}
 		}
-		path = Paths.get(path.toString(), "retro-output");
+		path = path.resolve("retro-output");
 		return Files.createDirectories(path);
 	}
 
@@ -208,7 +220,7 @@ public final class FileSystem {
 		if (path == null) {
 			path = Paths.get(name);
 		} else {
-			path = Paths.get(path.toString(), name);				
+			path = path.resolve(name);
 		}
 		return path;
 	}
@@ -219,7 +231,7 @@ public final class FileSystem {
 		});
 		var name = this.root.getFileName().toString();
 		name = name.substring(0, name.lastIndexOf('.')) + "-retro.jar";
-		var path = Paths.get(output().toString(), name);	
+		var path = output().resolve(name);	
 		try(var out = new JarOutputStream(new FileOutputStream(path.toFile()))) {
 			for (var entry : entries.entrySet()) {
 				out.putNextEntry(new ZipEntry(entry.getKey()));
@@ -229,10 +241,20 @@ public final class FileSystem {
 	}
 	
 	private void saveAsFiles() throws FileNotFoundException, IOException {
-		var path = output();
+		var output = output();
 		for (var entry : entries.entrySet()) {
-			var name = Paths.get(entry.getKey()).getFileName().toString();
-			try(var out = new FileOutputStream(Paths.get(path.toString(), name).toFile())) {
+			var path = output.resolve(
+				Paths.get(entry.getKey().replace(root.toString() + "/", ""))
+			);
+			if (isClass) {
+				path = output.resolve(
+					Paths.get(entry.getKey().replace(root.getParent().toString() + "/", ""))
+				);
+			}
+			if (!Files.exists(path.getParent())) {
+				Files.createDirectories(path.getParent());				
+			}
+			try(var out = new FileOutputStream(path.toFile())) {
 				out.write(entry.getValue());
 			}
 		}

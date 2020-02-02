@@ -19,7 +19,7 @@ public class VersionUtils {
 	 *  55  11
 	 *  56  12
 	 *  57  13
-	 *  58  14s
+	 *  58  14
 	 *  </pre>
 	 * @param version A bytecode major version.
 	 * @return a JDK version.

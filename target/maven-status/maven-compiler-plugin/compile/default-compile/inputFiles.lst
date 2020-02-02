@@ -1,10 +1,14 @@
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/records/RecordDetector.java
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/records/RecordVisitor.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/lambdas/LambdaDetector.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/ClassTransformer.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/api/EnvService.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/concats/ConcatDetector.java
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/records/RecordDescriber.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/nestmates/NestMateMemberDecriber.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/MethodInfo.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/cli/CommandLineParser.java
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/records/RecordRewriter.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/api/Capability.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/concats/ConcatVisitor.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/concats/ConcatDescriber.java
@@ -19,6 +23,7 @@
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/nestmates/NestMateDetector.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/App.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/Logger.java
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/mocker/MockerMethodDetector.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/FeatureDescriber.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/utils/TypeUtils.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/utils/InstUtils.java
@@ -31,5 +36,6 @@
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/Options.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/FeatureVisitor.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/models/ClassInfo.java
+/Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/mocker/MockerVisitor.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/FileSystem.java
 /Users/mamadou/Desktop/UPEM/M1/Java/Retro/src/main/java/fr/umlv/retro/Retro.java

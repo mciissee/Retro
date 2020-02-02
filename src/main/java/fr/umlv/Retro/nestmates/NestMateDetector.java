@@ -17,7 +17,7 @@ public class NestMateDetector extends MethodVisitor implements Opcodes {
 	private final NestMateVisitor vi;
 
 	public NestMateDetector(Retro app, ClassInfo ci, MethodInfo mi, NestMateVisitor vi) {
-		super(app.api(), mi.visitor());
+		super(Objects.requireNonNull(app).api(), Objects.requireNonNull(mi).visitor());
 		this.ci = ci;
 		this.vi = Objects.requireNonNull(vi);
 	}

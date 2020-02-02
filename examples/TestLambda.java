@@ -53,13 +53,6 @@ class TestLambda {
 		System.out.println(op.applyAsInt(2));
 	}
 
-	static void testMethodRef4() {
-		var arr = new String[] { "A", "B" };
-		Arrays.stream(arr).forEach(e -> {
-			System.out.println(e);
-		});
-	}
-
 	public static void main(String[] args) {
 		testLambda();
 		testLambda1();
@@ -69,6 +62,5 @@ class TestLambda {
 		testMethodRef();
 		testMethodRef2();
 		testMethodRef3();
-		testMethodRef4();
 	}
 }

@@ -22,15 +22,20 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-	private final Supplier<String> nextName;
+	private final Supplier<String> lambdaNameFactory;
 	private int lineNumber;
 	
-	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi, Supplier<String> nextName) {
-		super(app.api(), mi.access(), mi.descriptor(), mi.visitor());
+	public LambdaDetector(Retro app, ClassInfo ci, MethodInfo mi, Supplier<String> lambdaNameFactory) {
+		super(
+			Objects.requireNonNull(app).api(),
+			Objects.requireNonNull(mi).access(),
+			Objects.requireNonNull(mi).descriptor(),
+			Objects.requireNonNull(mi).visitor()
+		);
+		this.app = app;
 		this.ci = ci;
 		this.mi = mi;
-		this.nextName = Objects.requireNonNull(nextName);
-		this.app = Objects.requireNonNull(app);
+		this.lambdaNameFactory = Objects.requireNonNull(lambdaNameFactory);
 	}
 
 	@Override
@@ -48,7 +53,7 @@ class LambdaDetector extends LocalVariablesSorter implements Opcodes {
 			app.detectFeature(ci.path(), Features.Lambda, describer);
 			if (app.target() < 8 && app.hasFeature(Features.Lambda)) {
 				var rewriter = new LambdaRewriter(this, app, ci, mi);
-				rewriter.rewrite(nextName.get(), name, descriptor, bsm, bsmArgs);
+				rewriter.rewrite(lambdaNameFactory.get(), name, descriptor, bsm, bsmArgs);
 				rewritten = true;
 			}
 		}

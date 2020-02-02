@@ -1,0 +1,311 @@
+// class version 58.65535 (-65478)
+// access flags 0x21
+public class Record {
+
+  // compiled from: Record.java
+
+  // access flags 0x2
+  private I a
+
+  // access flags 0x2
+  private Ljava/lang/String; b
+
+  // access flags 0x2
+  private Ljava/lang/Object; c
+
+  // access flags 0x1
+  public <init>(ILjava/lang/String;Ljava/lang/Object;)V
+   L0
+    LINENUMBER 9 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+   L1
+    LINENUMBER 10 L1
+    ALOAD 0
+    ILOAD 1
+    PUTFIELD Record.a : I
+   L2
+    LINENUMBER 11 L2
+    ALOAD 0
+    ALOAD 2
+    PUTFIELD Record.b : Ljava/lang/String;
+   L3
+    LINENUMBER 12 L3
+    ALOAD 0
+    ALOAD 3
+    PUTFIELD Record.c : Ljava/lang/Object;
+   L4
+    LINENUMBER 13 L4
+    RETURN
+    MAXSTACK = 2
+    MAXLOCALS = 4
+
+  // access flags 0x1
+  public equals(Ljava/lang/Object;)Z
+   L0
+    LINENUMBER 16 L0
+    ALOAD 1
+    INSTANCEOF Record
+    IFNE L1
+   L2
+    LINENUMBER 17 L2
+    ICONST_0
+    IRETURN
+   L1
+    LINENUMBER 19 L1
+   FRAME SAME
+    ALOAD 1
+    CHECKCAST Record
+    ASTORE 2
+   L3
+    LINENUMBER 20 L3
+    ALOAD 0
+    GETFIELD Record.a : I
+    ALOAD 2
+    GETFIELD Record.a : I
+    IF_ICMPNE L4
+    ALOAD 0
+    GETFIELD Record.b : Ljava/lang/String;
+    ALOAD 2
+    GETFIELD Record.b : Ljava/lang/String;
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L4
+    ALOAD 0
+    GETFIELD Record.c : Ljava/lang/Object;
+    ALOAD 2
+    GETFIELD Record.c : Ljava/lang/Object;
+    INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
+    IFEQ L4
+    ICONST_1
+    GOTO L5
+   L4
+   FRAME APPEND [Record]
+    ICONST_0
+   L5
+   FRAME SAME1 I
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 3
+
+  // access flags 0x1
+  public hashCode()I
+   L0
+    LINENUMBER 24 L0
+    ICONST_3
+    ANEWARRAY java/lang/Object
+    DUP
+    ICONST_0
+    ALOAD 0
+    GETFIELD Record.a : I
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    AASTORE
+    DUP
+    ICONST_1
+    ALOAD 0
+    GETFIELD Record.b : Ljava/lang/String;
+    AASTORE
+    DUP
+    ICONST_2
+    ALOAD 0
+    GETFIELD Record.c : Ljava/lang/Object;
+    AASTORE
+    INVOKESTATIC Record.hashCode ([Ljava/lang/Object;)I
+    IRETURN
+    MAXSTACK = 4
+    MAXLOCALS = 1
+
+  // access flags 0x1
+  public toString()Ljava/lang/String;
+   L0
+    LINENUMBER 28 L0
+    NEW java/lang/StringBuilder
+    DUP
+    INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+    ASTORE 1
+   L1
+    LINENUMBER 29 L1
+    ALOAD 1
+    LDC "Record["
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L2
+    LINENUMBER 31 L2
+    ALOAD 1
+    LDC "a="
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L3
+    LINENUMBER 32 L3
+    ALOAD 1
+    ALOAD 0
+    GETFIELD Record.a : I
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    INVOKESTATIC java/util/Objects.toString (Ljava/lang/Object;)Ljava/lang/String;
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L4
+    LINENUMBER 33 L4
+    ALOAD 1
+    LDC ", "
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L5
+    LINENUMBER 35 L5
+    ALOAD 1
+    LDC "b="
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L6
+    LINENUMBER 36 L6
+    ALOAD 1
+    ALOAD 0
+    GETFIELD Record.b : Ljava/lang/String;
+    INVOKESTATIC java/util/Objects.toString (Ljava/lang/Object;)Ljava/lang/String;
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L7
+    LINENUMBER 37 L7
+    ALOAD 1
+    LDC ", "
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L8
+    LINENUMBER 39 L8
+    ALOAD 1
+    LDC "c="
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L9
+    LINENUMBER 40 L9
+    ALOAD 1
+    ALOAD 0
+    GETFIELD Record.b : Ljava/lang/String;
+    INVOKESTATIC java/util/Objects.toString (Ljava/lang/Object;)Ljava/lang/String;
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L10
+    LINENUMBER 42 L10
+    ALOAD 1
+    LDC "]"
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    POP
+   L11
+    LINENUMBER 43 L11
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+    ARETURN
+    MAXSTACK = 2
+    MAXLOCALS = 2
+
+  // access flags 0x8A
+  private static varargs hashCode([Ljava/lang/Object;)I
+   L0
+    LINENUMBER 47 L0
+    ALOAD 0
+    IFNONNULL L1
+   L2
+    LINENUMBER 48 L2
+    ICONST_0
+    IRETURN
+   L1
+    LINENUMBER 49 L1
+   FRAME SAME
+    ICONST_1
+    ISTORE 1
+   L3
+    LINENUMBER 50 L3
+    ALOAD 0
+    ASTORE 2
+    ALOAD 2
+    ARRAYLENGTH
+    ISTORE 3
+    ICONST_0
+    ISTORE 4
+   L4
+   FRAME FULL [[Ljava/lang/Object; I [Ljava/lang/Object; I I] []
+    ILOAD 4
+    ILOAD 3
+    IF_ICMPGE L5
+    ALOAD 2
+    ILOAD 4
+    AALOAD
+    ASTORE 5
+   L6
+    LINENUMBER 51 L6
+    BIPUSH 31
+    ILOAD 1
+    IMUL
+    ALOAD 5
+    IFNONNULL L7
+    ICONST_0
+    GOTO L8
+   L7
+   FRAME FULL [[Ljava/lang/Object; I [Ljava/lang/Object; I I java/lang/Object] [I]
+    ALOAD 5
+    INVOKEVIRTUAL java/lang/Object.hashCode ()I
+   L8
+   FRAME FULL [[Ljava/lang/Object; I [Ljava/lang/Object; I I java/lang/Object] [I I]
+    IADD
+    ISTORE 1
+   L9
+    LINENUMBER 50 L9
+    IINC 4 1
+    GOTO L4
+   L5
+    LINENUMBER 52 L5
+   FRAME FULL [[Ljava/lang/Object; I] []
+    ILOAD 1
+    IRETURN
+    MAXSTACK = 2
+    MAXLOCALS = 6
+
+  // access flags 0x9
+  public static main([Ljava/lang/String;)V
+   L0
+    LINENUMBER 56 L0
+    NEW Record
+    DUP
+    BIPUSH 10
+    LDC "..."
+    ICONST_1
+    INVOKESTATIC java/lang/Boolean.valueOf (Z)Ljava/lang/Boolean;
+    INVOKESPECIAL Record.<init> (ILjava/lang/String;Ljava/lang/Object;)V
+    ASTORE 1
+   L1
+    LINENUMBER 57 L1
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    INVOKEVIRTUAL Record.toString ()Ljava/lang/String;
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L2
+    LINENUMBER 58 L2
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    INVOKEVIRTUAL Record.hashCode ()I
+    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+   L3
+    LINENUMBER 59 L3
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    ALOAD 1
+    INVOKEVIRTUAL Record.equals (Ljava/lang/Object;)Z
+    INVOKEVIRTUAL java/io/PrintStream.println (Z)V
+   L4
+    LINENUMBER 60 L4
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    ALOAD 1
+    NEW Record
+    DUP
+    BIPUSH 10
+    LDC "..."
+    ICONST_0
+    INVOKESTATIC java/lang/Boolean.valueOf (Z)Ljava/lang/Boolean;
+    INVOKESPECIAL Record.<init> (ILjava/lang/String;Ljava/lang/Object;)V
+    INVOKEVIRTUAL Record.equals (Ljava/lang/Object;)Z
+    INVOKEVIRTUAL java/io/PrintStream.println (Z)V
+   L5
+    LINENUMBER 61 L5
+    RETURN
+    MAXSTACK = 7
+    MAXLOCALS = 2
+}

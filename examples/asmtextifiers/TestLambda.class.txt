@@ -257,37 +257,10 @@ class TestLambda {
   // access flags 0x8
   static testMethodRef4()V
    L0
-    LINENUMBER 57 L0
-    ICONST_2
-    ANEWARRAY java/lang/String
-    DUP
-    ICONST_0
-    LDC "A"
-    AASTORE
-    DUP
-    ICONST_1
-    LDC "B"
-    AASTORE
-    ASTORE 0
-   L1
-    LINENUMBER 58 L1
-    ALOAD 0
-    INVOKESTATIC java/util/Arrays.stream ([Ljava/lang/Object;)Ljava/util/stream/Stream;
-    INVOKEDYNAMIC accept()Ljava/util/function/Consumer; [
-      // handle kind 0x6 : INVOKESTATIC
-      java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
-      // arguments:
-      (Ljava/lang/Object;)V, 
-      // handle kind 0x6 : INVOKESTATIC
-      TestLambda.lambda$testMethodRef4$4(Ljava/lang/String;)V, 
-      (Ljava/lang/String;)V
-    ]
-    INVOKEINTERFACE java/util/stream/Stream.forEach (Ljava/util/function/Consumer;)V (itf)
-   L2
-    LINENUMBER 61 L2
+    LINENUMBER 61 L0
     RETURN
-    MAXSTACK = 4
-    MAXLOCALS = 1
+    MAXSTACK = 0
+    MAXLOCALS = 0
 
   // access flags 0x9
   public static main([Ljava/lang/String;)V
@@ -319,19 +292,6 @@ class TestLambda {
     LINENUMBER 73 L8
     RETURN
     MAXSTACK = 0
-    MAXLOCALS = 1
-
-  // access flags 0x100A
-  private static synthetic lambda$testMethodRef4$4(Ljava/lang/String;)V
-   L0
-    LINENUMBER 59 L0
-    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
-    ALOAD 0
-    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
-   L1
-    LINENUMBER 60 L1
-    RETURN
-    MAXSTACK = 2
     MAXLOCALS = 1
 
   // access flags 0x100A

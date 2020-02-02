@@ -9,7 +9,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
 import fr.umlv.retro.models.ClassInfo;
-import fr.umlv.retro.models.FeatureVisitor;
 import fr.umlv.retro.utils.Contracts;
 import fr.umlv.retro.utils.VersionUtils;
 
@@ -21,7 +20,6 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 	private final Path path;
 	private final Retro app;
 	private final ClassWriter writer;
-	private final FeatureVisitor[] visitors;
 	private final ClassTransformer parent;
 	private int version;
 
@@ -30,7 +28,6 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		this.app = Objects.requireNonNull(app);
 		this.path = Objects.requireNonNull(path);
 		this.writer = Objects.requireNonNull(writer);
-		this.visitors = app.visitors();
 		this.parent = parent;
 	}
 	
@@ -50,7 +47,7 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 	 * @param path path to the bytecode
 	 * @param bytecode the bytecode
 	 * @param parent reference to parent transformer in case of inner class
-	 * (allow to continue reset the class writer parent once the inner class is visited)
+	 * (suspend the parent visitor and resume once the new visitor has finished)
 	 */
 	public static void transform(Retro app, Path path, byte[] bytecode, ClassTransformer parent) {
 		Contracts.requires(app, "app");
@@ -78,15 +75,17 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 
 	private void visit(int version) {
 		this.version = version;
-		var n = visitors.length - 1;
-		var fileName = path.getFileName().toString();
-		var className = fileName.replace(".class", "");
-		var ci = new ClassInfo(version, path, fileName, className, writer);
-		var next = visitors[n].visit(ci, writer, this);
-		for (var i = n - 1; i >= 0; i--) {
-			next = visitors[i].visit(ci, next, this);
-		}
-		this.cv = next;
+		app.visitFeatures(visitors -> {			
+			var n = visitors.length - 1;
+			var fileName = path.getFileName().toString();
+			var className = fileName.replace(".class", "");
+			var ci = new ClassInfo(version, path, fileName, className, writer);
+			var next = visitors[n].visit(ci, writer, this);
+			for (var i = n - 1; i >= 0; i--) {
+				next = visitors[i].visit(ci, next, this);
+			}
+			this.cv = next;
+		});
 	}
 	
 }
