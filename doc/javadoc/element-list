@@ -1,7 +1,10 @@
-fr.umlv.Retro
-fr.umlv.Retro.cli
-fr.umlv.Retro.concats
-fr.umlv.Retro.lambdas
-fr.umlv.Retro.models
-fr.umlv.Retro.nestmates
-fr.umlv.Retro.utils
+fr.umlv.retro
+fr.umlv.retro.api
+fr.umlv.retro.cli
+fr.umlv.retro.concats
+fr.umlv.retro.lambdas
+fr.umlv.retro.mocker
+fr.umlv.retro.models
+fr.umlv.retro.nestmates
+fr.umlv.retro.records
+fr.umlv.retro.utils
