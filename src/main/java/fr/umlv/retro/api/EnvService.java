@@ -164,6 +164,9 @@ public class EnvService {
 			}
 			var logger = new Logger();
 			var success = Retro.exec(filePaths, reader.options, logger);
+			if (!success) {
+				FileUtils.deleteDirectory(envdir.toFile());
+			}
 			return Response.ok(Map.of("success", success, "envid", envid, "logs", logger.get(), "ttl", reader.ttl))
 					.build();
 		} catch (AssertionError | IOException | URISyntaxException e) {
