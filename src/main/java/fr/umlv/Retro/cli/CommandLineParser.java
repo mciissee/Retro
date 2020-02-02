@@ -42,7 +42,7 @@ public class CommandLineParser {
 				var opt = args[i].replace("-", "");
 				if (isTakeAnArgument(opt, patterns)) {
 					if (i + 1 >= n || args[i + 1].startsWith("-")) {
-						throw new AssertionError("An argument is required for option " + opt);
+						throw new AssertionError("an argument is required for option " + opt);
 					}
 					options.add(new CommandLineOption(opt, new String[] {args[i + 1]}));
 					i++;
