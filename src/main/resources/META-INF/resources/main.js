@@ -72,20 +72,21 @@
 
     const renderResponseTable = (response) => {
         const {
+            success,
             ttl,
             envid,
             logs
         } = response;
 
         spinner.hidden = false;
-
-        downloadBtn.hidden = false;
-        downloadBtn.setAttribute('href', `api/env/${envid}`);
-
-        const date = new Date(Date.now() + ttl);
-        const format = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-        timeToLiveNode.innerHTML = '&nbsp;&nbsp; Expire Time: ' + format;
-        timeToLiveNode.hidden = false;
+        if (success) {
+            downloadBtn.hidden = false;
+            downloadBtn.setAttribute('href', `api/env/${envid}`);
+            const date = new Date(Date.now() + ttl);
+            const format = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            timeToLiveNode.innerHTML = '&nbsp;&nbsp; Expire Time: ' + format;
+            timeToLiveNode.hidden = false;
+        }
     
         const html = [];
         html.push("<table class='uk-accordion-content uk-table uk-table-small uk-table-responsive uk-table-striped uk-table-hover'>");
