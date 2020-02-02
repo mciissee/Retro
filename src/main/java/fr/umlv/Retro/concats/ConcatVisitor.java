@@ -37,4 +37,5 @@ public class ConcatVisitor extends ClassVisitor implements FeatureVisitor {
 		return new ConcatDetector(app, ci, new MethodInfo(access, name, descriptor, exceptions, mv));
 	}
 	
+	
 }

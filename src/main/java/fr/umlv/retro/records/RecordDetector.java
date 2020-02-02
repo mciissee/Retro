@@ -1,33 +1,57 @@
 package fr.umlv.retro.records;
 
-import org.objectweb.asm.Label;
+import java.util.Arrays;
+import java.util.Objects;
+
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
 import fr.umlv.retro.Retro;
 import fr.umlv.retro.models.ClassInfo;
+import fr.umlv.retro.models.Features;
 import fr.umlv.retro.models.MethodInfo;
 
-/**
- * Detects lambda method calls and rewrite them if needed (target < JDK 8).
- */
-class RecordDetector extends LocalVariablesSorter implements Opcodes {
-	
+public class RecordDetector extends LocalVariablesSorter implements Opcodes {
+
 	private final Retro app;
 	private final ClassInfo ci;
 	private final MethodInfo mi;
-	private int lineNumber;
-	
+
 	public RecordDetector(Retro app, ClassInfo ci, MethodInfo mi) {
-		super(app.api(), mi.access(), mi.descriptor(), mi.visitor());
+		super(
+			Objects.requireNonNull(app).api(),
+			Objects.requireNonNull(mi).access(),
+			Objects.requireNonNull(mi).descriptor(),
+			Objects.requireNonNull(mi).visitor()
+		);
+		this.app = app;
 		this.ci = ci;
 		this.mi = mi;
-		this.app = app;
 	}
+	
 
 	@Override
-	public void visitLineNumber(int line, Label start) {
-		this.lineNumber = line;
-		super.visitLineNumber(line, start);
+	public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
+		if (owner.equals("java/lang/Record")) {
+			owner = "java/lang/Object";
+		}
+		super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
 	}
+	
+	@Override
+	public void visitInvokeDynamicInsn(String name, String descriptor, Handle handle, Object... args) {
+		var rewritten = false;
+		if (handle.getOwner().equals("java/lang/runtime/ObjectMethods")) {
+			if (app.target() < 14 && app.hasFeature(Features.Record)) {
+				var rewriter = new RecordRewriter(ci, mi);
+				rewriter.rewrite(name, Arrays.stream(args).skip(2).toArray(Handle[]::new));
+				rewritten = true;
+			}
+		}	
+		if (!rewritten) {
+			super.visitInvokeDynamicInsn(name, descriptor, handle, args);
+		}
+	}
+
 }

@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.objectweb.asm.Opcodes;
 
 import fr.umlv.retro.cli.CommandLine;
 import fr.umlv.retro.concats.ConcatVisitor;
 import fr.umlv.retro.lambdas.LambdaVisitor;
+import fr.umlv.retro.mocker.MockerVisitor;
 import fr.umlv.retro.models.FeatureDescriber;
 import fr.umlv.retro.models.FeatureVisitor;
 import fr.umlv.retro.models.Features;
@@ -22,9 +24,7 @@ import fr.umlv.retro.models.Logger;
 import fr.umlv.retro.models.Options;
 import fr.umlv.retro.nestmates.NestMateVisitor;
 import fr.umlv.retro.records.RecordVisitor;
-import fr.umlv.retro.trywithresources.TryWithResourceVisitor;
 import fr.umlv.retro.utils.Contracts;
-
 
 /**
  * Facade of the application.
@@ -35,13 +35,13 @@ public class Retro {
 	private final FileSystem fs;
 	private final Logger logger;
 	private boolean success = true;
-
+	
 	private final FeatureVisitor[] visitors = new FeatureVisitor[] {
+		new MockerVisitor(this), // IMPORTANT this should be the first visitor
 		new NestMateVisitor(this),
 		new ConcatVisitor(this),
 		new LambdaVisitor(this),
 		new RecordVisitor(this),
-		new TryWithResourceVisitor(this),
     };
 	
 	private Retro(FileSystem fs, Options options, Logger logger) {
@@ -50,11 +50,12 @@ public class Retro {
 		this.logger = Objects.requireNonNull(logger);
 	}
 
-
 	/**
 	 * Creates new instance and run the program.
 	 * For each specified path, the program will output the transformed
-	 * classes and jars in a directory 'retro-output' relative to the path.
+	 * classes and jars in a directory 'retro-output' relative to the path.<br><br>
+	 * 
+	 * The program will not generate nothing if there is an error or warning.
 	 * @param paths the paths where to run the program.
 	 * @param options the program options.
 	 * @param logger all call to sysout will be forwarded to this logger.
@@ -82,8 +83,16 @@ public class Retro {
 	        	error.append("use -help for a list of possible options");
 	        	throw new AssertionError(error.toString());
 	        }
+	        var roots = Arrays.stream(paths).filter(e -> {
+	        	for (var p : paths) {
+	        		if (e.startsWith(p) && !e.equals(p)) {
+	        			return false;
+	        		}
+	        	}
+	        	return true;
+	        }).toArray(Path[]::new);
         	Retro retro;
-        	for (var path : paths) {
+        	for (var path : roots) {
         		var fs = FileSystem.create(path);
         		retro = new Retro(fs, options, logger);        			
         		if (!retro.run(savers)) {
@@ -107,10 +116,12 @@ public class Retro {
 
 	/**
 	 * Creates new instance from command line arguments and run the program
-	 * from the paths specified in the arguments. <br> <br>
+	 * from the paths specified in the arguments. <br><br>
 	 * 
 	 * For each specified path, the program will output the transformed
-	 * classes and jars in a directory 'retro-output' relative to the path.
+	 * classes and jars in a directory 'retro-output' relative to the path.<br><br>
+	 * 
+	 * The program will not generate nothing if there is an error or warning.
 	 * @param commandLine the command line arguments.
 	 * @return true if the class files are transformed false otherwise.
 	 * @throws IOException
@@ -120,7 +131,8 @@ public class Retro {
 	public static boolean exec(CommandLine commandLine) throws IOException, URISyntaxException {
 		Contracts.requires(commandLine, "commandLine");	
 		var options = Options.fromCommandLine(commandLine);
-		var paths = Arrays.stream(commandLine.args().get())
+		var args = commandLine.args();
+		var paths = Arrays.stream(args.isEmpty() ? new String[0] : args.get())
 				.map(e -> Paths.get(e))
 				.toArray(Path[]::new);
 		return exec(paths, options, new Logger());
@@ -129,7 +141,9 @@ public class Retro {
 	/**
 	 * Creates new instance and run the program.
 	 * For each specified path, the program will output the transformed
-	 * classes and jars in a directory 'retro-output' relative to the path.
+	 * classes and jars in a directory 'retro-output' relative to the path.<br><br>
+	 * 
+	 * The program will not generate nothing if there is an error or warning.
 	 * @param path the path where to run the program.
 	 * @param options the program options.
 	 * @param logger all call to sysout will be forwarded to this logger.
@@ -158,7 +172,19 @@ public class Retro {
 	public int target() {
 		return options.target();
 	}
-	
+
+	/**
+	 * Is force option enabled?
+	 */
+	public boolean force() {
+		return options.force();
+	}
+
+	/** root path of the file system */
+ 	public Path root() {
+		return fs.root();
+	}
+
 	/**
 	 * Checks whether the given feature is in the list of features to transform.
 	 * @param feature the feature
@@ -170,8 +196,8 @@ public class Retro {
 		return options.hasFeature(feature) || options.force();
 	}
 	
-	public FeatureVisitor[] visitors() {
-		return Arrays.copyOf(visitors, visitors.length);
+	public void visitFeatures(Consumer<FeatureVisitor[]> consumer) {
+		consumer.accept(visitors);
 	}
 
 	/**
@@ -233,6 +259,33 @@ public class Retro {
 			success = false;
 		}
 	}
+
+	/**
+	 * Logs an informative message.
+	 * @param messages messages to output (append newline char after each message)
+	 */
+	public void logInfo(String... messages) {
+		logger.info(messages);
+	}
+	
+	/**
+	 * Logs a warning message and cancel the generation of the output directory.
+	 * @param messages messages to output (append newline char after each message)
+	 */
+	public void logWarning(String... messages) {
+		logger.warn(messages);
+		success = false;
+	}
+	
+	/**
+	 * Logs an error message and cancel the generation of the output directory.
+	 * @param messages messages to output (append newline char after each message)
+	 */
+	public void logError(String... messages) {
+		logger.error(messages);
+		success = false;
+	}
+	
 
 	private boolean run(ArrayList<Runnable> savers) throws FileNotFoundException, IOException, URISyntaxException {
 		fs.iterate((path, bytes) -> {

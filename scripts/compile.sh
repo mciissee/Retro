@@ -1,3 +1,4 @@
+cd examples
 rm -r asmifiers 2> /dev/null
 rm -r asmtextifiers 2> /dev/null
 rm -r javac 2> /dev/null

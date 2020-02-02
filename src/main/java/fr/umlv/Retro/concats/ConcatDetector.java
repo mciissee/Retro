@@ -21,8 +21,13 @@ class ConcatDetector extends LocalVariablesSorter implements Opcodes {
 	private int lineNumber;
 
 	public ConcatDetector(Retro app, ClassInfo ci, MethodInfo mi) {
-		super(app.api(), mi.access(), mi.descriptor(), mi.visitor());
-		this.app = Objects.requireNonNull(app);
+		super(
+			Objects.requireNonNull(app).api(),
+			Objects.requireNonNull(mi).access(),
+			Objects.requireNonNull(mi).descriptor(),
+			Objects.requireNonNull(mi).visitor()
+		);
+		this.app = app;
 		this.ci = ci;
 		this.mi = mi;
 	}

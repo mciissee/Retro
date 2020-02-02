@@ -24,6 +24,10 @@ public class Logger {
 		return new ArrayList<>(logs);
 	}
 
+	/**
+	 * Logs an informative message.
+	 * @param messages messages to output (append newline char after each message)
+	 */
 	public void info(String... messages) {
 		Objects.requireNonNull(messages);
 		var message = join(messages);
@@ -31,6 +35,10 @@ public class Logger {
 		System.out.println(message);
 	}
 
+	/**
+	 * Logs a warning message.
+	 * @param messages messages to output (append newline char after each message)
+	 */
 	public void warn(String... messages) {
 		Objects.requireNonNull(messages);
 		var message = join(messages);
@@ -38,6 +46,10 @@ public class Logger {
 		System.out.println(message);
 	}
 
+	/**
+	 * Logs an error message.
+	 * @param messages messages to output (append newline char after each message)
+	 */
 	public void error(String... messages) {
 		Objects.requireNonNull(messages);
 		var message = join(messages);

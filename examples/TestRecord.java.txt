@@ -7,7 +7,6 @@ public class TestRecord {
         }
     }
 
-
     public static void main(String[] args) {
         var range = new Range(0, 10);
         System.out.println(range);
