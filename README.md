@@ -53,6 +53,7 @@ Or using the build script:
 ```
 
 The compiled JARs will be available in the `target` directory:
+
 - `target/retro.jar` - Main application JAR
 - `target/retro-server-runner.jar` - Quarkus server JAR
 
@@ -118,11 +119,11 @@ Launch the development server:
 ./scripts/quarkus-dev.sh
 ```
 
-Then open your browser at: http://localhost:8080
+Then open your browser at: <http://localhost:8080>
 
 ## Project Structure
 
-```
+```txt
 retro/
 ├── src/
 │   ├── main/
@@ -181,6 +182,7 @@ Retro uses [ASM](https://asm.ow2.io/) (a Java bytecode manipulation framework) t
 4. **Output** the modified bytecode to a separate directory
 
 Each feature has its own visitor and rewriter:
+
 - **Detector**: Identifies where the feature is used
 - **Describer**: Provides information about detected features
 - **Rewriter**: Transforms the bytecode to the target version
@@ -213,7 +215,21 @@ boolean success = Retro.exec(inputPath, options, new Logger());
 
 ## Documentation
 
+### API Documentation (JavaDoc)
+
 Full JavaDoc documentation is available in the `doc/javadoc/` directory. Open `doc/javadoc/index.html` in a web browser to browse the API documentation.
+
+### Technical Documentation
+
+For in-depth technical information about the architecture, design patterns, and implementation details, see [doc/TECHNICAL.md](doc/TECHNICAL.md). This documentation covers:
+
+- **Architecture Overview**: Component structure, layers, and design principles
+- **Transformation Pipeline**: Step-by-step bytecode transformation process
+- **Feature Implementation Pattern**: How to implement new features
+- **Design Patterns**: Visitor, Strategy, Facade, Chain of Responsibility patterns
+- **Bytecode Transformation Details**: Detailed examples for each Java feature
+- **Extension Guide**: Complete guide for adding new transformations
+- **Performance & Testing**: Optimization strategies and testing approaches
 
 ## Troubleshooting
 
@@ -236,16 +252,19 @@ Java bytecode versions (class file major version) map to Java releases:
 #### Detecting Version Mismatches
 
 **Check compiled class file version:**
+
 ```bash
 javap -v YourClass.class | grep "major version"
 ```
 
 **Check Java version used for compilation:**
+
 ```bash
 java -version
 ```
 
 **Check ASM library version (in examples/):**
+
 ```bash
 unzip -p examples/asm.jar META-INF/MANIFEST.MF | grep "Bundle-Version"
 ```
@@ -253,16 +272,20 @@ unzip -p examples/asm.jar META-INF/MANIFEST.MF | grep "Bundle-Version"
 #### Common Solutions
 
 **If ASM version is too old** (e.g., ASM 7.2 doesn't support Java 17):
+
 - Update ASM JARs in [examples/](examples/) directory to version 9.6+
 - ASM 9.6 supports Java 17-21
 
 **If compiling examples with too new Java version:**
+
 - Modify [scripts/compile.sh](scripts/compile.sh) to use `--release` flag:
+
   ```bash
   javac -d javac --release 11 *.java
   ```
 
 **Version Requirements:**
+
 - **ASM 7.2**: Supports up to Java 13 (major version 57)
 - **ASM 9.6**: Supports up to Java 21 (major version 65)
 

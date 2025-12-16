@@ -8,8 +8,10 @@
 	<name>Retro</name>
 
 	<properties>
-		<java.version>13</java.version>
+		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<asm.version>9.6</asm.version>
+		<quarkus.version>1.2.0.Final</quarkus.version>
 	</properties>
 
 	<build>
@@ -46,7 +48,7 @@
 			<plugin>
 				<groupId>io.quarkus</groupId>
 				<artifactId>quarkus-maven-plugin</artifactId>
-				<version>1.2.0.Final</version>
+				<version>${quarkus.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -72,23 +74,23 @@
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
-			<version>7.2</version>
+			<version>${asm.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-commons</artifactId>
-			<version>7.2</version>
+			<version>${asm.version}</version>
 		</dependency>
 		<!-- QUARKUS -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-resteasy</artifactId>
-			<version>1.2.0.Final</version>
+			<version>${quarkus.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-resteasy-jsonb</artifactId>
-			<version>1.2.0.Final</version>
+			<version>${quarkus.version}</version>
 		</dependency>
 		
 		 <dependency>
