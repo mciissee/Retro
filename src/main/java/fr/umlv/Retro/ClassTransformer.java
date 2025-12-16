@@ -54,7 +54,35 @@ public class ClassTransformer extends ClassVisitor implements Opcodes {
 		Contracts.requires(path, "path");
 		Contracts.requires(bytecode, "bytecode");
 		var cr = new ClassReader(bytecode);
-        var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		
+		// Create a custom ClassWriter that handles missing classes gracefully
+		// when computing common super class for frame generation
+        var cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
+            /**
+             * Overrides the default implementation to prevent {@link TypeNotPresentException}
+             * when ASM tries to load classes that are not in the classpath (e.g., ASM internal
+             * classes like CheckMethodAdapter$MethodWriterWrapper, or application classes).
+             * 
+             * <p>When the class hierarchy cannot be determined, we fall back to returning
+             * {@code java/lang/Object} as the common superclass, which is always safe and
+             * allows the transformation to proceed without errors.
+             * 
+             * @param type1 the internal name of a class
+             * @param type2 the internal name of another class
+             * @return the internal name of the common super class of the two given classes,
+             *         or {@code java/lang/Object} if the classes cannot be loaded
+             */
+            @Override
+            protected String getCommonSuperClass(String type1, String type2) {
+                try {
+                    return super.getCommonSuperClass(type1, type2);
+                } catch (TypeNotPresentException e) {
+                    // If we can't load the class (e.g., ASM internal classes or missing dependencies),
+                    // fall back to Object which is always a valid common superclass
+                    return "java/lang/Object";
+                }
+            }
+        };
         cr.accept(new ClassTransformer(app, path, cw, parent), ClassReader.EXPAND_FRAMES);
         app.write(path, cw.toByteArray());
 	}

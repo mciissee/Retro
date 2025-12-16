@@ -33,7 +33,7 @@ public class RecordVisitor extends ClassVisitor implements FeatureVisitor, Opcod
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		if (superName.equals("java/lang/Record")) {
+		if (superName != null && superName.equals("java/lang/Record")) {
 			isRecord = true;
 			superName = "java/lang/Object";
 			app.detectFeature(ci.path(), Features.Record, new RecordDescriber(ci));
