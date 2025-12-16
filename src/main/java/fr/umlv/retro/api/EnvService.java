@@ -34,6 +34,8 @@ import fr.umlv.retro.utils.Contracts;
 @ApplicationScoped
 public class EnvService {
 
+	private static final String ENV_DIR = System.getProperty("retro.env.dir", "env");
+
 	private static class MultipartReader {
 		private final Options options;
 		private final HashMap<String, byte[]> files;
@@ -118,8 +120,8 @@ public class EnvService {
 	 * @return An Response Object
 	 */
 	public Response retrieve(String envid) {
-		var source = Paths.get("env", envid);
-		var target = Paths.get("env", envid + ".zip");
+		var source = Paths.get(ENV_DIR, envid);
+		var target = Paths.get(ENV_DIR, envid + ".zip");
 		try {
 			purge();
 			if (!Files.isDirectory(source)) {
@@ -146,7 +148,7 @@ public class EnvService {
 	 */
 	public Response create(MultipartFormDataInput input) {
 		var envid = UUID.randomUUID().toString();
-		var envdir = Paths.get("env", envid);
+		var envdir = Paths.get(ENV_DIR, envid);
 		try {
 			purge();
 			var i = 0;
@@ -180,7 +182,7 @@ public class EnvService {
 	}
 
 	private void purge() {
-		var dir = Paths.get("env");
+		var dir = Paths.get(ENV_DIR);
 		if (!Files.isDirectory(dir)) {
 			return;
 		}
