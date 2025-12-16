@@ -6,8 +6,7 @@ mkdir asmifiers
 mkdir asmtextifiers
 mkdir javac
 
-#/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home/bin/javac -d javac --release 14 --enable-preview *.java
-javac -d javac *.java
+javac -d javac --release 11 *.java
 
 cd javac
 for f in *.class;

@@ -1,1 +1,13 @@
+# Build outputs
 /target/
+/bin/
+
+# Generated examples directories
+examples/javac/
+examples/asmifiers/
+examples/asmtextifiers/
+
+# IDE files
+.classpath
+.project
+.settings/
