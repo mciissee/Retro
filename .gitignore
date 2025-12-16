@@ -5,6 +5,7 @@
 examples/javac/
 examples/asmifiers/
 examples/asmtextifiers/
+env/
 
 # IDE files
 .classpath
