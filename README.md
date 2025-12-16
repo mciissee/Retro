@@ -1,5 +1,7 @@
 # Retro - Java Bytecode Backporter
 
+![Screen](./doc/screen.png)
+
 Retro is a Java bytecode transformation tool that allows you to backport modern Java features to older JDK versions. It analyzes and transforms Java class files and JAR files, making code compiled with newer Java versions compatible with older runtime environments.
 
 ## Features
